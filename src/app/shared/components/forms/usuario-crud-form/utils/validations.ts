@@ -24,6 +24,7 @@ export const UsuarioCrudValidators: FormGroupValidators = {
     Validators.maxLength(10),
     Validators.minLength(6),
   ],
+  local_id: [Validators.required],
 };
 
 export const UsuarioCrudErrorMessages: FormErrorMessages = {
@@ -47,6 +48,10 @@ export const UsuarioCrudErrorMessages: FormErrorMessages = {
     required: 'La contraseña es requerida',
     maxlength: 'Solo se permite entre 6 y 10 caracteres.',
     minlength: 'Solo se permite entre 6 y 10 caracteres.',
+  },
+
+  local_id: {
+    required: 'El local es requerido.',
   },
 };
 

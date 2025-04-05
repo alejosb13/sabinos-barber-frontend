@@ -5,6 +5,7 @@ export interface UsuarioCrudForm {
   nombre_completo: FormControl<string | null>;
   email: FormControl<string | null>;
   role_id: FormControl<string | null>;
+  local_id: FormControl<string | null>;
   passwords: FormGroup;
 }
 
@@ -20,6 +21,7 @@ export const UsuarioCrudFormBuilder = () =>
     ]),
     email: new FormControl('', [...UsuarioCrudValidators['email']]),
     role_id: new FormControl('', [...UsuarioCrudValidators['role_id']]),
+    local_id: new FormControl('', [...UsuarioCrudValidators['local_id']]),
     // passwords: new FormGroup<UsuarioPasswordCrudForm>({
     //   password: new FormControl('', [...UsuarioCrudValidators['password']]),
     //   password_repeat: new FormControl('', [

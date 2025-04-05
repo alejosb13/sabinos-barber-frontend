@@ -27,6 +27,8 @@ import { Usuario } from 'src/app/models/Usuario.model';
 import { RolesService } from '../../../../services/role.service';
 import { Role } from '../../../../models/Role.model';
 import { Subject, takeUntil } from 'rxjs';
+import { Local } from '../../../../models/Local.model';
+import { LocalesService } from '../../../../services/locales.service';
 
 @Component({
   selector: 'app-usuario-crud-form',
@@ -53,14 +55,17 @@ export class UsuarioCrudFormComponent {
   #colorModeService = inject(ColorModeService);
   _UsuarioesServices = inject(UsuarioesService);
   _RolesService = inject(RolesService);
+  _LocalesServices = inject(LocalesService);
 
   Roles!: Role[];
+  Locales!: Local[];
 
   @Input() Usuario!: Usuario;
   @Output() FormsValues = new EventEmitter<any>();
 
   ngOnInit(): void {
     this.getRoles();
+    this.getLocales();
   }
 
   ngOnChanges(): void {
@@ -69,6 +74,15 @@ export class UsuarioCrudFormComponent {
 
       this.UsuarioCrudForm.controls.passwords.disable();
     }
+  }
+
+  getLocales() {
+    this._LocalesServices
+      .getLocales({ disablePaginate: '1', link: null })
+      .pipe(takeUntil(this.destruir$))
+      .subscribe((locales: Local[]) => {
+        this.Locales = locales;
+      });
   }
 
   getRoles() {
@@ -120,12 +134,13 @@ export class UsuarioCrudFormComponent {
 
   sendValueFom() {
     if (this.UsuarioCrudForm.valid) {
-      const { email, nombre_completo, role_id } = this.UsuarioCrudForm.value;
+      const { email, nombre_completo, role_id, local_id } =
+        this.UsuarioCrudForm.value;
       const { password } = this.UsuarioCrudForm.controls.passwords.value;
 
       const VALUES_RESPONSE = this.Usuario
-        ? { email, nombre_completo, role_id }
-        : { email, nombre_completo, role_id, password };
+        ? { email, nombre_completo, role_id, local_id }
+        : { email, nombre_completo, role_id, local_id, password };
       this.FormsValues.emit(VALUES_RESPONSE);
     } else {
       Swal.mixin({
