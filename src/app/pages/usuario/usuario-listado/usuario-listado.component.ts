@@ -14,6 +14,7 @@ import {
   ModalModule,
   ButtonModule,
   ModalService,
+  SpinnerComponent,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 
@@ -57,6 +58,7 @@ import { CambiarClaveUsuarioComponent } from '../../../shared/modals/cambiar-cla
     ModalModule,
     ButtonModule,
     FormsModule,
+    SpinnerComponent,
   ],
   templateUrl: './usuario-listado.component.html',
   styleUrl: './usuario-listado.component.scss',

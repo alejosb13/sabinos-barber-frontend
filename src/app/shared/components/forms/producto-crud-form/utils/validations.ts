@@ -10,7 +10,7 @@ export const ProductoCrudValidators: FormGroupValidators = {
   cantidad: [Validators.required, Validators.maxLength(3)],
   precio: [Validators.required, Validators.maxLength(15)],
   local_id: [Validators.required],
-  ilimitado: [Validators.required],
+  // ilimitado: [Validators.required],
 };
 
 export const ProductoCrudErrorMessages: FormErrorMessages = {

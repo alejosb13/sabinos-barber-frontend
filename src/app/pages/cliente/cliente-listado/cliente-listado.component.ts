@@ -15,6 +15,7 @@ import {
   ModalModule,
   ButtonModule,
   ModalService,
+  SpinnerComponent,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 
@@ -55,6 +56,7 @@ import { ClientesService } from '../../../services/clientes.service';
     ModalModule,
     ButtonModule,
     FormsModule,
+    SpinnerComponent,
   ],
   templateUrl: './cliente-listado.component.html',
   styleUrl: './cliente-listado.component.scss',
@@ -69,12 +71,12 @@ export class ClienteListadoComponent {
 
   loaderTable: boolean = true;
   ParametrosURL: ParametersUrl = {
-    allDates: false,
+    allDates: true,
     estado: 1,
     link: null,
     disablePaginate: '0',
-    fecha_inicio: dayjs().startOf('month').format('YYYY-MM-DD'),
-    fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
+    // fecha_inicio:  dayjs().startOf('month').format('YYYY-MM-DD'),
+    // fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
   };
   ClientesList!: Listado<Cliente>;
 

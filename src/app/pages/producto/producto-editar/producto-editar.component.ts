@@ -1,6 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CardModule, ColorModeService, GridModule } from '@coreui/angular';
+import {
+  CardModule,
+  ColorModeService,
+  GridModule,
+  SpinnerComponent,
+} from '@coreui/angular';
 import { Producto } from 'src/app/models/Producto.model';
 import { ProductosService } from 'src/app/services/productos.service';
 import logger from 'src/app/shared/utils/logger';
@@ -15,7 +20,12 @@ import { HelpersService } from '../../../services/helpers.service';
   standalone: true,
   templateUrl: './producto-editar.component.html',
   styleUrl: './producto-editar.component.scss',
-  imports: [CardModule, GridModule, ProductoCrudFormComponent],
+  imports: [
+    CardModule,
+    GridModule,
+    ProductoCrudFormComponent,
+    SpinnerComponent,
+  ],
 })
 export class ProductoEditarComponent {
   private destruir$: Subject<void> = new Subject<void>();

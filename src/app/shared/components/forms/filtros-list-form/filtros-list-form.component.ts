@@ -68,6 +68,7 @@ export class FiltrosListFormComponent {
   @Input() showLocales: boolean = false;
   @Input() showEstado: boolean = false;
   @Input() showValidDates: boolean = false;
+  @Input() validDateValue!: boolean | undefined;
   @Input() showEmpleados: boolean = false;
   @Input() showUsers: boolean = false;
   @Output() filtrar = new EventEmitter<Filtro>();
@@ -101,14 +102,19 @@ export class FiltrosListFormComponent {
     this.getLocales();
     this.getEmpleados();
     this.getUsers();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    logger.log(changes, this.filtro);
     this.filtro = {
       ...this.filtro,
       estado: this.showEstado ? 1 : '',
       local_id: Number(this._LoginService.getUserData().local.id),
+      allDates: this.validDateValue
+        ? this.validDateValue
+        : IniciarFiltro.allDates,
     };
   }
-
-  ngOnChanges(changes: SimpleChanges): void {}
 
   eventChangeLocal() {
     const USER_DATA = this._LoginService.getUserData();

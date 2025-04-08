@@ -1,7 +1,12 @@
 import { EmpleadoCrudFormComponent } from 'src/app/shared/components/forms/empleado-crud-form/empleado-crud-form.component';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CardModule, ColorModeService, GridModule } from '@coreui/angular';
+import {
+  CardModule,
+  ColorModeService,
+  GridModule,
+  SpinnerComponent,
+} from '@coreui/angular';
 import { Empleado } from 'src/app/models/Empleado.model';
 import { EmpleadosService } from 'src/app/services/empleados.service';
 import logger from 'src/app/shared/utils/logger';
@@ -13,7 +18,12 @@ import { HelpersService } from '../../../services/helpers.service';
 @Component({
   selector: 'app-empleado-editar',
   standalone: true,
-  imports: [CardModule, GridModule, EmpleadoCrudFormComponent],
+  imports: [
+    CardModule,
+    GridModule,
+    EmpleadoCrudFormComponent,
+    SpinnerComponent,
+  ],
   templateUrl: './empleado-editar.component.html',
   styleUrl: './empleado-editar.component.scss',
 })

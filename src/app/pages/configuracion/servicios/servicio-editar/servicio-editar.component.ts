@@ -1,6 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CardModule, ColorModeService, GridModule } from '@coreui/angular';
+import {
+  CardModule,
+  ColorModeService,
+  GridModule,
+  SpinnerComponent,
+} from '@coreui/angular';
 import { Cliente } from 'src/app/models/Cliente.model';
 import { ClientesService } from 'src/app/services/clientes.service';
 import logger from 'src/app/shared/utils/logger';
@@ -16,7 +21,12 @@ import { ServicioCrudFormComponent } from '../../../../shared/components/forms/s
 @Component({
   selector: 'app-servicio-editar',
   standalone: true,
-  imports: [CardModule, GridModule, ServicioCrudFormComponent],
+  imports: [
+    CardModule,
+    GridModule,
+    ServicioCrudFormComponent,
+    SpinnerComponent,
+  ],
   templateUrl: './servicio-editar.component.html',
   styleUrl: './servicio-editar.component.scss',
 })

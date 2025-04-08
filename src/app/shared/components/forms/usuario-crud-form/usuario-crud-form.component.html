@@ -1,5 +1,5 @@
 <form cForm [formGroup]="UsuarioCrudForm" class="form-Usuario-crud">
-  <c-row class="mb-4 flex-wrap justify-content-center">
+  <c-row class="mb-4 flex-wrap">
     <c-col [md]="4">
       <div cFormFloating class="mb-3">
         <input
@@ -57,7 +57,7 @@
             'is-valid': getControl('role_id').valid
           }"
         >
-          <option value="">Seleccione un rol</option>
+          <option value="0" hidden>Seleccione un rol</option>
           <option *ngFor="let rol of Roles; let i = index" [value]="rol.id">
             {{ rol.name | titlecase }}
           </option>

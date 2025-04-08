@@ -34,7 +34,7 @@ export class HelpersService {
     Object.entries(parametersURL).forEach(([key, value]) => {
       // logger.log([key, value]);
       // Solo agregar valores que no sean undefined o null
-      if (value && key != 'link') {
+      if ((value && key != 'link') || key === 'estado') {
         params = params.set(key, value);
       }
     });
@@ -106,6 +106,7 @@ export class HelpersService {
     let ListErrorStr: string = '';
 
     if (httpErrorResponse.error.length > 0) {
+      logger.log('asasfas');
       let listError: any[] = [];
       ListErrorStr += "<ul class='error-list'>";
 
@@ -115,6 +116,8 @@ export class HelpersService {
       listError.map((msjError) => (ListErrorStr += `<li>${msjError}</li>`));
 
       ListErrorStr += '</ul>';
+    } else if (httpErrorResponse.error.mensaje) {
+      ListErrorStr = mensaje;
     } else {
       ListErrorStr += httpErrorResponse.error;
     }

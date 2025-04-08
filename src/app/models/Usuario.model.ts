@@ -4,7 +4,7 @@ export interface Usuario {
   nombre_completo: string;
   email: string;
   password: string;
-  role_id?: string;
+  role_id?: number;
 
   estado?: number;
   created_at?: Date;

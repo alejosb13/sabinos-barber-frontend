@@ -53,7 +53,8 @@ export class EmpleadoInsertarComponent {
             icon: 'success',
           })
           .then((result) => {
-            this._Router.navigateByUrl(`/empleados/editar/${response.data.id}`);
+            // this._Router.navigateByUrl(`/empleados/editar/${response.data.id}`);
+            this._Router.navigateByUrl(`/empleados`);
           });
       });
   }

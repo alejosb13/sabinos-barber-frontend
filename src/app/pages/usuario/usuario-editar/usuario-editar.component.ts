@@ -1,6 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CardModule, ColorModeService, GridModule } from '@coreui/angular';
+import {
+  CardModule,
+  ColorModeService,
+  GridModule,
+  SpinnerComponent,
+} from '@coreui/angular';
 import { Usuario } from 'src/app/models/Usuario.model';
 import { UsuarioesService } from 'src/app/services/usuarios.service';
 import logger from 'src/app/shared/utils/logger';
@@ -13,7 +18,7 @@ import { HelpersService } from '../../../services/helpers.service';
 @Component({
   selector: 'app-usuario-editar',
   standalone: true,
-  imports: [CardModule, GridModule, UsuarioCrudFormComponent],
+  imports: [CardModule, GridModule, UsuarioCrudFormComponent, SpinnerComponent],
   templateUrl: './usuario-editar.component.html',
   styleUrl: './usuario-editar.component.scss',
 })

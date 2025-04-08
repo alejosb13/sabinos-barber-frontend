@@ -14,6 +14,7 @@ import {
   ModalModule,
   ButtonModule,
   ModalService,
+  SpinnerComponent,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 
@@ -56,6 +57,7 @@ import { LoginService } from '../../../services/login.service';
     ModalModule,
     ButtonModule,
     FormsModule,
+    SpinnerComponent,
   ],
   templateUrl: './empleado-listado.component.html',
   styleUrl: './empleado-listado.component.scss',

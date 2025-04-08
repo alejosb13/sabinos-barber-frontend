@@ -1,6 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CardModule, ColorModeService, GridModule } from '@coreui/angular';
+import {
+  CardModule,
+  ColorModeService,
+  GridModule,
+  SpinnerComponent,
+} from '@coreui/angular';
 import { Cliente } from 'src/app/models/Cliente.model';
 import { ClientesService } from 'src/app/services/clientes.service';
 import logger from 'src/app/shared/utils/logger';
@@ -16,7 +21,7 @@ import { HelpersService } from '../../../services/helpers.service';
   standalone: true,
   templateUrl: './cliente-editar.component.html',
   styleUrl: './cliente-editar.component.scss',
-  imports: [CardModule, GridModule, ClienteCrudFormComponent],
+  imports: [CardModule, GridModule, ClienteCrudFormComponent, SpinnerComponent],
 })
 export class ClienteEditarComponent {
   private destruir$: Subject<void> = new Subject<void>();

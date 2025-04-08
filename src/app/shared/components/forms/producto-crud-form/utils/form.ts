@@ -7,7 +7,7 @@ export interface ProductoCrudForm {
   cantidad: FormControl<number | null>;
   precio: FormControl<number | null>;
   local_id: FormControl<string | number | null>;
-  ilimitado: FormControl<boolean | null>;
+  // ilimitado: FormControl<boolean | null>;
 }
 
 export const ProductoCrudFormBuilder = () =>
@@ -21,5 +21,5 @@ export const ProductoCrudFormBuilder = () =>
     local_id: new FormControl({ value: '0', disabled: true }, [
       ...ProductoCrudValidators['local_id'],
     ]),
-    ilimitado: new FormControl(false, [...ProductoCrudValidators['ilimitado']]),
+    // ilimitado: new FormControl(false, [...ProductoCrudValidators['ilimitado']]),
   });

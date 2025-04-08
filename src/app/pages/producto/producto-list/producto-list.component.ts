@@ -15,6 +15,7 @@ import {
   ModalModule,
   ButtonModule,
   ModalService,
+  SpinnerComponent,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import { ProductosService } from '../../../services/productos.service';
@@ -57,6 +58,7 @@ import { LoginService } from '../../../services/login.service';
     ModalModule,
     ButtonModule,
     FormsModule,
+    SpinnerComponent,
   ],
 })
 export class ProductoListComponent {
@@ -76,8 +78,8 @@ export class ProductoListComponent {
     link: null,
     disablePaginate: '0',
     local_model: '1',
-    fecha_inicio: dayjs().startOf('month').format('YYYY-MM-DD'),
-    fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
+    // fecha_inicio: dayjs().startOf('month').format('YYYY-MM-DD'),
+    // fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
   };
   ProductosList!: Listado<Producto>;
 
@@ -126,14 +128,14 @@ export class ProductoListComponent {
   filtroEvent(filtros: Filtro) {
     logger.log('filtros', filtros);
 
-    filtros.fecha_inicio = dayjs(filtros.fecha.startDate).format('YYYY-MM-DD');
-    filtros.fecha_fin = dayjs(filtros.fecha.endDate).format('YYYY-MM-DD');
+    // filtros.fecha_inicio = dayjs(filtros.fecha.startDate).format('YYYY-MM-DD');
+    // filtros.fecha_fin = dayjs(filtros.fecha.endDate).format('YYYY-MM-DD');
     const FILTROS_SANETIZE = this._HelpersService.filterData(filtros);
 
     this.ParametrosURL = {
       ...this.ParametrosURL,
       ...FILTROS_SANETIZE,
-      fecha_inicio: FILTROS_SANETIZE.fecha_inicio,
+      // fecha_inicio: FILTROS_SANETIZE.fecha_inicio,
     };
 
     if (this.ParametrosURL.allDates) {

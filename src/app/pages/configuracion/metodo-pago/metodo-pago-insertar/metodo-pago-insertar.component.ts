@@ -61,9 +61,10 @@ export class MetodoPagoInsertarComponent {
             icon: 'success',
           })
           .then((result) => {
-            this._Router.navigateByUrl(
-              `/ajustes/metodo-pago/editar/${response.id}`
-            );
+            // this._Router.navigateByUrl(
+            //   `/ajustes/metodo-pago/editar/${response.id}`
+            // );
+            this._Router.navigateByUrl(`/ajustes/metodo-pago`);
           });
       });
   }

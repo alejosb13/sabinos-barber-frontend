@@ -165,7 +165,7 @@
       <c-row class="mb-4">
         <c-col>
           <div class="small text-body-secondary mt-3">
-            <span class="h4"> Cargando clientes...</span>
+            <span class="h4"> Cargando <c-spinner size="sm" /></span>
           </div>
         </c-col>
       </c-row>
@@ -184,6 +184,7 @@
       [showDate]="true"
       [showEstado]="true"
       [showValidDates]="true"
+      [validDateValue]="ParametrosURL.allDates"
     />
   </c-modal-body>
 </c-modal>

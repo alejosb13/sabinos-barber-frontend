@@ -14,6 +14,7 @@ import {
   ModalModule,
   ButtonModule,
   ModalService,
+  SpinnerComponent,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 
@@ -55,6 +56,7 @@ import { Subject, takeUntil } from 'rxjs';
     ModalModule,
     ButtonModule,
     FormsModule,
+    SpinnerComponent,
   ],
   templateUrl: './local-listado.component.html',
   styleUrl: './local-listado.component.scss',

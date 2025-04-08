@@ -8,7 +8,7 @@ import logger from 'src/app/shared/utils/logger';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { UsuarioCrudFormComponent } from '../../../shared/components/forms/usuario-crud-form/usuario-crud-form.component';
-import { catchError, Subject, takeUntil } from 'rxjs';
+import { catchError, Subject, takeUntil, throwError } from 'rxjs';
 import { HelpersService } from '../../../services/helpers.service';
 
 @Component({
@@ -39,16 +39,19 @@ export class UsuarioInsertarComponent {
       .createUsuario(Usuario)
       .pipe(
         takeUntil(this.destruir$),
-        catchError((error) =>
+        catchError((error) => {
+          logger.log('error', error);
           this._HelpersService.handleErrorApiCrud(
             error,
             'No se pudo insertar el usuario.'
-          )
-        )
+          );
+          return throwError(() => error);
+        })
       )
       .subscribe((data) => {
         this.loader = false;
         logger.log(data);
+        this._HelpersService.handleErrorApiCrud(data);
         Swal.mixin({
           customClass: {
             container: this.#colorModeService.getStoredTheme(
@@ -61,7 +64,8 @@ export class UsuarioInsertarComponent {
             icon: 'success',
           })
           .then((result) => {
-            this._Router.navigateByUrl(`/usuarios/editar/${data.id}`);
+            this._Router.navigateByUrl(`/usuarios`);
+            // this._Router.navigateByUrl(`/usuarios/editar/${data.id}`);
           });
       });
   }

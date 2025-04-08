@@ -187,7 +187,7 @@
       <c-row class="mb-4">
         <c-col>
           <div class="small text-body-secondary mt-3">
-            <span class="h4"> Cargando productos...</span>
+            <span class="h4"> Cargando <c-spinner size="sm" /></span>
           </div>
         </c-col>
       </c-row>
@@ -203,9 +203,7 @@
   <c-modal-body>
     <app-filtros-list-form
       (filtrar)="filtroEvent($event)"
-      [showDate]="true"
       [showEstado]="true"
-      [showValidDates]="true"
     />
   </c-modal-body>
 </c-modal>

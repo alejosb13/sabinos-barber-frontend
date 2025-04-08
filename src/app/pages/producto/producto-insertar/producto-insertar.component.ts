@@ -62,7 +62,8 @@ export class ProductoInsertarComponent {
             icon: 'success',
           })
           .then((result) => {
-            this._Router.navigateByUrl(`/productos/editar/${data.producto.id}`);
+            this._Router.navigateByUrl(`/productos`);
+            // this._Router.navigateByUrl(`/productos/editar/${data.producto.id}`);
           });
       });
   }
