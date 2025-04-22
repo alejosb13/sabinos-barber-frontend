@@ -4,7 +4,9 @@ import { PedidoCrudValidators, validarProductosCargados } from './validations';
 export interface PedidoCrudForm {
   cliente_id: FormControl<number | null>;
   servicio_id: FormControl<number | null>;
-  metodo_pago_id: FormControl<number | null>;
+  // metodo_pago_id: FormControl<number | null>;
+
+  metodos_pagos: FormArray<FormGroup<PedidoMetodoPagoForm>>;
   productos: FormArray<FormGroup<PedidoProductoForm>>;
   pendiente: FormControl<boolean | null>;
   completado: FormControl<boolean | null>;
@@ -24,10 +26,13 @@ export const PedidoCrudFormBuilder = () =>
       servicio_id: new FormControl(null, [
         ...PedidoCrudValidators['servicio_id'],
       ]),
-      metodo_pago_id: new FormControl(null, [
-        ...PedidoCrudValidators['metodo_pago_id'],
-      ]),
+      // metodo_pago_id: new FormControl(null, [
+      //   ...PedidoCrudValidators['metodo_pago_id'],
+      // ]),
       productos: new FormArray<FormGroup<PedidoProductoForm>>([
+        // crearProductoArrayForm(),
+      ]), // Inicializar con un gasto
+      metodos_pagos: new FormArray<FormGroup<PedidoMetodoPagoForm>>([
         // crearProductoArrayForm(),
       ]), // Inicializar con un gasto
       pendiente: new FormControl(false),
@@ -43,6 +48,16 @@ export interface PedidoProductoForm {
   precio_unitario: FormControl<number | null>;
   precio: FormControl<number | null>;
   gratis: FormControl<boolean | null>;
+  pendiente: FormControl<boolean | null>;
+  completado: FormControl<boolean | null>;
+  editable: FormControl<boolean | null>;
+  pendienteEliminado: FormControl<boolean | null>;
+  facturtaProdutoId: FormControl<boolean | null>;
+}
+
+export interface PedidoMetodoPagoForm {
+  metodo_pago_id: FormControl<number | null>;
+  monto: FormControl<number | null>;
   pendiente: FormControl<boolean | null>;
   completado: FormControl<boolean | null>;
   editable: FormControl<boolean | null>;
@@ -77,7 +92,26 @@ const crearProductoArrayForm = (): FormGroup<PedidoProductoForm> => {
     { updateOn: 'change' }
   );
 };
+const crearMetodoPagoArrayForm = (): FormGroup<PedidoMetodoPagoForm> => {
+  return new FormGroup<PedidoMetodoPagoForm>({
+    metodo_pago_id: new FormControl(null, [
+      ...PedidoCrudValidators['metodo_pago_id'],
+    ]),
+    monto: new FormControl({ disabled: false, value: 0 }, [
+      ...PedidoCrudValidators['precio'],
+    ]),
+    pendiente: new FormControl(false),
+    completado: new FormControl(false),
+    editable: new FormControl(false),
+    pendienteEliminado: new FormControl(false),
+    facturtaProdutoId: new FormControl(null),
+  });
+};
 
 export const agregarProductosArray = (form: FormGroup<PedidoCrudForm>) => {
   form.controls.productos.push(crearProductoArrayForm()); // Agregar una nueva instancia
+};
+
+export const agregarMetodoPagoArray = (form: FormGroup<PedidoCrudForm>) => {
+  form.controls.metodos_pagos.push(crearMetodoPagoArrayForm()); // Agregar una nueva instancia
 };

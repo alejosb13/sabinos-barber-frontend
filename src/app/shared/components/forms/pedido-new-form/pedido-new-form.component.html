@@ -99,7 +99,7 @@
         [messages]="PedidoCrudErrorMessages['servicio_id']"
       ></app-valid-messages-form>
     </c-col>
-    <c-col [md]="4">
+    <!-- <c-col [md]="4">
       <div cFormFloating>
         <select
           cSelect
@@ -129,7 +129,7 @@
         [errors]="getControlError('metodo_pago_id')"
         [messages]="PedidoCrudErrorMessages['metodo_pago_id']"
       ></app-valid-messages-form>
-    </c-col>
+    </c-col> -->
     <c-col [md]="2">
       <button cButton color="primary" (click)="guardarCambioFacturaDetalle()">
         <c-spinner
@@ -152,7 +152,157 @@
       </button>
     </c-col>
   </c-row>
+  <div formArrayName="metodos_pagos">
+    <div class="d-flex align-items-center">
+      <h5 class="mb-0 text-info me-3">Métodos de pago</h5>
+      <button
+        cButton
+        type="button"
+        (click)="agregarMetodoPago()"
+        class="me-3 text-white btn-sm"
+      >
+        <svg cIcon height="18" name="cil-plus"></svg>
+      </button>
+    </div>
+    <hr />
+    <div
+      *ngFor="let metodoP of MetodosPagoFormArray.controls; let m = index"
+      [formGroupName]="m"
+      class="position-relative mb-4"
+    >
+      <c-row class="form-gasto">
+        <h6 class="mb-3">Método de pago Nro. {{ m + 1 }}</h6>
+        <c-col [md]="11">
+          <c-row class="flex-wrap">
+            <c-col [md]="3" class="mb-3">
+              <div cFormFloating>
+                <select
+                  cSelect
+                  id="metodo_pago_input{{ m }}"
+                  formControlName="metodo_pago_id"
+                >
+                  <option value="null" hidden>
+                    Seleccione un método de pago
+                  </option>
+                  <option
+                    *ngFor="let MetodosPago of MetodosPagos"
+                    [ngValue]="MetodosPago.id"
+                  >
+                    {{ MetodosPago.tipo | uppercase }}
+                  </option>
+                </select>
+                <label cLabel for="metodo_pago_input{{ m }}"
+                  >Método de pago
+                  <!-- <c-spinner size="sm" *ngIf="loadingProductos" /> -->
+                </label>
+              </div>
+              <app-valid-messages-form
+                [errors]="getProductoFormControlError(m, 'metodo_pago_id')"
+                [messages]="PedidoCrudErrorMessages['metodo_pago_id']"
+              ></app-valid-messages-form>
+            </c-col>
+            <c-col [md]="2" class="mb-3">
+              <div cFormFloating>
+                <input
+                  cFormControl
+                  id="monto_{{ m }}"
+                  formControlName="monto"
+                  type="text"
+                  placeholder="monto"
+                  appOnlyNumberAndPoint
+                />
+                <label cLabel for="monto_{{ m }}">Monto</label>
+              </div>
+              <app-valid-messages-form
+                [errors]="getProductoFormControlError(m, 'monto')"
+                [messages]="PedidoCrudErrorMessages['monto']"
+              ></app-valid-messages-form>
+            </c-col>
+            <c-col
+              [md]="2"
+              class="align-content-center mb-3"
+              *ngIf="metodoP.valid"
+            >
+              <button
+                cButton
+                color="primary"
+                (click)="guardarMetodoPago(m, metodoP)"
+                [disabled]="
+                  metodoP.get('completado')?.value ||
+                  metodoP.get('pendiente')?.value
+                "
+                class="me-4"
+              >
+                <svg
+                  cIcon
+                  height="18"
+                  name="cil-save"
+                  *ngIf="
+                    !metodoP.get('completado')?.value &&
+                    !metodoP.get('pendiente')?.value &&
+                    !metodoP.get('editable')?.value
+                  "
+                ></svg>
+                <svg
+                  cIcon
+                  height="18"
+                  name="cil-check-alt"
+                  *ngIf="metodoP.get('completado')?.value"
+                ></svg>
+                <svg
+                  cIcon
+                  height="18"
+                  name="cil-pencil"
+                  *ngIf="metodoP.get('editable')?.value"
+                ></svg>
+                <c-spinner
+                  aria-hidden="true"
+                  size="sm"
+                  *ngIf="metodoP.get('pendiente')?.value"
+                />
+              </button>
+
+              <button
+                cButton
+                color="danger"
+                (click)="eliminarMetodoPago(m, metodoP)"
+                [disabled]="
+                  MetodosPagoFormArray.controls.length == 1 &&
+                  !metodoP.get('editable')?.value
+                "
+              >
+                <c-spinner
+                  aria-hidden="true"
+                  size="sm"
+                  *ngIf="metodoP.get('pendienteEliminado')?.value"
+                />
+                <svg
+                  cIcon
+                  height="18"
+                  name="cil-trash"
+                  *ngIf="!metodoP.get('pendienteEliminado')?.value"
+                ></svg>
+              </button>
+            </c-col>
+          </c-row>
+        </c-col>
+      </c-row>
+    </div>
+  </div>
+
   <div formArrayName="productos">
+    <div class="d-flex align-items-center">
+      <h5 class="mb-0 me-3 text-info">Productos</h5>
+      <button
+        cButton
+        type="button"
+        (click)="agregarProducto()"
+        class="me-3 text-white btn-sm"
+      >
+        <svg cIcon height="18" name="cil-plus"></svg>
+      </button>
+    </div>
+    <hr />
     <div
       *ngFor="let prod of ProductorFormArray.controls; let i = index"
       [formGroupName]="i"
@@ -348,7 +498,7 @@
   </div>
   <c-row class="mb-4 mt-2">
     <c-col [md]="6" class="d-flex align-items-center">
-      <button
+      <!-- <button
         cButton
         type="button"
         (click)="agregarProducto()"
@@ -356,7 +506,7 @@
       >
         <svg cIcon height="18" name="cil-plus"></svg>
         Producto
-      </button>
+      </button> -->
       <!-- @if (PedidoDetail) {
       <button
         [disabled]="!this.PedidoCrudForm.valid"

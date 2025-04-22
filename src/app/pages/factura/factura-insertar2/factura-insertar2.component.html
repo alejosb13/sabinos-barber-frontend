@@ -49,8 +49,8 @@
             >
               <c-col>
                 <div class="small text-body-secondary mt-3 border p-4">
-                  <div class="d-flex align-items-center mb-4">
-                    <p class="h5">
+                  <div class="d-flex align-items-center">
+                    <p class="h5 text-info">
                       {{ j + 1 }} - {{ empFactura.cliente?.nombre }}
                       {{ empFactura.cliente?.apellido }}
                     </p>
@@ -74,6 +74,7 @@
                     <!-- <button cButton color="danger">
                     </button> -->
                   </div>
+                  <hr class="mb-4" />
                   <app-pedido-new-form
                     (FormsValues)="FormsValues($event)"
                     [Clientes]="Clientes"

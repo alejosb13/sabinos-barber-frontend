@@ -29,7 +29,7 @@ import {
 import {
   agregarProductosArray,
   PedidoCrudFormBuilder,
-  PedidoCrudForm,
+  agregarMetodoPagoArray,
 } from './utils/form';
 import { CommonModule } from '@angular/common';
 import { ValidMessagesFormComponent } from '../../valid-messages-form/valid-messages-form.component';
@@ -226,7 +226,7 @@ export class PedidoNewFormComponent {
     }
     this.PedidoCrudForm.patchValue({
       cliente_id: cliente,
-      metodo_pago_id: this.PedidoDetail.metodo_pago_id,
+      // metodo_pago_id: this.PedidoDetail.metodo_pago_id,
       servicio_id: this.PedidoDetail.servicio_id,
       pendiente: false,
       completado: false,
@@ -313,6 +313,14 @@ export class PedidoNewFormComponent {
 
   agregarProducto() {
     agregarProductosArray(this.PedidoCrudForm);
+  }
+
+  get MetodosPagoFormArray() {
+    return this.PedidoCrudForm.get('metodos_pagos') as FormArray;
+  }
+
+  agregarMetodoPago() {
+    agregarMetodoPagoArray(this.PedidoCrudForm);
   }
 
   changeStatusGratis(producGroup: any) {
@@ -453,6 +461,113 @@ export class PedidoNewFormComponent {
           precio: prod.get('precio').value,
           cantidad: prod.get('cantidad').value,
           gratis: prod.get('gratis').value,
+        })
+        .subscribe((data) => {
+          this.ProductorFormArray.at(index).patchValue({
+            pendiente: false,
+            completado: true,
+            facturtaProdutoId: data.id,
+          });
+          setTimeout(() => {
+            this.ProductorFormArray.at(index).patchValue({
+              pendiente: false,
+              completado: false,
+              editable: true,
+            });
+          }, 1000);
+        });
+    }
+  }
+
+  eliminarMetodoPago(index: number, MetodoP: any) {
+    // logger.log('index', index);
+
+    Swal.fire({
+      title: '¿Desea eliminar el producto?',
+      text: 'Una vez que acepte se eliminará el producto',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'No, quedarme aquí',
+      customClass: {
+        container: this.#colorModeService.getStoredTheme(
+          environment.SabinosTheme
+        ),
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.ProductorFormArray.at(index).patchValue({
+          pendienteEliminado: true,
+        });
+        const PRODUCTO_ID = MetodoP.get('facturtaProdutoId').value;
+        logger.log('PRODUCTO_ID', PRODUCTO_ID);
+        this._FacturaProductoService
+          .deleteFacturaProducto(PRODUCTO_ID)
+          .subscribe((data) => {
+            this.ProductorFormArray.at(index).patchValue({
+              pendienteEliminado: false,
+            });
+            this.ProductorFormArray.removeAt(index);
+            if (this.PedidoDetail.factura_producto) {
+              this.PedidoDetail.factura_producto =
+                this.PedidoDetail.factura_producto.filter(
+                  (f_producto: any) => f_producto.id != PRODUCTO_ID
+                );
+            }
+          });
+
+        // this.ActualizarProductos.emit(index);
+      }
+    });
+  }
+
+  guardarMetodoPago(index: number, MetodoP: any) {
+    // logger.log('index', index);
+    // logger.log('prod', prod.getRawValue());
+    const ACCION = MetodoP.get('editable').value;
+    this.ProductorFormArray.at(index).patchValue({
+      pendiente: true,
+      completado: false,
+      editable: false,
+    });
+
+    if (ACCION) {
+      const PRODUCTO_ID = MetodoP.get('facturtaProdutoId').value;
+      // logger.log('PRODUCTO_ID', PRODUCTO_ID);
+      // logger.log('ACCION', ACCION);
+
+      this._FacturaProductoService
+        .updateFacturaProducto(PRODUCTO_ID, {
+          factura_detalle_id: this.PedidoDetail.id,
+          producto_id: MetodoP.get('producto_id').value,
+          precio_unitario: MetodoP.get('precio_unitario').value,
+          precio: MetodoP.get('precio').value,
+          cantidad: MetodoP.get('cantidad').value,
+          gratis: MetodoP.get('gratis').value,
+        })
+        .subscribe((data) => {
+          this.ProductorFormArray.at(index).patchValue({
+            pendiente: false,
+            completado: true,
+          });
+          setTimeout(() => {
+            this.ProductorFormArray.at(index).patchValue({
+              pendiente: false,
+              completado: false,
+              editable: true,
+            });
+          }, 1000);
+        });
+    } else {
+      // logger.log('prod.get(editable).value', prod.get('editable').value);
+      this._FacturaProductoService
+        .createFacturaProducto({
+          factura_detalle_id: this.PedidoDetail.id,
+          producto_id: MetodoP.get('producto_id').value,
+          precio_unitario: MetodoP.get('precio_unitario').value,
+          precio: MetodoP.get('precio').value,
+          cantidad: MetodoP.get('cantidad').value,
+          gratis: MetodoP.get('gratis').value,
         })
         .subscribe((data) => {
           this.ProductorFormArray.at(index).patchValue({
