@@ -39,7 +39,6 @@ import { NgbActiveModal, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { Cliente } from '../../../../models/Cliente.model';
 import { LoginService } from '../../../../services/login.service';
 import { FacturaDetalleService } from '../../../../services/factura_detalle.service';
-import { FacturaProductoService } from '../../../../services/factura_producto.service';
 import { Servicios } from '../../../../models/Servicios.model';
 
 @Component({
@@ -147,64 +146,65 @@ export class FacturaDetalleFormComponent {
     logger.log('this.PedidoCrudForm.valid', this.PedidoCrudForm.valid);
 
     if (this.PedidoCrudForm.valid) {
-      Swal.fire({
-        title: '¿Desea continuar?',
-        text: 'Esta acción creara una factura.',
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, continuar',
-        cancelButtonText: 'No, quedarme aquí',
-        customClass: {
-          container: this.#colorModeService.getStoredTheme(
-            environment.SabinosTheme
-          ),
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // this._Router.navigateByUrl(`/clientes/editar/${data.id}`);
-          let valuesFrom: any = this.PedidoCrudForm.getRawValue();
-          let payloadFactura = {
-            ...valuesFrom,
-            cliente_id:
-              typeof valuesFrom.cliente_id == 'string'
-                ? valuesFrom.cliente_id
-                : Number(valuesFrom.cliente_id.id),
-            empleado_id: this.empleado_id,
-            user_id: this.User_id,
-            local_id: this.Local_id,
-          };
+      // Swal.fire({
+      //   title: '¿Desea continuar?',
+      //   text: 'Esta acción creara una factura.',
+      //   icon: 'info',
+      //   showCancelButton: true,
+      //   confirmButtonText: 'Sí, continuar',
+      //   cancelButtonText: 'No, quedarme aquí',
+      //   customClass: {
+      //     container: this.#colorModeService.getStoredTheme(
+      //       environment.SabinosTheme
+      //     ),
+      //   },
+      // }).then((result) => {
+      //   if (result.isConfirmed) {
+      // this._Router.navigateByUrl(`/clientes/editar/${data.id}`);
+      let valuesFrom: any = this.PedidoCrudForm.getRawValue();
+      let payloadFactura = {
+        ...valuesFrom,
+        cliente_id:
+          typeof valuesFrom.cliente_id == 'string'
+            ? valuesFrom.cliente_id
+            : Number(valuesFrom.cliente_id.id),
+        empleado_id: this.empleado_id,
+        user_id: this.User_id,
+        local_id: this.Local_id,
+      };
 
-          // agregar logica de llamado a la api
-          this._FacturaDetalleService
-            .createFactura(payloadFactura)
-            .subscribe((data) => {
-              logger.log('resukltado factura creada', data);
-              this.FormsValues.emit(data);
-              Swal.fire({
-                // title: ',
-                text: '!Agregado con éxito!',
-                icon: 'success',
-                confirmButtonText: 'Aceptar',
-                customClass: {
-                  container: this.#colorModeService.getStoredTheme(
-                    environment.SabinosTheme
-                  ),
-                },
-              });
-            });
-        }
-      });
-    } else {
-      Swal.mixin({
-        customClass: {
-          container: this.#colorModeService.getStoredTheme(
-            environment.SabinosTheme
-          ),
-        },
-      }).fire({
-        text: 'Complete todos los campos obligatorios',
-        icon: 'warning',
-      });
+      // agregar logica de llamado a la api
+      this._FacturaDetalleService
+        .createFactura(payloadFactura)
+        .subscribe((data) => {
+          // logger.log('resukltado factura creada', data);
+          this.FormsValues.emit(data);
+          Swal.fire({
+            // title: ',
+            text: '!Agregado con éxito!',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            customClass: {
+              container: this.#colorModeService.getStoredTheme(
+                environment.SabinosTheme
+              ),
+            },
+          });
+          this.activeModal.close();
+        });
     }
+    // });
+    // } else {
+    //   Swal.mixin({
+    //     customClass: {
+    //       container: this.#colorModeService.getStoredTheme(
+    //         environment.SabinosTheme
+    //       ),
+    //     },
+    //   }).fire({
+    //     text: 'Complete todos los campos obligatorios',
+    //     icon: 'warning',
+    //   });
+    // }
   }
 }

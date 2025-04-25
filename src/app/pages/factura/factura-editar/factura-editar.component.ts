@@ -81,7 +81,7 @@ export class FacturaEditarComponent {
   private _LoginService = inject(LoginService);
   private _ModalServiceNgB = inject(NgbModal);
   private _ActivatedRoute = inject(ActivatedRoute);
-  private _FacturaPedidoService = inject(FacturaPedidoService);
+  _FacturaPedidoService = inject(FacturaPedidoService);
   private _FacturasService = inject(FacturasService);
   private _FacturaDetalleService = inject(FacturaDetalleService);
 

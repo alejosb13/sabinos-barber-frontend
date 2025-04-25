@@ -40,6 +40,7 @@ import { FacturaDetalleService } from '../../../services/factura_detalle.service
 import Swal from 'sweetalert2';
 import { environment } from '../../../../environments/environment';
 import { numberValue } from '../../../shared/utils/constants/function-value';
+import { Factura } from '../../../models/Factura.model';
 
 @Component({
   selector: 'app-factura-insertar2',
@@ -266,6 +267,11 @@ export class FacturaInsertar2Component {
             let EmpleadoId = this.EmpleadoList.findIndex(
               (empleadoFind) => empleadoFind.id === empleado_id
             );
+
+            this._FacturaPedidoService.eliminarPorFacturaDetalleId(
+              Number(facturaDetalle.id)
+            );
+
             if (this.EmpleadoList[EmpleadoId].facturas) {
               this.EmpleadoList[EmpleadoId].facturas[0].factura_detalle =
                 this.EmpleadoList[
@@ -305,6 +311,16 @@ export class FacturaInsertar2Component {
       // );
       if (empleadoIndex !== -1 && this.EmpleadoList[empleadoIndex].facturas) {
         // Actualizamos solo la propiedad 'factura' para el empleado encontrado
+
+        // EmpleadoResponse[0].factura_detalle.forEach((factura: Factura) => {
+        //   let empleadoId = factura.empleado_id;
+        //   factura.factura_detalle?.forEach((fdetalle) => {
+        //     this._FacturaPedidoService.definirPosicion(
+        //       Number(empleadoId),
+        //       Number(fdetalle.id)
+        //     );
+        //   });
+        // });
 
         this.EmpleadoList[empleadoIndex].facturas = [...EmpleadoResponse];
         this.getClientes();

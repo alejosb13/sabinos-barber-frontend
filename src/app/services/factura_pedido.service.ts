@@ -58,6 +58,21 @@ export class FacturaPedidoService {
     // logger.log('definirPosicion', this._facturaDetalle());
   }
 
+  // Método para eliminar una posición en el array con  id_factura_detalle
+  eliminarPorFacturaDetalleId(id_factura_detalle: number) {
+    let detalles = this._facturaDetalle();
+
+    // Filtramos los que no tengan el id_factura_detalle indicado
+    let nuevosDetalles = detalles.filter(
+      (detalle) => detalle.id_factura_detalle !== id_factura_detalle
+    );
+
+    // Actualizamos el signal con el nuevo array
+    this._facturaDetalle.set(nuevosDetalles);
+
+    // logger.log('eliminarPorFacturaDetalleId', this._facturaDetalle());
+  }
+
   // Método para actualizar total_servicio sin modificar los IDs
   actualizarTotalServicio(id_factura_detalle: number, nuevoTotal: number) {
     let detalles = this._facturaDetalle().map((detalle) =>

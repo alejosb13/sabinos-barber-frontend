@@ -62,7 +62,7 @@ export interface PedidoMetodoPagoForm {
   completado: FormControl<boolean | null>;
   editable: FormControl<boolean | null>;
   pendienteEliminado: FormControl<boolean | null>;
-  facturtaProdutoId: FormControl<boolean | null>;
+  factura_detalle_metodo_pago_id: FormControl<number | null>;
 }
 
 const crearProductoArrayForm = (): FormGroup<PedidoProductoForm> => {
@@ -104,7 +104,7 @@ const crearMetodoPagoArrayForm = (): FormGroup<PedidoMetodoPagoForm> => {
     completado: new FormControl(false),
     editable: new FormControl(false),
     pendienteEliminado: new FormControl(false),
-    facturtaProdutoId: new FormControl(null),
+    factura_detalle_metodo_pago_id: new FormControl(null),
   });
 };
 

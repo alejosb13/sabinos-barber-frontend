@@ -1,10 +1,10 @@
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
-import { PedidoCrudValidators, validarProductosCargados } from './validations';
+import { FormGroup, FormControl } from '@angular/forms';
+import { PedidoCrudValidators } from './validations';
 
 export interface FacturaDetalleCrudForm {
   cliente_id: FormControl<number | null>;
   servicio_id: FormControl<number | null>;
-  metodo_pago_id: FormControl<number | null>;
+  // metodo_pago_id: FormControl<number | null>;
 }
 
 export const FacturaDetalleCrudFormBuilder = () =>
@@ -13,7 +13,7 @@ export const FacturaDetalleCrudFormBuilder = () =>
     servicio_id: new FormControl(null, [
       ...PedidoCrudValidators['servicio_id'],
     ]),
-    metodo_pago_id: new FormControl(null, [
-      ...PedidoCrudValidators['metodo_pago_id'],
-    ]),
+    // metodo_pago_id: new FormControl(null, [
+    //   ...PedidoCrudValidators['metodo_pago_id'],
+    // ]),
   });

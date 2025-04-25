@@ -4,7 +4,6 @@ import {
   inject,
   Input,
   Output,
-  signal,
   SimpleChanges,
 } from '@angular/core';
 
@@ -42,29 +41,20 @@ import logger from 'src/app/shared/utils/logger';
 import { environment } from 'src/environments/environment';
 import { DirectivesModule } from '../../../directivas/directives.module';
 import { PedidoService } from '../../../../services/pedido.service';
-import { Factura } from '../../../../models/Factura.model';
-import { LocalesService } from '../../../../services/locales.service';
+
 import {
-  catchError,
   debounceTime,
   distinctUntilChanged,
   filter,
   map,
   Observable,
-  of,
   OperatorFunction,
   Subject,
-  switchMap,
-  takeUntil,
-  tap,
 } from 'rxjs';
-import { Local } from '../../../../models/Local.model';
 import { Producto } from '../../../../models/Producto.model';
 import { ProductosService } from '../../../../services/productos.service';
-import { MetodoPagoService } from '../../../../services/metodos_pago.service';
 import { MetodoPago } from '../../../../models/MetodoPago.model';
-import { IconComponent, IconDirective } from '@coreui/icons-angular';
-import { ParametersUrl } from '../../../../models/Parameter.model';
+import { IconDirective } from '@coreui/icons-angular';
 import { ClientesService } from '../../../../services/clientes.service';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { Cliente } from '../../../../models/Cliente.model';
@@ -113,6 +103,7 @@ export class PedidoNewFormComponent {
   @Input() MetodosPagos: MetodoPago[] = [];
   @Input() Productos: Producto[] = [];
   @Input() Servicios: Servicios[] = [];
+  @Input() EmpleadoId!: number;
 
   @Output() FormsValues = new EventEmitter<any>();
   @Output() ActualizarProductos = new EventEmitter<any>();
@@ -126,15 +117,30 @@ export class PedidoNewFormComponent {
   ngOnInit(): void {
     this.changeCantidad(this.PedidoCrudForm);
 
-    this.PedidoCrudForm.valueChanges.subscribe((value) => {
-      // logger.log('value', value);
-      this.getValueFacturaTotal();
-      // console.log('Total de precios:', totalPrecio);
+    // this.PedidoCrudForm.valueChanges.subscribe((value) => {
+    //   // logger.log('value', value);
+    //   // console.log('Total de precios:', totalPrecio);
+    // });
+    this.PedidoCrudForm.get('servicio_id')?.valueChanges.subscribe((data) => {
+      let dataService = this.Servicios.find((servicio) => servicio.id == data);
+      this._FacturaPedidoService.actualizarTotalServicio(
+        Number(this.PedidoDetail.id),
+        Number(dataService?.precio)
+      );
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // logger.log('changes', changes);
+    // logger.log('facturaDetalle', this._FacturaPedidoService.facturaDetalle());
+    // logger.log('facturaDetalle', changes);
+
+    if (this.EmpleadoId) {
+      this._FacturaPedidoService.definirPosicion(
+        Number(this.EmpleadoId),
+        Number(this.PedidoDetail.id)
+      );
+    }
+
     if (this.PedidoDetail) this.setFormValues();
   }
 
@@ -153,6 +159,17 @@ export class PedidoNewFormComponent {
     controlName: string
   ): ValidationErrors | null {
     const gastoFormGroup = this.ProductorFormArray.at(index) as FormGroup;
+    const control = gastoFormGroup.get(controlName);
+    return control && control.touched && control.invalid
+      ? control.errors
+      : null;
+  }
+
+  getMetodoPagoFormControlError(
+    index: number,
+    controlName: string
+  ): ValidationErrors | null {
+    const gastoFormGroup = this.MetodosPagoFormArray.at(index) as FormGroup;
     const control = gastoFormGroup.get(controlName);
     return control && control.touched && control.invalid
       ? control.errors
@@ -224,6 +241,54 @@ export class PedidoNewFormComponent {
         emitEvent: true,
       });
     }
+
+    if (
+      this.PedidoDetail.metodos_pago_detalle &&
+      this.PedidoDetail.metodos_pago_detalle.length > 0
+    ) {
+      const MetodosPagos = this.PedidoDetail.metodos_pago_detalle.map(
+        (item) =>
+          // new FormGroup<PedidoMetodoPagoForm>({
+          //   metodo_pago_id: new FormControl(null, [
+          //     ...PedidoCrudValidators['metodo_pago_id'],
+          //   ]),
+          //   monto: new FormControl({ disabled: false, value: 0 }, [
+          //     ...PedidoCrudValidators['precio'],
+          //   ]),
+          //   pendiente: new FormControl(false),
+          //   completado: new FormControl(false),
+          //   editable: new FormControl(false),
+          //   pendienteEliminado: new FormControl(false),
+          //   facturtaProdutoId: new FormControl(null),
+          // })
+          new FormGroup(
+            {
+              metodo_pago_id: new FormControl(
+                Number(item.metodo_pago_id) ?? null,
+                [...PedidoCrudValidators['metodo_pago_id']]
+              ),
+              monto: new FormControl(Number(item.monto) ?? null, [
+                ...PedidoCrudValidators['precio'],
+              ]),
+              pendiente: new FormControl(false),
+              completado: new FormControl(false),
+              editable: new FormControl(true),
+              pendienteEliminado: new FormControl(false),
+              factura_detalle_metodo_pago_id: new FormControl(Number(item.id)),
+            },
+            { updateOn: 'change' }
+          )
+      );
+
+      // Reemplazar el FormArray con los nuevos valores
+      this.PedidoCrudForm.setControl(
+        'metodos_pagos',
+        new FormArray(MetodosPagos),
+        {
+          emitEvent: true,
+        }
+      );
+    }
     this.PedidoCrudForm.patchValue({
       cliente_id: cliente,
       // metodo_pago_id: this.PedidoDetail.metodo_pago_id,
@@ -244,13 +309,6 @@ export class PedidoNewFormComponent {
     );
 
     // logger.log('this.PedidoCrudForm', this.PedidoCrudForm.value);
-    this.PedidoCrudForm.get('servicio_id')?.valueChanges.subscribe((data) => {
-      let dataService = this.Servicios.find((servicio) => servicio.id == data);
-      this._FacturaPedidoService.actualizarTotalServicio(
-        Number(this.PedidoDetail.id),
-        Number(dataService?.precio)
-      );
-    });
   }
 
   getValueFacturaTotal() {
@@ -316,6 +374,11 @@ export class PedidoNewFormComponent {
   }
 
   get MetodosPagoFormArray() {
+    // console.log(
+    //   'MetodosPagoFormArray',
+    //   this.PedidoCrudForm.get('metodos_pagos')
+    // );
+
     return this.PedidoCrudForm.get('metodos_pagos') as FormArray;
   }
 
@@ -374,6 +437,13 @@ export class PedidoNewFormComponent {
 
   eliminarProducto(index: number, prod: any) {
     // logger.log('index', index);
+    // logger.log('prod', prod);
+    const PRODUCTO_ID = prod.get('facturtaProdutoId').value;
+
+    if (!PRODUCTO_ID) {
+      this.ProductorFormArray.removeAt(index);
+      return;
+    }
 
     Swal.fire({
       title: '¿Desea eliminar el producto?',
@@ -381,7 +451,7 @@ export class PedidoNewFormComponent {
       icon: 'info',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'No, quedarme aquí',
+      cancelButtonText: 'No',
       customClass: {
         container: this.#colorModeService.getStoredTheme(
           environment.SabinosTheme
@@ -392,7 +462,7 @@ export class PedidoNewFormComponent {
         this.ProductorFormArray.at(index).patchValue({
           pendienteEliminado: true,
         });
-        const PRODUCTO_ID = prod.get('facturtaProdutoId').value;
+
         logger.log('PRODUCTO_ID', PRODUCTO_ID);
         this._FacturaProductoService
           .deleteFacturaProducto(PRODUCTO_ID)
@@ -407,6 +477,7 @@ export class PedidoNewFormComponent {
                   (f_producto: any) => f_producto.id != PRODUCTO_ID
                 );
             }
+            this.getValueFacturaTotal();
           });
 
         // this.ActualizarProductos.emit(index);
@@ -449,6 +520,7 @@ export class PedidoNewFormComponent {
               completado: false,
               editable: true,
             });
+            this.getValueFacturaTotal();
           }, 1000);
         });
     } else {
@@ -474,6 +546,7 @@ export class PedidoNewFormComponent {
               completado: false,
               editable: true,
             });
+            this.getValueFacturaTotal();
           }, 1000);
         });
     }
@@ -496,22 +569,24 @@ export class PedidoNewFormComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.ProductorFormArray.at(index).patchValue({
+        this.MetodosPagoFormArray.at(index).patchValue({
           pendienteEliminado: true,
         });
-        const PRODUCTO_ID = MetodoP.get('facturtaProdutoId').value;
-        logger.log('PRODUCTO_ID', PRODUCTO_ID);
-        this._FacturaProductoService
-          .deleteFacturaProducto(PRODUCTO_ID)
+        const FD_METODO_PAGO_ID = MetodoP.get(
+          'factura_detalle_metodo_pago_id'
+        ).value;
+        logger.log('PRODUCTO_ID', FD_METODO_PAGO_ID);
+        this._FacturaDetalleService
+          .deleteMetodoPagoFactura(FD_METODO_PAGO_ID)
           .subscribe((data) => {
-            this.ProductorFormArray.at(index).patchValue({
+            this.MetodosPagoFormArray.at(index).patchValue({
               pendienteEliminado: false,
             });
-            this.ProductorFormArray.removeAt(index);
+            this.MetodosPagoFormArray.removeAt(index);
             if (this.PedidoDetail.factura_producto) {
-              this.PedidoDetail.factura_producto =
-                this.PedidoDetail.factura_producto.filter(
-                  (f_producto: any) => f_producto.id != PRODUCTO_ID
+              this.PedidoDetail.metodos_pago_detalle =
+                this.PedidoDetail.metodos_pago_detalle?.filter(
+                  (f_producto: any) => f_producto.id != FD_METODO_PAGO_ID
                 );
             }
           });
@@ -525,33 +600,34 @@ export class PedidoNewFormComponent {
     // logger.log('index', index);
     // logger.log('prod', prod.getRawValue());
     const ACCION = MetodoP.get('editable').value;
-    this.ProductorFormArray.at(index).patchValue({
+    this.MetodosPagoFormArray.at(index).patchValue({
       pendiente: true,
       completado: false,
       editable: false,
     });
 
     if (ACCION) {
-      const PRODUCTO_ID = MetodoP.get('facturtaProdutoId').value;
+      const FD_METODO_PAGO_ID = MetodoP.get(
+        'factura_detalle_metodo_pago_id'
+      ).value;
       // logger.log('PRODUCTO_ID', PRODUCTO_ID);
       // logger.log('ACCION', ACCION);
-
-      this._FacturaProductoService
-        .updateFacturaProducto(PRODUCTO_ID, {
-          factura_detalle_id: this.PedidoDetail.id,
-          producto_id: MetodoP.get('producto_id').value,
-          precio_unitario: MetodoP.get('precio_unitario').value,
-          precio: MetodoP.get('precio').value,
-          cantidad: MetodoP.get('cantidad').value,
-          gratis: MetodoP.get('gratis').value,
-        })
+      this._FacturaDetalleService
+        .editarMetodoPagoFactura(
+          {
+            factura_detalle_id: Number(this.PedidoDetail.id),
+            metodo_pago_id: MetodoP.get('metodo_pago_id').value,
+            monto: MetodoP.get('monto').value,
+          },
+          FD_METODO_PAGO_ID
+        )
         .subscribe((data) => {
-          this.ProductorFormArray.at(index).patchValue({
+          this.MetodosPagoFormArray.at(index).patchValue({
             pendiente: false,
             completado: true,
           });
           setTimeout(() => {
-            this.ProductorFormArray.at(index).patchValue({
+            this.MetodosPagoFormArray.at(index).patchValue({
               pendiente: false,
               completado: false,
               editable: true,
@@ -560,23 +636,20 @@ export class PedidoNewFormComponent {
         });
     } else {
       // logger.log('prod.get(editable).value', prod.get('editable').value);
-      this._FacturaProductoService
-        .createFacturaProducto({
-          factura_detalle_id: this.PedidoDetail.id,
-          producto_id: MetodoP.get('producto_id').value,
-          precio_unitario: MetodoP.get('precio_unitario').value,
-          precio: MetodoP.get('precio').value,
-          cantidad: MetodoP.get('cantidad').value,
-          gratis: MetodoP.get('gratis').value,
+      this._FacturaDetalleService
+        .createMetodoPagoFactura({
+          factura_detalle_id: Number(this.PedidoDetail.id),
+          metodo_pago_id: MetodoP.get('metodo_pago_id').value,
+          monto: MetodoP.get('monto').value,
         })
         .subscribe((data) => {
-          this.ProductorFormArray.at(index).patchValue({
+          this.MetodosPagoFormArray.at(index).patchValue({
             pendiente: false,
             completado: true,
             facturtaProdutoId: data.id,
           });
           setTimeout(() => {
-            this.ProductorFormArray.at(index).patchValue({
+            this.MetodosPagoFormArray.at(index).patchValue({
               pendiente: false,
               completado: false,
               editable: true,

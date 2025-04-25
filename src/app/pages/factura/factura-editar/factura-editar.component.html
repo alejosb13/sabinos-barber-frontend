@@ -8,18 +8,22 @@
     <c-tabs-content>
       <c-tab-panel class="p-3" itemKey="Empleado">
         <c-card-header>
-          <p class="h3">Facturación {{ Factura.empleado?.nombre_completo }}</p>
-          <!-- Botón principal (visible en la parte normal de la pantalla) -->
-          <!-- Botón principal -->
-          <!-- <div class="scroll-info" *ngIf="scrollPosition <= 70">
-            <button
-              class="btn btn-primary"
-              (click)="agregarFactura(Factura.empleado_id)"
-            >
-              <svg cIcon height="18" name="cil-plus"></svg>
-              Agregar Factura
-            </button>
-          </div> -->
+          <div
+            class="w-100 d-flex justify-content-between align-items-center flex-wrap mb-3"
+          >
+            <p class="h3">
+              Facturación {{ Factura.empleado?.nombre_completo }}
+            </p>
+
+            <h4>
+              Facturado :
+              {{
+                _FacturaPedidoService.sumarTotalesPorEmpleado(
+                  Factura.empleado_id
+                ) | currency : "ARS"
+              }}
+            </h4>
+          </div>
         </c-card-header>
         <c-card-body class="pt-4">
           <c-container [fluid]="true" class="px-0">

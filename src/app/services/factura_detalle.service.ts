@@ -76,4 +76,41 @@ export class FacturaDetalleService {
       }
     );
   }
+
+  createMetodoPagoFactura(metodoPago: {
+    factura_detalle_id: number;
+    metodo_pago_id: number;
+    monto: number;
+  }): Observable<any> {
+    return this.http.post<any>(
+      `${URL_Factura}/metodo_pago`,
+      { ...metodoPago },
+      {
+        responseType: 'json',
+      }
+    );
+  }
+
+  editarMetodoPagoFactura(
+    metodoPago: {
+      factura_detalle_id: number;
+      metodo_pago_id: number;
+      monto: number;
+    },
+    Id: number
+  ): Observable<any> {
+    return this.http.put<any>(
+      `${URL_Factura}/metodo_pago/${Id}`,
+      { ...metodoPago },
+      {
+        responseType: 'json',
+      }
+    );
+  }
+
+  deleteMetodoPagoFactura(id: number): Observable<any> {
+    return this.http.delete<any>(`${URL_Factura}/metodo_pago/${id}`, {
+      responseType: 'json',
+    });
+  }
 }
