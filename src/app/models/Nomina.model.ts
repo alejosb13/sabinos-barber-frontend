@@ -14,3 +14,16 @@ export interface Nomina {
   created_at?: Date;
   updated_at?: Date;
 }
+
+export interface NominaEmpleado {
+  nombre: string;
+  porcentaje: null;
+  servicios: ServicioNomina[];
+}
+interface ServicioNomina {
+  id: number;
+  descripcion: string;
+  precio: number;
+  precio_nomina: null;
+  cantidad: number;
+}

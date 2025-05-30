@@ -13,10 +13,18 @@ import { HelpersService } from '../../../services/helpers.service';
 import { NominaCrudFormComponent } from '../../../shared/components/forms/nomina-crud-form/nomina-crud-form.component';
 import { NominaService } from '../../../services/nomina.service';
 import { Nomina } from '../../../models/Nomina.model';
+import { NominaSeleccionEmpleadoFormComponent } from '../../../shared/components/forms/nomina-seleccion-empleado-form/nomina-seleccion-empleado-form.component';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-nomina-insertar',
   standalone: true,
-  imports: [CardModule, GridModule, NominaCrudFormComponent],
+  imports: [
+    CardModule,
+    GridModule,
+    NominaCrudFormComponent,
+    NominaSeleccionEmpleadoFormComponent,
+    CommonModule,
+  ],
   templateUrl: './nomina-insertar.component.html',
   styleUrl: './nomina-insertar.component.scss',
 })
@@ -24,11 +32,12 @@ export class NominaInsertarComponent {
   private destruir$: Subject<void> = new Subject<void>();
 
   #colorModeService = inject(ColorModeService);
-  private _NominaService = inject(NominaService);
+  _NominaService = inject(NominaService);
   private _Router = inject(Router);
   private _HelpersService = inject(HelpersService);
 
   loader: boolean = true;
+  NominaEmpleadoSelecion: any = null;
 
   FormsValues(Nomina: Nomina) {
     logger.log(Nomina);
@@ -58,6 +67,11 @@ export class NominaInsertarComponent {
             this._Router.navigateByUrl(`/nominas/editar/${response.id}`);
           });
       });
+  }
+
+  triggerNominaEmpleado(Nomina: any) {
+    logger.log('triggerNominaEmpleado nominaevent', Nomina);
+    this.NominaEmpleadoSelecion = Nomina;
   }
 
   ngOnDestroy(): void {

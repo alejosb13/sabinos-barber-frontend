@@ -7,6 +7,8 @@ export interface Empleado {
   dni: string;
   local_id: number;
 
+  porcentaje: number;
+
   facturas?: Factura[];
 
   estado?: number;

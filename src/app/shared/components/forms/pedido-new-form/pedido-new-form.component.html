@@ -99,6 +99,45 @@
         [messages]="PedidoCrudErrorMessages['servicio_id']"
       ></app-valid-messages-form>
     </c-col>
+    <c-col
+      [md]="1"
+      class="mb-3 d-flex justify-content-center flex-column align-items-center text-center"
+    >
+      <label cLabel for="gratis_check">¿Gratis?</label>
+      <c-form-check switch sizing="lg">
+        <input
+          cFormCheckInput
+          type="checkbox"
+          formControlName="servicio_gratis"
+          id="gratis_check"
+          [ngClass]="{
+            'is-invalid':
+              getControl('servicio_gratis').invalid &&
+              getControl('servicio_gratis').touched,
+            'is-valid': getControl('servicio_gratis').valid
+          }"
+          class="pointer"
+        />
+      </c-form-check>
+      <span class="price"></span>
+      <!-- <div cFormFloating>
+                <input
+                  cFormControl
+                  id="gratis_{{ i }}"
+                  formControlName="gratis"
+                  type="text"
+                  placeholder="gratis"
+                  (keyup)="changeCantidad(prod)"
+                  (change)="changeCantidad(prod)"
+                  appOnlyNumbers
+                />
+                <label cLabel for="gratis_{{ i }}">Cantidad</label>
+              </div> -->
+      <app-valid-messages-form
+        [errors]="getControlError('servicio_gratis')"
+        [messages]="PedidoCrudErrorMessages['servicio_gratis']"
+      ></app-valid-messages-form>
+    </c-col>
     <!-- <c-col [md]="4">
       <div cFormFloating>
         <select

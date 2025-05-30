@@ -229,62 +229,125 @@ export class FacturaInsertar2Component {
       });
   }
 
-  eliminarFacturaDetalle(facturaDetalle: FacturaDetalle, empleado_id: number) {
-    Swal.fire({
-      title: '¿Desea eliminar la factura?',
-      text: 'Una vez que acepte se eliminará la factura',
-      icon: 'info',
+  async eliminarFacturaDetalle(
+    facturaDetalle: FacturaDetalle,
+    empleado_id: number
+  ) {
+    const { value: formValues } = await Swal.fire({
+      title: 'Confirmación',
+      html: `
+        <div class="mb-3">
+          <div class="mb-3 text-start">
+            <label for="swal-password" class="form-label">Contraseña</label>
+            <input
+              id="swal-password"
+              type="password"
+              class="swal2-input form-control form-control-sm m-0"
+              placeholder="Contraseña"
+              maxlength="10"
+            />
+          </div>
+          <div class="mb-3 text-start">
+            <label for="swal-textarea" class="form-label">Motivo de eliminación</label>
+            <textarea
+              id="swal-textarea"
+              class="swal2-textarea form-control form-control-sm m-0"
+              placeholder="Escribe un motivo..."
+            ></textarea>
+          </div>
+        </div>
+      `,
+      focusConfirm: false,
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'No, quedarme aquí',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Eliminar',
       customClass: {
         container: this.#colorModeService.getStoredTheme(
           environment.SabinosTheme
         ),
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this._HelpersService.loaderSweetAlert({
-          title: 'Eliminando',
-          text: 'Esto puede demorar un momento.',
-        });
-        this._FacturaDetalleService
-          .deleteFactura(Number(facturaDetalle.id))
-          // .pipe(delay(3000))
-          .pipe(takeUntil(this.destruir$))
-          .subscribe((data: any) => {
-            Swal.mixin({
-              customClass: {
-                container: this.#colorModeService.getStoredTheme(
-                  environment.SabinosTheme
-                ),
-              },
-            }).fire({
-              text: 'Factura eliminada',
-              icon: 'success',
-            });
+      preConfirm: () => {
+        const password = (
+          document.getElementById('swal-password') as HTMLInputElement
+        ).value;
+        const comentario = (
+          document.getElementById('swal-textarea') as HTMLTextAreaElement
+        ).value;
 
-            let EmpleadoId = this.EmpleadoList.findIndex(
-              (empleadoFind) => empleadoFind.id === empleado_id
-            );
+        if (!password || !comentario) {
+          Swal.showValidationMessage('Ambos campos son obligatorios');
+          return;
+        }
 
-            this._FacturaPedidoService.eliminarPorFacturaDetalleId(
-              Number(facturaDetalle.id)
-            );
-
-            if (this.EmpleadoList[EmpleadoId].facturas) {
-              this.EmpleadoList[EmpleadoId].facturas[0].factura_detalle =
-                this.EmpleadoList[
-                  EmpleadoId
-                ].facturas[0].factura_detalle?.filter(
-                  (facturaDFilter) => facturaDFilter.id !== facturaDetalle.id
-                );
-            }
-            // this.Clientes = [...data];
-            // logger.log(data);
-          });
-      }
+        return { password, comentario };
+      },
     });
+
+    if (formValues) {
+      this._HelpersService.loaderSweetAlert({
+        title: 'Eliminando',
+        text: 'Esto puede demorar un momento.',
+      });
+      this._FacturaDetalleService
+        .deleteFactura(Number(facturaDetalle.id), {
+          password: formValues.password,
+          comentario: formValues.comentario,
+        })
+        // .pipe(delay(3000))
+        .pipe(takeUntil(this.destruir$))
+        .subscribe((data: any) => {
+          Swal.mixin({
+            customClass: {
+              container: this.#colorModeService.getStoredTheme(
+                environment.SabinosTheme
+              ),
+            },
+          }).fire({
+            text: 'Factura eliminada',
+            icon: 'success',
+          });
+
+          let EmpleadoId = this.EmpleadoList.findIndex(
+            (empleadoFind) => empleadoFind.id === empleado_id
+          );
+
+          this._FacturaPedidoService.eliminarPorFacturaDetalleId(
+            Number(facturaDetalle.id)
+          );
+
+          if (this.EmpleadoList[EmpleadoId].facturas) {
+            this.EmpleadoList[EmpleadoId].facturas[0].factura_detalle =
+              this.EmpleadoList[EmpleadoId].facturas[0].factura_detalle?.filter(
+                (facturaDFilter) => facturaDFilter.id !== facturaDetalle.id
+              );
+          }
+          // this.Clientes = [...data];
+          // logger.log(data);
+        });
+      // Swal.fire({
+      //   icon: 'success',
+      //   title: 'Datos recibidos',
+      //   html: `<p><strong>Contraseña:</strong> ${formValues.password}</p>
+      //        <p><strong>Comentario:</strong> ${formValues.comentario}</p>`,
+      // });
+    }
+    // Swal.fire({
+    //   title: '¿Desea eliminar la factura?',
+    //   text: 'Una vez que acepte se eliminará la factura',
+    //   icon: 'info',
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Sí, eliminar',
+    //   cancelButtonText: 'No, quedarme aquí',
+    //   customClass: {
+    //     container: this.#colorModeService.getStoredTheme(
+    //       environment.SabinosTheme
+    //     ),
+    //   },
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+
+    //   }
+    // });
   }
 
   agregarFactura(empleadiId: any) {

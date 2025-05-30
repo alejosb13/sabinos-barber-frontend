@@ -19,6 +19,8 @@ export class NominaService {
   private http = inject(HttpClient);
   private _Helpers = inject(HelpersService);
 
+  public LoadingCrud = false;
+
   // public methods
   getNominas(parametersURL: ParametersUrl): Observable<any> {
     let URL = parametersURL.link ? parametersURL.link : URL_NOMINA;
@@ -57,6 +59,20 @@ export class NominaService {
 
   deleteNomina(id: number): Observable<any> {
     return this.http.delete<any>(`${URL_NOMINA}/${id}`, {
+      responseType: 'json',
+    });
+  }
+
+  getNominaEmpleado(
+    empliado_id: number,
+    parametersURL: ParametersUrl
+  ): Observable<any> {
+    let URL = parametersURL.link
+      ? parametersURL.link
+      : `${URL_NOMINA}/empleado/${empliado_id}`;
+    // logger.log(URL, parametersURL);
+    return this.http.get<any>(URL, {
+      params: this._Helpers.formatParameters(parametersURL),
       responseType: 'json',
     });
   }

@@ -4,6 +4,7 @@ import { PedidoCrudValidators, validarProductosCargados } from './validations';
 export interface PedidoCrudForm {
   cliente_id: FormControl<number | null>;
   servicio_id: FormControl<number | null>;
+  servicio_gratis: FormControl<boolean | null>;
   // metodo_pago_id: FormControl<number | null>;
 
   metodos_pagos: FormArray<FormGroup<PedidoMetodoPagoForm>>;
@@ -24,6 +25,9 @@ export const PedidoCrudFormBuilder = () =>
         [...PedidoCrudValidators['cliente_id']]
       ),
       servicio_id: new FormControl(null, [
+        ...PedidoCrudValidators['servicio_id'],
+      ]),
+      servicio_gratis: new FormControl(null, [
         ...PedidoCrudValidators['servicio_id'],
       ]),
       // metodo_pago_id: new FormControl(null, [

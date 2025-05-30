@@ -24,17 +24,15 @@ import {
 import { NominaCrudFormBuilder } from './utils/form';
 import { CommonModule } from '@angular/common';
 import { ValidMessagesFormComponent } from '../../valid-messages-form/valid-messages-form.component';
-import { NominaCrudErrorMessages } from './utils/validations';
-import Swal from 'sweetalert2';
+import { NominaSeleccionCrudErrorMessages } from './utils/validations';
 import logger from 'src/app/shared/utils/logger';
-import { environment } from 'src/environments/environment';
 import { DirectivesModule } from '../../../directivas/directives.module';
 import { EmpleadosService } from 'src/app/services/empleados.service';
 import { Empleado } from 'src/app/models/Empleado.model';
 import { LocalesService } from '../../../../services/locales.service';
 import { Local } from '../../../../models/Local.model';
 import { Subject, takeUntil } from 'rxjs';
-import { Nomina } from '../../../../models/Nomina.model';
+import { Nomina, NominaEmpleado } from '../../../../models/Nomina.model';
 import { DateRangePickerComponent } from '../../date-range-picker/date-range-picker.component';
 import {
   END_DATE,
@@ -47,7 +45,7 @@ import { LoginService } from '../../../../services/login.service';
 import { NominaService } from '../../../../services/nomina.service';
 
 @Component({
-  selector: 'app-nomina-crud-form',
+  selector: 'app-nomina-seleccion-empleado-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -63,12 +61,12 @@ import { NominaService } from '../../../../services/nomina.service';
     SpinnerModule,
     DateRangePickerComponent,
   ],
-  templateUrl: './nomina-crud-form.component.html',
-  styleUrl: './nomina-crud-form.component.scss',
+  templateUrl: './nomina-seleccion-empleado-form.component.html',
+  styleUrl: './nomina-seleccion-empleado-form.component.scss',
 })
-export class NominaCrudFormComponent {
+export class NominaSeleccionEmpleadoFormComponent {
   NominaCrudForm = NominaCrudFormBuilder();
-  readonly NominaCrudErrorMessages = NominaCrudErrorMessages;
+  readonly NominaSeleccionCrudErrorMessages = NominaSeleccionCrudErrorMessages;
 
   private destruir$: Subject<void> = new Subject<void>();
 
@@ -79,6 +77,7 @@ export class NominaCrudFormComponent {
   loadingEmpleados: boolean = false;
   Empleados: Empleado[] = [];
   EmpleadoId: number = 0;
+  NominaEmpleado!: NominaEmpleado;
 
   #colorModeService = inject(ColorModeService);
   private _EmpleadosService = inject(EmpleadosService);
@@ -89,39 +88,28 @@ export class NominaCrudFormComponent {
   @Input() Nomina!: Nomina;
   @Output() FormsValues = new EventEmitter<any>();
 
-  Empleadoes: Empleado[] = [];
-
   loadingLocales = false;
   Locales: Local[] = [];
 
-  loadingNomina: boolean = false;
-
-  constructor() {
-    this.changeSesionStorage();
-  }
+  // constructor() {
+  //   this.changeSesionStorage();
+  // }
 
   ngOnInit(): void {
     this.getEmpleados();
     this.changeEmpleado();
+    this.changeComentario();
     this.getLocales();
   }
 
-  changeSesionStorage() {
-    effect(() => {
-      this._LoginService.getUserData();
-      this.formInit();
-    });
-  }
+  // changeSesionStorage() {
+  //   effect(() => {
+  //     this._LoginService.getUserData();
+  //     this.formInit();
+  //   });
+  // }
 
-  formInit() {
-    if (this.Nomina) {
-      this.setFormValues();
-    } else {
-      // this.NominaCrudForm.controls.local_id.patchValue(
-      //   Number(this._LoginService.getUserData().local.id)
-      // );
-    }
-  }
+  // formInit() {}
 
   getControlError(name: string): ValidationErrors | null {
     const control = this.NominaCrudForm.controls
@@ -137,9 +125,17 @@ export class NominaCrudFormComponent {
     return this.NominaCrudForm.get(name) as FormControl;
   }
 
+  changeComentario() {
+    this.getControl('descripcion').valueChanges.subscribe((descripcion) => {
+      if (this.NominaEmpleado) {
+        this.sendValueFom();
+      }
+    });
+  }
+
   changeEmpleado() {
     this.getControl('empleado_id').valueChanges.subscribe((idEmpleado) => {
-      this.loadingNomina = true;
+      this._NominaService.LoadingCrud = true;
       logger.log('idEmpleado', idEmpleado);
 
       this.EmpleadoId = idEmpleado;
@@ -192,53 +188,30 @@ export class NominaCrudFormComponent {
       .getNominaEmpleado(this.EmpleadoId, {
         estado: 1,
         disablePaginate: '1',
-
         link: null,
         fecha_inicio: formatearFecha(this.Fecha.startDate, 'YYYY-MM-DD'),
         fecha_fin: formatearFecha(this.Fecha.endDate, 'YYYY-MM-DD'),
       })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
-      .subscribe((facturas: Factura[]) => {
-        logger.log('data nomina', facturas);
-        this.loadingNomina = false;
-        // const sumaTotal = facturas.reduce(
-        //   (acumulador, item) => acumulador + item.total,
-        //   0
-        // );
+      .subscribe((nominaEmpleado: NominaEmpleado) => {
+        logger.log('data nomina', nominaEmpleado);
 
-        // logger.log(sumaTotal);
-        // this.NominaCrudForm.patchValue({
-        //   monto_facturado: sumaTotal,
-        // });
+        this._NominaService.LoadingCrud = false;
+        this.NominaEmpleado = nominaEmpleado;
+        this.sendValueFom();
       });
   }
 
   sendValueFom() {
-    if (this.NominaCrudForm.valid) {
-      // const USER_DATA = this._LoginService.userData();
-      const NOMINA = {
-        // ...this.NominaCrudForm.value,
-        ...this.NominaCrudForm.getRawValue(),
-        total: this.getControl('total').value,
-        // adicional: this.NominaCrudForm.value.adicional ? '1' : '0',
-        // local_id: USER_DATA.user.local_id,
-      };
-      logger.log(NOMINA);
-
-      this.FormsValues.emit(NOMINA);
-    } else {
-      Swal.mixin({
-        customClass: {
-          container: this.#colorModeService.getStoredTheme(
-            environment.SabinosTheme
-          ),
-        },
-      }).fire({
-        text: 'Complete todos los campos obligatorios',
-        icon: 'warning',
-      });
-    }
+    let nominaSelection = this.NominaCrudForm.getRawValue();
+    this.FormsValues.emit({
+      empleado: this.EmpleadoId,
+      comentario: nominaSelection.descripcion,
+      fecha_inicio: formatearFecha(this.Fecha.startDate, 'YYYY-MM-DD'),
+      fecha_fin: formatearFecha(this.Fecha.endDate, 'YYYY-MM-DD'),
+      nomina_empleado: this.NominaEmpleado,
+    });
   }
 
   getLocales() {
@@ -260,8 +233,8 @@ export class NominaCrudFormComponent {
 
   handleDate(event: { endDate: dayjs.Dayjs; startDate: dayjs.Dayjs }) {
     logger.log('range', event);
-    this.getNominaEmpleado();
     this.Fecha = event;
+    this.getNominaEmpleado();
   }
 
   ngOnDestroy(): void {

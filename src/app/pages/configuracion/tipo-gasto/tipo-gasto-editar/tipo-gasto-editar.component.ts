@@ -70,7 +70,7 @@ export class TipoGastoEditarComponent {
           },
         })
           .fire({
-            text: 'Tipo de pago modificado con éxito',
+            text: 'Tipo de gasto modificado con éxito',
             icon: 'success',
           })
           .then((result) => {

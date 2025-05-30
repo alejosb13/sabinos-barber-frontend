@@ -7,7 +7,20 @@
       <c-row class="mb-4">
         <c-col>
           <div class="small text-body-secondary mt-3">
-            <app-nomina-crud-form (FormsValues)="FormsValues($event)" />
+            <!-- <app-nomina-crud-form (FormsValues)="FormsValues($event)" /> -->
+            <app-nomina-seleccion-empleado-form
+              (FormsValues)="triggerNominaEmpleado($event)"
+            />
+
+            @if(_NominaService.LoadingCrud){
+            <div>
+              <h3>Cargando</h3>
+            </div>
+            } @if(!_NominaService.LoadingCrud && NominaEmpleadoSelecion){
+            <div>
+              <h3>{{ NominaEmpleadoSelecion | json }}</h3>
+            </div>
+            }
           </div>
         </c-col>
       </c-row>

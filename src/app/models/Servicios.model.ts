@@ -3,6 +3,7 @@ export interface Servicios {
 
   descripcion: string;
   precio: number;
+  precio_nomina: number;
 
   estado?: number;
   created_at?: Date;

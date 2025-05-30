@@ -556,7 +556,7 @@ export class PedidoNewFormComponent {
     // logger.log('index', index);
 
     Swal.fire({
-      title: '¿Desea eliminar el producto?',
+      title: '¿Desea eliminar el metodo de pago?',
       text: 'Una vez que acepte se eliminará el producto',
       icon: 'info',
       showCancelButton: true,
@@ -646,8 +646,11 @@ export class PedidoNewFormComponent {
           this.MetodosPagoFormArray.at(index).patchValue({
             pendiente: false,
             completado: true,
-            facturtaProdutoId: data.id,
+            // facturtaProdutoId: data.id,
+            metodo_pago_id: data.metodo_pago_id,
+            factura_detalle_metodo_pago_id: data.id,
           });
+          // logger.log('getRawValue', this.MetodosPagoFormArray.getRawValue());
           setTimeout(() => {
             this.MetodosPagoFormArray.at(index).patchValue({
               pendiente: false,

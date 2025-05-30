@@ -27,7 +27,7 @@
       </div>
       <app-valid-messages-form
         [errors]="getControlError('empleado_id')"
-        [messages]="NominaCrudErrorMessages['empleado_id']"
+        [messages]="NominaSeleccionCrudErrorMessages['empleado_id']"
       ></app-valid-messages-form>
     </c-col>
     <c-col [md]="4">
@@ -49,7 +49,7 @@
         <label cLabel for="descripcionInput">Comentario</label>
         <app-valid-messages-form
           [errors]="getControlError('descripcion')"
-          [messages]="NominaCrudErrorMessages['descripcion']"
+          [messages]="NominaSeleccionCrudErrorMessages['descripcion']"
         ></app-valid-messages-form>
       </div>
     </c-col>
@@ -63,62 +63,8 @@
         />
       </div>
     </c-col>
-    <!-- <c-col [md]="2" *ngIf="getControl('adicional').value">
-      <c-input-group class="mb-3">
-        <input
-          aria-describedby="basic-addon2"
-          aria-label="Porcentaje adicional"
-          cFormControl
-          id="porcentaje_adicionalInput"
-          placeholder="Porcentaje adicional"
-          type="text"
-          formControlName="porcentaje_adicional"
-          [ngClass]="{
-            'is-invalid':
-              getControl('porcentaje_adicional').invalid &&
-              getControl('porcentaje_adicional').touched,
-            'is-valid': getControl('porcentaje_adicional').valid
-          }"
-          appOnlyNumberAndPoint
-        />
-        <span cInputGroupText id="basic-addon2">%</span>
-      </c-input-group>
-      <app-valid-messages-form
-        [errors]="getControlError('porcentaje_adicional')"
-        [messages]="NominaCrudErrorMessages['porcentaje_adicional']"
-      ></app-valid-messages-form>
-    </c-col> -->
-    <!-- <c-col [md]="4">
-      <div cFormFloating>
-        <select
-          cSelect
-          id="localInput"
-          formControlName="local_id"
-          [ngClass]="{
-            'is-invalid':
-              getControl('local_id').invalid && getControl('local_id').touched,
-            'is-valid': getControl('local_id').valid
-          }"
-        >
-          <option value="0">Seleccione un local</option>
-          <option
-            *ngFor="let local of Locales; let i = index"
-            [value]="local.id"
-          >
-            {{ local.nombre }}
-          </option>
-        </select>
-        <label cLabel for="localInput"
-          >Local<c-spinner size="sm" *ngIf="loadingLocales"
-        /></label>
-      </div>
-      <app-valid-messages-form
-        [errors]="getControlError('local_id')"
-        [messages]="NominaCrudErrorMessages['local_id']"
-      ></app-valid-messages-form>
-    </c-col> -->
   </c-row>
-  <c-row class="mb-4">
+  <!-- <c-row class="mb-4">
     <c-col class="text-center">
       @if (Nomina) {
       <button cButton color="info" (click)="sendValueFom()">Editar</button>
@@ -126,5 +72,5 @@
       <button cButton color="info" (click)="sendValueFom()">Agregar</button>
       }
     </c-col>
-  </c-row>
+  </c-row> -->
 </form>

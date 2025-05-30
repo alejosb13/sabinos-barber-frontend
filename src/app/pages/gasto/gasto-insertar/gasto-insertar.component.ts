@@ -38,7 +38,7 @@ export class GastoInsertarComponent {
   FormsValues(Gasto: Gasto) {
     logger.log(Gasto);
     this._HelpersService.loaderSweetAlert({
-      title: 'Agregando nomina',
+      title: 'Agregando gasto',
       text: 'Esto puede demorar un momento.',
     });
 
@@ -71,7 +71,7 @@ export class GastoInsertarComponent {
           },
         })
           .fire({
-            text: 'Gasto agregada con éxito',
+            text: 'Gasto agregado con éxito',
             icon: 'success',
           })
           .then((result) => {
