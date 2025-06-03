@@ -24,6 +24,7 @@ interface ServicioNomina {
   id: number;
   descripcion: string;
   precio: number;
-  precio_nomina: null;
+  precio_nomina: number;
+  facturado?: number;
   cantidad: number;
 }

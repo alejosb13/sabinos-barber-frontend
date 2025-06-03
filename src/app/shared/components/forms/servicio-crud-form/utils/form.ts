@@ -4,6 +4,7 @@ import { ServicioCrudValidators } from './validations';
 export interface ServicioCrudForm {
   descripcion: FormControl<string | null>;
   precio: FormControl<number | null>;
+  precio_nomina: FormControl<number | null>;
 }
 
 export const ServicioCrudFormBuilder = () =>
@@ -12,4 +13,5 @@ export const ServicioCrudFormBuilder = () =>
       ...ServicioCrudValidators['descripcion'],
     ]),
     precio: new FormControl(0, [...ServicioCrudValidators['precio']]),
+    precio_nomina: new FormControl(0, [...ServicioCrudValidators['precio']]),
   });

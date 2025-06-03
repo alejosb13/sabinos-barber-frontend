@@ -8,6 +8,7 @@ export const EmpleadoCrudValidators: FormGroupValidators = {
   nombre_completo: [Validators.required, Validators.maxLength(80)],
   dni: [Validators.required, Validators.maxLength(10)],
   local_id: [Validators.required],
+  porcentaje: [Validators.required, Validators.maxLength(3)],
 };
 
 export const EmpleadoCrudErrorMessages: FormErrorMessages = {
@@ -21,5 +22,9 @@ export const EmpleadoCrudErrorMessages: FormErrorMessages = {
   },
   local_id: {
     required: 'El local es requerido',
+  },
+  porcentaje: {
+    required: 'El porcentaje es requerido',
+    maxlength: 'Solo se permite 3 números.',
   },
 };

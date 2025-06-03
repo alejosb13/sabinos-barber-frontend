@@ -1,6 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { CardModule, ColorModeService, GridModule } from '@coreui/angular';
+import {
+  CardModule,
+  ColorModeService,
+  GridModule,
+  TableModule,
+} from '@coreui/angular';
 import { Empleado } from 'src/app/models/Empleado.model';
 import { EmpleadosService } from 'src/app/services/empleados.service';
 import logger from 'src/app/shared/utils/logger';
@@ -12,9 +17,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { HelpersService } from '../../../services/helpers.service';
 import { NominaCrudFormComponent } from '../../../shared/components/forms/nomina-crud-form/nomina-crud-form.component';
 import { NominaService } from '../../../services/nomina.service';
-import { Nomina } from '../../../models/Nomina.model';
+import { Nomina, NominaEmpleado } from '../../../models/Nomina.model';
 import { NominaSeleccionEmpleadoFormComponent } from '../../../shared/components/forms/nomina-seleccion-empleado-form/nomina-seleccion-empleado-form.component';
 import { CommonModule } from '@angular/common';
+import { TableDirective } from '@coreui/angular';
 @Component({
   selector: 'app-nomina-insertar',
   standalone: true,
@@ -24,6 +30,7 @@ import { CommonModule } from '@angular/common';
     NominaCrudFormComponent,
     NominaSeleccionEmpleadoFormComponent,
     CommonModule,
+    TableDirective,
   ],
   templateUrl: './nomina-insertar.component.html',
   styleUrl: './nomina-insertar.component.scss',
@@ -70,8 +77,43 @@ export class NominaInsertarComponent {
   }
 
   triggerNominaEmpleado(Nomina: any) {
-    logger.log('triggerNominaEmpleado nominaevent', Nomina);
-    this.NominaEmpleadoSelecion = Nomina;
+    // logger.log('triggerNominaEmpleado nominaevent', Nomina);
+    let NominaEmpleado: NominaEmpleado = Nomina.nomina_empleado;
+
+    NominaEmpleado.servicios = NominaEmpleado.servicios.map((s) => ({
+      ...s,
+      facturado: (s.precio_nomina ?? 0) * s.cantidad,
+    }));
+
+    const totalCantidad = NominaEmpleado.servicios.reduce(
+      (sum, s) => sum + s.cantidad,
+      0
+    );
+    const totalFacturado = NominaEmpleado.servicios.reduce(
+      (sum, s) => sum + (s.facturado || 0),
+      0
+    );
+
+    Nomina.nomina_empleado.servicios.push({
+      descripcion: 'TOTAL',
+      precio: 0,
+      precio_nomina: 0,
+      cantidad: totalCantidad,
+      facturado: totalFacturado,
+    });
+
+    const resultado =
+      totalFacturado * (Nomina.nomina_empleado.porcentaje / 100);
+    resultado;
+    console.log(resultado); // 12000
+    this.NominaEmpleadoSelecion = { ...Nomina, facturaFinal: resultado };
+
+    // logger.log('triggerNominaEmpleado totalFacturado', totalFacturado);
+    // logger.log('triggerNominaEmpleado Nomina', Nomina);
+    // logger.log(
+    //   'triggerNominaEmpleado     this.NominaEmpleadoSelecion ',
+    //   this.NominaEmpleadoSelecion
+    // );
   }
 
   ngOnDestroy(): void {

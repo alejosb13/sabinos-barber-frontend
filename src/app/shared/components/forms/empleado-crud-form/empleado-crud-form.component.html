@@ -1,5 +1,5 @@
 <form cForm [formGroup]="EmpleadoCrudForm" class="form-Empleado-crud">
-  <c-row class="mb-4 flex-wrap justify-content-center">
+  <c-row class="mb-4 flex-wrap">
     <c-col [md]="4">
       <div cFormFloating class="mb-3">
         <input
@@ -42,6 +42,30 @@
         <app-valid-messages-form
           [errors]="getControlError('dni')"
           [messages]="EmpleadoCrudErrorMessages['dni']"
+        ></app-valid-messages-form>
+      </div>
+    </c-col>
+    <c-col [md]="4">
+      <div cFormFloating class="input-group mb-3">
+        <input
+          cFormControl
+          id="porcentajeInput"
+          placeholder="porcentaje"
+          type="text"
+          formControlName="porcentaje"
+          [ngClass]="{
+            'is-invalid':
+              getControl('porcentaje').invalid &&
+              getControl('porcentaje').touched,
+            'is-valid': getControl('porcentaje').valid
+          }"
+          appOnlyNumbers
+        />
+        <span class="input-group-text">%</span>
+        <label cLabel for="porcentajeInput">Porcentaje</label>
+        <app-valid-messages-form
+          [errors]="getControlError('porcentaje')"
+          [messages]="EmpleadoCrudErrorMessages['porcentaje']"
         ></app-valid-messages-form>
       </div>
     </c-col>

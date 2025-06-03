@@ -36,12 +36,35 @@
               getControl('precio').invalid && getControl('precio').touched,
             'is-valid': getControl('precio').valid
           }"
-          appOnlyAlphanumeric
+          appOnlyNumberAndPoint
         />
         <label cLabel for="PrecioInput">Precio</label>
         <app-valid-messages-form
           [errors]="getControlError('precio')"
           [messages]="ClienteCrudErrorMessages['precio']"
+        ></app-valid-messages-form>
+      </div>
+    </c-col>
+    <c-col [md]="4">
+      <div cFormFloating class="mb-3">
+        <input
+          cFormControl
+          id="PrecioNominaInput"
+          placeholder="precio_nomina"
+          type="text"
+          formControlName="precio_nomina"
+          [ngClass]="{
+            'is-invalid':
+              getControl('precio_nomina').invalid &&
+              getControl('precio_nomina').touched,
+            'is-valid': getControl('precio_nomina').valid
+          }"
+          appOnlyNumberAndPoint
+        />
+        <label cLabel for="PrecioNominaInput">Precio Nomina</label>
+        <app-valid-messages-form
+          [errors]="getControlError('precio_nomina')"
+          [messages]="ClienteCrudErrorMessages['precio_nomina']"
         ></app-valid-messages-form>
       </div>
     </c-col>

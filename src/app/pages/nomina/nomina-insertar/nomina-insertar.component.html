@@ -18,8 +18,81 @@
             </div>
             } @if(!_NominaService.LoadingCrud && NominaEmpleadoSelecion){
             <div>
-              <h3>{{ NominaEmpleadoSelecion | json }}</h3>
+              <table class="table table-bordered text-center">
+                <thead>
+                  <tr>
+                    <th>{{ NominaEmpleadoSelecion.nombre }}</th>
+                    <th
+                      *ngFor="
+                        let servicio of NominaEmpleadoSelecion.nomina_empleado
+                          .servicios
+                      "
+                      [ngClass]="{
+                        'bg-warning': servicio.descripcion === 'TOTAL'
+                      }"
+                    >
+                      {{ servicio.descripcion }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>CANTIDAD</td>
+                    <td
+                      *ngFor="
+                        let servicioCantidad of NominaEmpleadoSelecion
+                          .nomina_empleado.servicios
+                      "
+                    >
+                      {{ servicioCantidad.cantidad }}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>PORCENTAJE</td>
+                    <td
+                      [attr.colspan]="
+                        NominaEmpleadoSelecion.nomina_empleado.servicios.length
+                      "
+                      class="bg-warning"
+                    >
+                      40%
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>VALOR SERVICIOS</td>
+                    <td
+                      *ngFor="
+                        let servicio of NominaEmpleadoSelecion.nomina_empleado
+                          .servicios
+                      "
+                      [ngClass]="{
+                        'bg-warning': servicio.descripcion === 'TOTAL'
+                      }"
+                    >
+                      {{ servicio.precio_nomina | currency : "ARS" }}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>FACTURADO</td>
+                    <td
+                      *ngFor="
+                        let servicio of NominaEmpleadoSelecion.nomina_empleado
+                          .servicios
+                      "
+                      [ngClass]="{
+                        'fw-bold': servicio.descripcion === 'TOTAL'
+                      }"
+                    >
+                      {{ servicio.facturado | currency : "ARS" }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+
             }
           </div>
         </c-col>
