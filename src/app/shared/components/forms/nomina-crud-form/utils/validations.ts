@@ -5,39 +5,21 @@ import {
 } from '../../../../utils/interfaces';
 
 export const NominaCrudValidators: FormGroupValidators = {
-  empleado_id: [Validators.required],
-  descripcion: [Validators.required],
-  monto_facturado: [Validators.required],
-  adicional: [Validators.required],
-  porcentaje_adicional: [Validators.required],
-  total: [Validators.required],
-  local_id: [Validators.required],
+  extra_id: [Validators.required],
+  monto: [Validators.required],
+  monto_total: [Validators.required],
 };
 
 export const NominaCrudErrorMessages: FormErrorMessages = {
-  empleado_id: {
-    required: 'El Empleado es requerido',
-    maxlength: 'Solo se permite 80 caracteres.',
+  extra_id: {
+    required: 'El extra es requerido',
   },
-  descripcion: {
-    required: 'La descripción es requerido',
-    maxlength: 'Solo se permite 80 caracteres.',
+  monto: {
+    required: 'El monto es requerido',
+    maxlength: 'Solo se permite 14 números.',
   },
-  monto_facturado: {
-    required: 'El monto facturado es requerido',
-  },
-  local_id: {
-    required: 'El local es requerido',
-  },
-  adicional: {
-    required: 'El adicional es requerido',
-    maxlength: 'Solo se permite 80 caracteres.',
-  },
-  porcentaje_adicional: {
-    required: 'El porcentaje es requerido',
-    maxlength: 'Solo se permite 80 caracteres.',
-  },
-  total: {
-    required: 'El total es requerido',
+  monto_total: {
+    required: 'El monto total es requerido',
+    maxlength: 'Solo se permite 14 números.',
   },
 };

@@ -1,13 +1,8 @@
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
-  Component,
-  effect,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-} from '@angular/core';
-import {
+  FormArray,
   FormControl,
+  FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
 } from '@angular/forms';
@@ -21,7 +16,7 @@ import {
   RowComponent,
   SpinnerModule,
 } from '@coreui/angular';
-import { NominaCrudFormBuilder } from './utils/form';
+import { agregarExtraInArrayForm, NominaCrudFormBuilder } from './utils/form';
 import { CommonModule } from '@angular/common';
 import { ValidMessagesFormComponent } from '../../valid-messages-form/valid-messages-form.component';
 import { NominaCrudErrorMessages } from './utils/validations';
@@ -34,7 +29,6 @@ import { Empleado } from 'src/app/models/Empleado.model';
 import { LocalesService } from '../../../../services/locales.service';
 import { Local } from '../../../../models/Local.model';
 import { Subject, takeUntil } from 'rxjs';
-import { Nomina } from '../../../../models/Nomina.model';
 import { DateRangePickerComponent } from '../../date-range-picker/date-range-picker.component';
 import {
   END_DATE,
@@ -86,7 +80,7 @@ export class NominaCrudFormComponent {
   private _LocalesService = inject(LocalesService);
   private _LoginService = inject(LoginService);
 
-  @Input() Nomina!: Nomina;
+  @Input() NominaData: any;
   @Output() FormsValues = new EventEmitter<any>();
 
   Empleadoes: Empleado[] = [];
@@ -97,31 +91,22 @@ export class NominaCrudFormComponent {
   loadingNomina: boolean = false;
 
   constructor() {
-    this.changeSesionStorage();
+    // this.changeSesionStorage();
   }
 
   ngOnInit(): void {
-    this.getEmpleados();
-    this.changeEmpleado();
-    this.getLocales();
+    logger.log('NominaData', this.NominaData);
+    // this.getEmpleados();
+    // this.changeEmpleado();
+    // this.getLocales();
   }
 
-  changeSesionStorage() {
-    effect(() => {
-      this._LoginService.getUserData();
-      this.formInit();
-    });
-  }
-
-  formInit() {
-    if (this.Nomina) {
-      this.setFormValues();
-    } else {
-      // this.NominaCrudForm.controls.local_id.patchValue(
-      //   Number(this._LoginService.getUserData().local.id)
-      // );
-    }
-  }
+  // changeSesionStorage() {
+  //   effect(() => {
+  //     this._LoginService.getUserData();
+  //     this.formInit();
+  //   });
+  // }
 
   getControlError(name: string): ValidationErrors | null {
     const control = this.NominaCrudForm.controls
@@ -147,6 +132,26 @@ export class NominaCrudFormComponent {
     });
   }
 
+  get ExtraNominaFormArray() {
+    return this.NominaCrudForm.get('extras_nomina') as FormArray;
+  }
+
+  getExtraNominaFormControlError(
+    index: number,
+    controlName: string
+  ): ValidationErrors | null {
+    const extraFormGroup = this.ExtraNominaFormArray.at(index) as FormGroup;
+    const control = extraFormGroup.get(controlName);
+    return control && control.touched && control.invalid
+      ? control.errors
+      : null;
+  }
+
+  agregarExtraInNomina() {
+    // agregarMetodoPagoArray(this.PedidoCrudForm);
+    agregarExtraInArrayForm(this.NominaCrudForm);
+  }
+
   validPorcentaje(total: number) {
     if (this.getControl('adicional').value) {
       const porcentajeAdicional = this.getControl('porcentaje_adicional').value;
@@ -162,12 +167,11 @@ export class NominaCrudFormComponent {
   }
 
   setFormValues() {
-    logger.log(this.Nomina);
-
-    this.NominaCrudForm.patchValue({
-      empleado_id: this.Nomina.empleado_id,
-      descripcion: this.Nomina.descripcion,
-    });
+    // logger.log(this.Nomina);
+    // this.NominaCrudForm.patchValue({
+    //   empleado_id: this.Nomina.empleado_id,
+    //   descripcion: this.Nomina.descripcion,
+    // });
   }
 
   getEmpleados() {

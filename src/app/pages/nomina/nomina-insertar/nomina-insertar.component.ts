@@ -110,10 +110,10 @@ export class NominaInsertarComponent {
 
     // logger.log('triggerNominaEmpleado totalFacturado', totalFacturado);
     // logger.log('triggerNominaEmpleado Nomina', Nomina);
-    // logger.log(
-    //   'triggerNominaEmpleado     this.NominaEmpleadoSelecion ',
-    //   this.NominaEmpleadoSelecion
-    // );
+    logger.log(
+      'triggerNominaEmpleado     this.NominaEmpleadoSelecion ',
+      this.NominaEmpleadoSelecion
+    );
   }
 
   ngOnDestroy(): void {

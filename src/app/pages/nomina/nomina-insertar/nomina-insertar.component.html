@@ -92,7 +92,10 @@
                 </tbody>
               </table>
             </div>
-
+            <app-nomina-crud-form
+              [NominaData]="NominaEmpleadoSelecion"
+              (FormsValues)="FormsValues($event)"
+            />
             }
           </div>
         </c-col>

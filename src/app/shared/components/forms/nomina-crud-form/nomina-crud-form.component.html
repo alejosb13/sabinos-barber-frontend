@@ -1,35 +1,84 @@
+<c-row class="mb-4 flex-wrap fs-5">
+  <c-col [md]="6" class="justify-content-center mx-auto">
+    <ul class="list-group">
+      <li
+        class="list-group-item d-flex justify-content-between align-items-center"
+      >
+        Servicios total
+        <span class="badge bg-primary rounded-pill">{{
+          NominaData.facturaFinal | currency : "ARS"
+        }}</span>
+      </li>
+    </ul>
+  </c-col>
+</c-row>
+
+<table class="table table-bordered text-center" [formGroup]="NominaCrudForm">
+  <thead>
+    <tr>
+      <th>Servicios</th>
+      <th></th>
+      <th>{{ NominaData.facturaFinal | currency : "ARS" }}</th>
+    </tr>
+  </thead>
+  <tbody formArrayName="extras_nomina">
+    @for ( nominaF of ExtraNominaFormArray.controls; track $index; let m =
+    $index) {
+    <tr [formGroupName]="m">
+      <td style="max-width: 75px">
+        <div cFormFloating>
+          <select cSelect id="extra_idlInput{{ m }}" formControlName="extra_id">
+            <option value="1">Adición</option>
+            <option value="2">Deducción</option>
+          </select>
+          <label cLabel for="extra_idlInput{{ m }}">Extra </label>
+        </div>
+        <app-valid-messages-form
+          [errors]="getExtraNominaFormControlError(m, 'extra_id')"
+          [messages]="NominaCrudErrorMessages['extra_id']"
+        ></app-valid-messages-form>
+      </td>
+      <td style="max-width: 75px">
+        <div cFormFloating>
+          <input
+            cFormControl
+            id="monto_{{ m }}"
+            formControlName="monto"
+            type="text"
+            placeholder="monto"
+            appOnlyNumberAndPoint
+          />
+          <label cLabel for="monto_{{ m }}">Monto</label>
+        </div>
+        <app-valid-messages-form
+          [errors]="getExtraNominaFormControlError(m, 'monto')"
+          [messages]="NominaCrudErrorMessages['monto']"
+        ></app-valid-messages-form>
+      </td>
+      <td style="max-width: 75px">
+        <div cFormFloating>
+          <input
+            cFormControl
+            id="monto_total_{{ m }}"
+            formControlName="monto_total"
+            type="text"
+            placeholder="Monto Total"
+            appOnlyNumberAndPoint
+          />
+          <label cLabel for="monto_total_{{ m }}">Monto</label>
+        </div>
+        <app-valid-messages-form
+          [errors]="getExtraNominaFormControlError(m, 'monto_total')"
+          [messages]="NominaCrudErrorMessages['monto_total']"
+        ></app-valid-messages-form>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+<!-- 
 <form cForm [formGroup]="NominaCrudForm" class="form-Empleado-crud">
   <c-row class="mb-4">
-    <c-col [md]="4">
-      <div cFormFloating>
-        <select
-          cSelect
-          id="empleado_idlInput"
-          formControlName="empleado_id"
-          [ngClass]="{
-            'is-invalid':
-              getControl('empleado_id').invalid &&
-              getControl('empleado_id').touched,
-            'is-valid': getControl('empleado_id').valid
-          }"
-        >
-          <option value="0">Seleccione un empleado</option>
-          <option
-            *ngFor="let empleado of Empleados; let i = index"
-            [ngValue]="empleado.id"
-          >
-            {{ empleado.nombre_completo | titlecase }}
-          </option>
-        </select>
-        <label cLabel for="empleado_idlInput"
-          >Empleados <c-spinner size="sm" *ngIf="loadingEmpleados"
-        /></label>
-      </div>
-      <app-valid-messages-form
-        [errors]="getControlError('empleado_id')"
-        [messages]="NominaCrudErrorMessages['empleado_id']"
-      ></app-valid-messages-form>
-    </c-col>
     <c-col [md]="4">
       <div cFormFloating class="mb-3">
         <input
@@ -63,68 +112,10 @@
         />
       </div>
     </c-col>
-    <!-- <c-col [md]="2" *ngIf="getControl('adicional').value">
-      <c-input-group class="mb-3">
-        <input
-          aria-describedby="basic-addon2"
-          aria-label="Porcentaje adicional"
-          cFormControl
-          id="porcentaje_adicionalInput"
-          placeholder="Porcentaje adicional"
-          type="text"
-          formControlName="porcentaje_adicional"
-          [ngClass]="{
-            'is-invalid':
-              getControl('porcentaje_adicional').invalid &&
-              getControl('porcentaje_adicional').touched,
-            'is-valid': getControl('porcentaje_adicional').valid
-          }"
-          appOnlyNumberAndPoint
-        />
-        <span cInputGroupText id="basic-addon2">%</span>
-      </c-input-group>
-      <app-valid-messages-form
-        [errors]="getControlError('porcentaje_adicional')"
-        [messages]="NominaCrudErrorMessages['porcentaje_adicional']"
-      ></app-valid-messages-form>
-    </c-col> -->
-    <!-- <c-col [md]="4">
-      <div cFormFloating>
-        <select
-          cSelect
-          id="localInput"
-          formControlName="local_id"
-          [ngClass]="{
-            'is-invalid':
-              getControl('local_id').invalid && getControl('local_id').touched,
-            'is-valid': getControl('local_id').valid
-          }"
-        >
-          <option value="0">Seleccione un local</option>
-          <option
-            *ngFor="let local of Locales; let i = index"
-            [value]="local.id"
-          >
-            {{ local.nombre }}
-          </option>
-        </select>
-        <label cLabel for="localInput"
-          >Local<c-spinner size="sm" *ngIf="loadingLocales"
-        /></label>
-      </div>
-      <app-valid-messages-form
-        [errors]="getControlError('local_id')"
-        [messages]="NominaCrudErrorMessages['local_id']"
-      ></app-valid-messages-form>
-    </c-col> -->
   </c-row>
   <c-row class="mb-4">
     <c-col class="text-center">
-      @if (Nomina) {
-      <button cButton color="info" (click)="sendValueFom()">Editar</button>
-      } @else {
-      <button cButton color="info" (click)="sendValueFom()">Agregar</button>
-      }
+      <button cButton color="info" (click)="sendValueFom()">Generar</button>
     </c-col>
   </c-row>
-</form>
+</form> -->
