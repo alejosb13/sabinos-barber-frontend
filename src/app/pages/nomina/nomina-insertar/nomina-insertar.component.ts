@@ -55,27 +55,27 @@ export class NominaInsertarComponent {
       text: 'Esto puede demorar un momento.',
     });
 
-    // this._NominaService
-    //   .createNomina(Nomina)
-    //   .pipe(takeUntil(this.destruir$))
-    //   .subscribe((response) => {
-    //     this.loader = false;
-    //     logger.log(response);
-    //     Swal.mixin({
-    //       customClass: {
-    //         container: this.#colorModeService.getStoredTheme(
-    //           environment.SabinosTheme
-    //         ),
-    //       },
-    //     })
-    //       .fire({
-    //         text: 'Nomina agregada con éxito',
-    //         icon: 'success',
-    //       })
-    //       .then((result) => {
-    //         this._Router.navigateByUrl(`/nominas/editar/${response.id}`);
-    //       });
-    //   });
+    this._NominaService
+      .createNomina(Nomina)
+      .pipe(takeUntil(this.destruir$))
+      .subscribe((response) => {
+        this.loader = false;
+        logger.log(response);
+        Swal.mixin({
+          customClass: {
+            container: this.#colorModeService.getStoredTheme(
+              environment.SabinosTheme
+            ),
+          },
+        })
+          .fire({
+            text: 'Nomina agregada con éxito',
+            icon: 'success',
+          })
+          .then((result) => {
+            this._Router.navigateByUrl(`/nominas`);
+          });
+      });
   }
 
   triggerNominaEmpleado(Nomina: any) {

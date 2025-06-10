@@ -198,7 +198,8 @@ export class NominaCrudFormComponent {
   getPresentismo(): number {
     const presentismoPorcentaje =
       this.NominaCrudForm.controls.presentismo.value || 0;
-    const presentismo = this.TotalExtras * (presentismoPorcentaje / 100);
+    const presentismo =
+      this.NominaData.facturaFinal * (presentismoPorcentaje / 100);
     return presentismo;
   }
 
