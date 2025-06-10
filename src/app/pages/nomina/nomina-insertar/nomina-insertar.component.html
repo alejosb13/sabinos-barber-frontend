@@ -13,8 +13,10 @@
             />
 
             @if(_NominaService.LoadingCrud){
-            <div>
-              <h3>Cargando</h3>
+            <div class="small text-body-secondary mt-3 text-center">
+              <span class="h4">
+                Cargando <c-spinner aria-hidden="true" size="sm" variant="grow"
+              /></span>
             </div>
             } @if(!_NominaService.LoadingCrud && NominaEmpleadoSelecion){
             <div>
@@ -71,7 +73,8 @@
                         'bg-warning': servicio.descripcion === 'TOTAL'
                       }"
                     >
-                      {{ servicio.precio_nomina | currency : "ARS" }}
+                      @if( servicio.descripcion != 'TOTAL'){{{ servicio.precio_nomina | currency : "ARS"
+                      }}}
                     </td>
                   </tr>
 

@@ -13,12 +13,24 @@
   </c-col>
 </c-row>
 
-<table class="table table-bordered text-center" [formGroup]="NominaCrudForm">
+<table
+  class="table table-bordered text-center mb-4"
+  [formGroup]="NominaCrudForm"
+>
   <thead>
     <tr>
-      <th>Servicios</th>
-      <th></th>
-      <th>{{ NominaData.facturaFinal | currency : "ARS" }}</th>
+      <th colspan="5" class="text-start">
+        <button
+          cButton
+          color="info"
+          class="btn-action-table mx-3"
+          (click)="agregarExtraInNomina()"
+        >
+          <span class="">
+            <svg cIcon height="18" name="cil-plus"></svg> Agregar Extra</span
+          >
+        </button>
+      </th>
     </tr>
   </thead>
   <tbody formArrayName="extras_nomina">
@@ -72,10 +84,95 @@
           [messages]="NominaCrudErrorMessages['monto_total']"
         ></app-valid-messages-form>
       </td>
+      <td style="max-width: 150px">
+        <div cFormFloating>
+          <input
+            cFormControl
+            id="descripcion_{{ m }}"
+            formControlName="descripcion"
+            type="text"
+            placeholder="Descripcion"
+            appOnlyAlphanumeric
+          />
+          <label cLabel for="descripcion_{{ m }}">Detalle</label>
+        </div>
+        <app-valid-messages-form
+          [errors]="getExtraNominaFormControlError(m, 'descripcion')"
+          [messages]="NominaCrudErrorMessages['descripcion']"
+        ></app-valid-messages-form>
+      </td>
+      <td style="max-width: 75px">
+        <button
+          cButton
+          color="danger"
+          class="btn-action-table me-3"
+          (click)="eliminarExtraForm(m)"
+        >
+          <span class=""> <svg cIcon height="18" name="cil-trash"></svg> </span>
+        </button>
+      </td>
     </tr>
     }
+    <tr [formGroup]="NominaCrudForm">
+      <td colspan="3" valign="middle" class="bg-info">
+        <div class="text-center px-3">
+          <h6>Presentismo</h6>
+        </div>
+      </td>
+      <td style="max-width: 75px">
+        <div class="input-group">
+          <input
+            cFormControl
+            id="presentismoInput"
+            placeholder="presentismo"
+            type="text"
+            formControlName="presentismo"
+            [ngClass]="{
+              'is-invalid':
+                getControl('presentismo').invalid &&
+                getControl('presentismo').touched,
+              'is-valid': getControl('presentismo').valid
+            }"
+            appOnlyAlphanumeric
+          />
+          <span class="input-group-text" id="basic-addon2">%</span>
+        </div>
+        <app-valid-messages-form
+          [errors]="getControlError('presentismo')"
+          [messages]="NominaCrudErrorMessages['presentismo']"
+        ></app-valid-messages-form>
+      </td>
+      <td valign="middle" class="bg-info">
+        <div class="text-center px-3">
+          <h6>{{ getPresentismo() | currency : "ARS" }}</h6>
+        </div>
+      </td>
+    </tr>
+    <tr valign="middle">
+      <td colspan="5">
+        <div class="text-end px-3">
+          <h5>
+            Total a pagar:
+            <span class="badge bg-primary rounded-pill">{{
+              getTotalSeccion() | currency : "ARS"
+            }}</span>
+          </h5>
+        </div>
+      </td>
+    </tr>
   </tbody>
 </table>
+<div class="text-center">
+  <button
+    cButton
+    color="info"
+    class="text-center"
+    (click)="sendValueFom()"
+    [disabled]="!NominaCrudForm.valid"
+  >
+    Agregar
+  </button>
+</div>
 <!-- 
 <form cForm [formGroup]="NominaCrudForm" class="form-Empleado-crud">
   <c-row class="mb-4">

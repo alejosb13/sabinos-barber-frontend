@@ -205,6 +205,7 @@ export class NominaSeleccionEmpleadoFormComponent {
 
   sendValueFom() {
     let nominaSelection = this.NominaCrudForm.getRawValue();
+    logger.log('nominaSelection', nominaSelection);
     this.FormsValues.emit({
       empleado: this.EmpleadoId,
       comentario: nominaSelection.descripcion,

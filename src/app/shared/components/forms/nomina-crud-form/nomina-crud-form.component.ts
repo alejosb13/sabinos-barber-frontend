@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -16,7 +23,11 @@ import {
   RowComponent,
   SpinnerModule,
 } from '@coreui/angular';
-import { agregarExtraInArrayForm, NominaCrudFormBuilder } from './utils/form';
+import {
+  agregarExtraInArrayForm,
+  ExtraNominaForm,
+  NominaCrudFormBuilder,
+} from './utils/form';
 import { CommonModule } from '@angular/common';
 import { ValidMessagesFormComponent } from '../../valid-messages-form/valid-messages-form.component';
 import { NominaCrudErrorMessages } from './utils/validations';
@@ -39,6 +50,7 @@ import dayjs from 'dayjs';
 import { Factura } from '../../../../models/Factura.model';
 import { LoginService } from '../../../../services/login.service';
 import { NominaService } from '../../../../services/nomina.service';
+import { IconComponent, IconDirective } from '@coreui/icons-angular';
 
 @Component({
   selector: 'app-nomina-crud-form',
@@ -56,6 +68,7 @@ import { NominaService } from '../../../../services/nomina.service';
     DirectivesModule,
     SpinnerModule,
     DateRangePickerComponent,
+    IconDirective,
   ],
   templateUrl: './nomina-crud-form.component.html',
   styleUrl: './nomina-crud-form.component.scss',
@@ -89,7 +102,8 @@ export class NominaCrudFormComponent {
   Locales: Local[] = [];
 
   loadingNomina: boolean = false;
-
+  TotalExtras: number = 0;
+  TotalSeccion: number = 0;
   constructor() {
     // this.changeSesionStorage();
   }
@@ -99,6 +113,16 @@ export class NominaCrudFormComponent {
     // this.getEmpleados();
     // this.changeEmpleado();
     // this.getLocales();
+    this.changeExtraValues();
+    this.changePresentismo();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+    logger.log('changes', changes);
+    this.TotalExtras = this.NominaData.facturaFinal;
+    // this.Presentismo = this.NominaData.facturaFinal;
   }
 
   // changeSesionStorage() {
@@ -118,6 +142,73 @@ export class NominaCrudFormComponent {
       : null;
   }
 
+  changeExtraValues() {
+    this.NominaCrudForm.controls.extras_nomina.valueChanges.subscribe(
+      (extras) => {
+        this.TotalExtras = this.NominaData.facturaFinal;
+        let totalFinalSalario = this.NominaData.facturaFinal || 0;
+        extras.forEach((extra, index) => {
+          if (extra.extra_id == 1) {
+            totalFinalSalario += Number(extra.monto);
+          } else {
+            totalFinalSalario -= Number(extra.monto);
+          }
+          this.ExtraNominaFormArray.at(index).patchValue(
+            {
+              monto_total: totalFinalSalario,
+            },
+            { emitEvent: false }
+          );
+        });
+        this.TotalExtras = totalFinalSalario;
+
+        // const presentismovalue =
+        //   this.NominaCrudForm.controls.presentismo.value || 0;
+        // const Porcentaje = 1 + presentismovalue / 100;
+        // this.Presentismo = this.TotalExtras * Porcentaje;
+        // this.NominaCrudForm.patchValue(
+        //   {
+        //     presentismo: this.Presentismo,
+        //   },
+        //   { emitEvent: false }
+        // );
+
+        // logger.log('total ', this.NominaData.facturaFinal);
+      }
+    );
+  }
+
+  changePresentismo() {
+    this.NominaCrudForm.controls.presentismo.valueChanges.subscribe(
+      (presentismo) => {
+        const TotalExtras = this.TotalExtras || 0;
+        const Porcentaje = 1 + Number(presentismo) / 100;
+        // this.Presentismo = TotalExtras * Porcentaje;
+
+        // this.NominaCrudForm.patchValue(
+        //   {
+        //     presentismo: this.Presentismo,
+        //   },
+        //   { emitEvent: false }
+        // );
+      }
+    );
+  }
+
+  getPresentismo(): number {
+    const presentismoPorcentaje =
+      this.NominaCrudForm.controls.presentismo.value || 0;
+    const presentismo = this.TotalExtras * (presentismoPorcentaje / 100);
+    return presentismo;
+  }
+
+  getTotalSeccion() {
+    const presentismovalue = this.getPresentismo();
+
+    this.TotalExtras + presentismovalue;
+    return this.TotalExtras + presentismovalue;
+  }
+
   getControl(name: string): FormControl {
     return this.NominaCrudForm.get(name) as FormControl;
   }
@@ -132,8 +223,10 @@ export class NominaCrudFormComponent {
     });
   }
 
-  get ExtraNominaFormArray() {
-    return this.NominaCrudForm.get('extras_nomina') as FormArray;
+  get ExtraNominaFormArray(): FormArray<FormGroup<ExtraNominaForm>> {
+    return this.NominaCrudForm.get('extras_nomina') as FormArray<
+      FormGroup<ExtraNominaForm>
+    >;
   }
 
   getExtraNominaFormControlError(
@@ -221,12 +314,42 @@ export class NominaCrudFormComponent {
   sendValueFom() {
     if (this.NominaCrudForm.valid) {
       // const USER_DATA = this._LoginService.userData();
+      const SERVICIOS_FACTURADOS_TOTAL =
+        this.NominaData.nomina_empleado.servicios.find(
+          (serv: any) => serv.descripcion === 'TOTAL'
+        );
+      const USER_DATA = this._LoginService.getUserData();
+
       const NOMINA = {
         // ...this.NominaCrudForm.value,
-        ...this.NominaCrudForm.getRawValue(),
-        total: this.getControl('total').value,
-        // adicional: this.NominaCrudForm.value.adicional ? '1' : '0',
-        // local_id: USER_DATA.user.local_id,
+        empleado_id: this.NominaData.empleado,
+        descripcion: this.NominaData.comentario,
+        monto_facturado: SERVICIOS_FACTURADOS_TOTAL.facturado,
+        presentismo: this.NominaCrudForm.controls.presentismo.value,
+        presentismoTotal: this.getPresentismo(),
+        total_facturado: this.NominaData.facturaFinal,
+        vales: this.NominaCrudForm.controls.extras_nomina
+          .getRawValue()
+          .map((extra: any) => ({
+            tipo: extra.extra_id,
+            monto: Number(extra.monto),
+            descripcion: extra.descripcion,
+            // monto_total: extra.monto_total,
+          })),
+        servicios: this.NominaData.nomina_empleado.servicios.filter(
+          (item: any) => item.descripcion !== 'TOTAL'
+        ),
+        factura_detalle: this.NominaData.nomina_empleado.factura_detalle,
+        local_id: USER_DATA.local.id,
+        // presentismoTotal: this.getPresentismo(),
+        // totalSeccion: this.getTotalSeccion(),
+
+        // userNominaSelected: {
+        //   facturaFinal: this.NominaData.facturaFinal,
+        //   fecha_fin: this.NominaData.fecha_fin,
+        //   fecha_inicio: this.NominaData.fecha_inicio,
+        //   nomina_empleado: this.NominaData.nomina_empleado,
+        // },
       };
       logger.log(NOMINA);
 
@@ -266,6 +389,26 @@ export class NominaCrudFormComponent {
     logger.log('range', event);
     this.getNominaEmpleado();
     this.Fecha = event;
+  }
+
+  eliminarExtraForm(index: number) {
+    this.ExtraNominaFormArray.removeAt(index);
+  }
+
+  ChangeMontoInput(NominaForm: FormGroup<ExtraNominaForm>, index: number) {
+    logger.log('NominaForm change', NominaForm);
+    logger.log('index change', index);
+
+    //  NominaForm.at(index).patchValue({
+    //       pendienteEliminado: false,
+    //     });
+    const { extra_id, monto, monto_total } = NominaForm.getRawValue();
+
+    NominaForm.patchValue({
+      // extra_id: extra_id ?? null,
+      // monto: this.OperacionExtra(Number(extra_id), Number(monto)) ?? null,
+      // monto_total: this.OperacionExtra(Number(extra_id), Number(monto)) ?? null,
+    });
   }
 
   ngOnDestroy(): void {

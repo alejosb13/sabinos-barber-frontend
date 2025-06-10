@@ -3,18 +3,23 @@ import { NominaCrudValidators } from './validations';
 
 export interface NominaCrudForm {
   extras_nomina: FormArray<FormGroup<ExtraNominaForm>>;
+  presentismo: FormControl<number | null>;
 }
 export interface ExtraNominaForm {
   extra_id: FormControl<number | null>;
   monto: FormControl<number | null>;
   monto_total: FormControl<number | null>;
+  descripcion: FormControl<string | null>;
 }
 
 export const NominaCrudFormBuilder = () =>
   new FormGroup<NominaCrudForm>({
     extras_nomina: new FormArray<FormGroup<ExtraNominaForm>>([
-      crearExtraArrayForm(),
+      // crearExtraArrayForm(),
     ]), // Inicializar con un gasto
+    presentismo: new FormControl({ disabled: false, value: 5 }, [
+      ...NominaCrudValidators['presentismo'],
+    ]),
   });
 
 const crearExtraArrayForm = (): FormGroup<ExtraNominaForm> => {
@@ -26,8 +31,11 @@ const crearExtraArrayForm = (): FormGroup<ExtraNominaForm> => {
       monto: new FormControl({ disabled: false, value: 0 }, [
         ...NominaCrudValidators['monto'],
       ]),
-      monto_total: new FormControl({ disabled: false, value: 0 }, [
+      monto_total: new FormControl({ disabled: true, value: 0 }, [
         ...NominaCrudValidators['monto_total'],
+      ]),
+      descripcion: new FormControl({ disabled: false, value: '' }, [
+        ...NominaCrudValidators['descripcion'],
       ]),
     },
     { updateOn: 'change' }

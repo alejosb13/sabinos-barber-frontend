@@ -4,6 +4,7 @@ import {
   CardModule,
   ColorModeService,
   GridModule,
+  SpinnerComponent,
   TableModule,
 } from '@coreui/angular';
 import { Empleado } from 'src/app/models/Empleado.model';
@@ -31,6 +32,7 @@ import { TableDirective } from '@coreui/angular';
     NominaSeleccionEmpleadoFormComponent,
     CommonModule,
     TableDirective,
+    SpinnerComponent,
   ],
   templateUrl: './nomina-insertar.component.html',
   styleUrl: './nomina-insertar.component.scss',
@@ -47,38 +49,46 @@ export class NominaInsertarComponent {
   NominaEmpleadoSelecion: any = null;
 
   FormsValues(Nomina: Nomina) {
-    logger.log(Nomina);
+    logger.log('FormsValues Nomina', Nomina);
     this._HelpersService.loaderSweetAlert({
       title: 'Agregando nomina',
       text: 'Esto puede demorar un momento.',
     });
 
-    this._NominaService
-      .createNomina(Nomina)
-      .pipe(takeUntil(this.destruir$))
-      .subscribe((response) => {
-        this.loader = false;
-        logger.log(response);
-        Swal.mixin({
-          customClass: {
-            container: this.#colorModeService.getStoredTheme(
-              environment.SabinosTheme
-            ),
-          },
-        })
-          .fire({
-            text: 'Nomina agregada con éxito',
-            icon: 'success',
-          })
-          .then((result) => {
-            this._Router.navigateByUrl(`/nominas/editar/${response.id}`);
-          });
-      });
+    // this._NominaService
+    //   .createNomina(Nomina)
+    //   .pipe(takeUntil(this.destruir$))
+    //   .subscribe((response) => {
+    //     this.loader = false;
+    //     logger.log(response);
+    //     Swal.mixin({
+    //       customClass: {
+    //         container: this.#colorModeService.getStoredTheme(
+    //           environment.SabinosTheme
+    //         ),
+    //       },
+    //     })
+    //       .fire({
+    //         text: 'Nomina agregada con éxito',
+    //         icon: 'success',
+    //       })
+    //       .then((result) => {
+    //         this._Router.navigateByUrl(`/nominas/editar/${response.id}`);
+    //       });
+    //   });
   }
 
   triggerNominaEmpleado(Nomina: any) {
-    // logger.log('triggerNominaEmpleado nominaevent', Nomina);
+    logger.log('triggerNominaEmpleado nominaevent', Nomina);
     let NominaEmpleado: NominaEmpleado = Nomina.nomina_empleado;
+
+    const FIND_TOTAL = NominaEmpleado.servicios.findIndex(
+      (item) => item.descripcion === 'TOTAL'
+    );
+
+    if (FIND_TOTAL !== -1) {
+      Nomina.nomina_empleado.servicios.splice(FIND_TOTAL, 1);
+    }
 
     NominaEmpleado.servicios = NominaEmpleado.servicios.map((s) => ({
       ...s,
@@ -110,10 +120,10 @@ export class NominaInsertarComponent {
 
     // logger.log('triggerNominaEmpleado totalFacturado', totalFacturado);
     // logger.log('triggerNominaEmpleado Nomina', Nomina);
-    logger.log(
-      'triggerNominaEmpleado     this.NominaEmpleadoSelecion ',
-      this.NominaEmpleadoSelecion
-    );
+    // logger.log(
+    //   'aaaaaaaa triggerNominaEmpleado     this.NominaEmpleadoSelecion ',
+    //   this.NominaEmpleadoSelecion
+    // );
   }
 
   ngOnDestroy(): void {
