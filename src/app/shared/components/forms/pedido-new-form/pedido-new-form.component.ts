@@ -121,12 +121,12 @@ export class PedidoNewFormComponent {
     //   // logger.log('value', value);
     //   // console.log('Total de precios:', totalPrecio);
     // });
-    this.PedidoCrudForm.get('servicio_id')?.valueChanges.subscribe((data) => {
-      let dataService = this.Servicios.find((servicio) => servicio.id == data);
-      this._FacturaPedidoService.actualizarTotalServicio(
-        Number(this.PedidoDetail.id),
-        Number(dataService?.precio)
-      );
+    this.PedidoCrudForm.get('servicio_id')?.valueChanges.subscribe(() => {
+      this.changeServices();
+    });
+
+    this.PedidoCrudForm.get('servicio_gratis')?.valueChanges.subscribe(() => {
+      this.changeServices();
     });
   }
 
@@ -163,6 +163,21 @@ export class PedidoNewFormComponent {
     return control && control.touched && control.invalid
       ? control.errors
       : null;
+  }
+
+  changeServices() {
+    let isGratis = this.PedidoCrudForm.controls.servicio_gratis.value;
+    let servicio_id = this.PedidoCrudForm.controls.servicio_id.value;
+    let dataService = this.Servicios.find(
+      (servicio) => servicio.id == servicio_id
+    );
+
+    let precioServicio = isGratis ? 0 : dataService?.precio;
+
+    this._FacturaPedidoService.actualizarTotalServicio(
+      Number(this.PedidoDetail.id),
+      Number(precioServicio)
+    );
   }
 
   getMetodoPagoFormControlError(
@@ -405,6 +420,7 @@ export class PedidoNewFormComponent {
       'guardarCambioFacturaDetalle',
       this.PedidoCrudForm.getRawValue()
     );
+    // return false;
     this.PedidoCrudForm.patchValue({
       pendiente: true,
       completado: false,
@@ -417,6 +433,7 @@ export class PedidoNewFormComponent {
       .updateFactura(Number(this.PedidoDetail.id), {
         metodo_pago_id: values.metodo_pago_id,
         servicio_id: values.servicio_id,
+        servicio_gratis: values.servicio_gratis,
         cliente_id: values.cliente_id.id,
       })
       .subscribe((data) => {
