@@ -325,10 +325,12 @@ export class NominaCrudFormComponent {
         // ...this.NominaCrudForm.value,
         empleado_id: this.NominaData.empleado,
         descripcion: this.NominaData.comentario,
-        monto_facturado: SERVICIOS_FACTURADOS_TOTAL.facturado,
+        // monto_facturado: SERVICIOS_FACTURADOS_TOTAL.facturado,
+        monto_facturado: this.NominaData.facturaFinal,
         presentismo: this.NominaCrudForm.controls.presentismo.value,
         presentismoTotal: this.getPresentismo(),
-        total_facturado: this.NominaData.facturaFinal,
+        // total_facturado: this.NominaData.facturaFinal,
+        total_facturado: this.getTotalSeccion(),
         vales: this.NominaCrudForm.controls.extras_nomina
           .getRawValue()
           .map((extra: any) => ({

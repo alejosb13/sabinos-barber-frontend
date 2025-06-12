@@ -308,6 +308,7 @@ export class PedidoNewFormComponent {
       cliente_id: cliente,
       // metodo_pago_id: this.PedidoDetail.metodo_pago_id,
       servicio_id: this.PedidoDetail.servicio_id,
+      servicio_gratis: this.PedidoDetail.gratis == 1 ? true : false,
       pendiente: false,
       completado: false,
       editable: true,
@@ -320,7 +321,7 @@ export class PedidoNewFormComponent {
     );
     this._FacturaPedidoService.actualizarTotalServicio(
       Number(this.PedidoDetail.id),
-      Number(dataService?.precio)
+      this.PedidoDetail.gratis == 1 ? 0 : Number(dataService?.precio)
     );
 
     // logger.log('this.PedidoCrudForm', this.PedidoCrudForm.value);

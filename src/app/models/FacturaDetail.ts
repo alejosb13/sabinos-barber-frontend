@@ -20,7 +20,7 @@ export interface FacturaDetalle {
   metodo_pago?: MetodoPago;
 
   metodos_pago_detalle?: FacturaDetalleMetodoPago[];
-
+  gratis: number;
   total: number;
 
   factura_producto?: any[];
