@@ -7,6 +7,7 @@ export interface GastoCrudForm {
   password: FormControl<string | null>;
   empleado_id: FormControl<number | null>;
   tipo_usuario: FormControl<boolean | null>;
+  is_local: FormControl<boolean | null>;
   gastos: FormArray<FormGroup<GastoItemForm>>;
 }
 
@@ -45,6 +46,7 @@ export const GastoCrudFormBuilder = () =>
     tipo_usuario: new FormControl(false, [
       ...GastoCrudValidators['tipo_usuario'],
     ]),
+    is_local: new FormControl(false, [...GastoCrudValidators['is_local']]),
     gastos: new FormArray<FormGroup<GastoItemForm>>([crearGastoForm()]), // Inicializar con un gasto
   });
 

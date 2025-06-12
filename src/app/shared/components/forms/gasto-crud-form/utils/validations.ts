@@ -31,11 +31,8 @@ export const GastoCrudValidators: FormGroupValidators = {
     Validators.min(1),
     Validators.pattern(/^[0-9]+$/),
   ],
-  tipo_gasto_id: [
-    Validators.required,
-    Validators.min(1),
-    Validators.pattern(/^[0-9]+$/),
-  ],
+  tipo_gasto_id: [Validators.required],
+  is_local: [Validators.required],
   tipo_usuario: [],
 };
 
@@ -80,6 +77,11 @@ export const GastoCrudErrorMessages: FormErrorMessages = {
   },
   tipo_gasto_id: {
     required: 'El tipo de gasto es requerido',
+    min: 'Seleccione un tipo válido',
+    pattern: 'Solo números enteros permitidos',
+  },
+  is_local: {
+    required: 'El local es requerido',
     min: 'Seleccione un tipo válido',
     pattern: 'Solo números enteros permitidos',
   },

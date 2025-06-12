@@ -55,7 +55,7 @@
       ></app-valid-messages-form>
     </c-col>
     <c-col [md]="2" class="mb-3">
-      <div cFormFloating>
+      <div cFormFloating class="mb-3">
         <c-form-check switch sizing="lg">
           <input
             cFormCheckInput
@@ -72,6 +72,24 @@
       <app-valid-messages-form
         [errors]="getControlError('tipo_usuario')"
         [messages]="GastoCrudErrorMessages['tipo_usuario']"
+      ></app-valid-messages-form>
+      <div cFormFloating>
+        <c-form-check switch sizing="lg">
+          <input
+            cFormCheckInput
+            type="checkbox"
+            id="is_local"
+            class="pointer"
+            formControlName="is_local"
+          />
+          <label cFormCheckLabel class="pointer" for="is_local"
+            >¿Es para el local?</label
+          >
+        </c-form-check>
+      </div>
+      <app-valid-messages-form
+        [errors]="getControlError('is_local')"
+        [messages]="GastoCrudErrorMessages['is_local']"
       ></app-valid-messages-form>
     </c-col>
     <c-col
