@@ -46,7 +46,7 @@ export class FacturaDetalleService {
 
   deleteFactura(id: number, data: any): Observable<any> {
     return this.http.put<any>(
-      `${URL_Factura}/${id}`,
+      `${URL_Factura}/eliminar/${id}`,
       { ...data },
       {
         responseType: 'json',

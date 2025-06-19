@@ -11,8 +11,8 @@ import { IconDirective } from '@coreui/icons-angular';
 import { FormModule } from '@coreui/angular';
 import { Component, inject, HostListener, effect } from '@angular/core';
 import { NgbModal, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { ClientesService } from '../../../services/clientes.service';
 import { EmpleadosService } from '../../../services/empleados.service';
@@ -291,11 +291,45 @@ export class FacturaInsertar2Component {
       this._FacturaDetalleService
         .deleteFactura(Number(facturaDetalle.id), {
           password: formValues.password,
-          comentario: formValues.comentario,
+          motivo: formValues.comentario,
         })
         // .pipe(delay(3000))
-        .pipe(takeUntil(this.destruir$))
+        .pipe(
+          takeUntil(this.destruir$),
+          catchError((err) => {
+            if (err.status === 401) {
+              Swal.mixin({
+                customClass: {
+                  container: this.#colorModeService.getStoredTheme(
+                    environment.SabinosTheme
+                  ),
+                },
+              }).fire({
+                title: 'No autorizado',
+                text: 'Contraseña incorrecta o sesión expirada.',
+                icon: 'error',
+              });
+            } else {
+              Swal.mixin({
+                customClass: {
+                  container: this.#colorModeService.getStoredTheme(
+                    environment.SabinosTheme
+                  ),
+                },
+              }).fire({
+                title: 'Error',
+                text: 'Ocurrió un error al eliminar la factura.',
+                icon: 'error',
+              });
+              console.error('Error:', err);
+            }
+
+            // Detenemos el flujo devolviendo un observable vacío
+            return of(null);
+          })
+        )
         .subscribe((data: any) => {
+          if (!data) return; // Si ocurrió un error, salimos
           Swal.mixin({
             customClass: {
               container: this.#colorModeService.getStoredTheme(
