@@ -17,6 +17,13 @@ export interface GastoItemForm {
   precio_unitario: FormControl<number | null>;
   precio: FormControl<number | null>;
   tipo_gasto_id: FormControl<number | null>;
+  metodos_pagos: FormArray<FormGroup<MontoItemForm>>;
+}
+
+export interface MontoItemForm {
+  metodo_pago_id: FormControl<number | null>;
+
+  monto: FormControl<number | null>;
 }
 
 // Función para crear un nuevo FormGroup de GastoItemForm
@@ -31,6 +38,19 @@ const crearGastoForm = (): FormGroup<GastoItemForm> => {
     tipo_gasto_id: new FormControl(0, [
       ...GastoCrudValidators['tipo_gasto_id'],
     ]),
+    // metodo_pago_id: new FormControl(0, [
+    //   ...GastoCrudValidators['metodo_pago_id'],
+    // ]),
+    metodos_pagos: new FormArray<FormGroup<MontoItemForm>>([
+      crearMetodosForm(),
+    ]),
+  });
+};
+
+export const crearMetodosForm = (): FormGroup<MontoItemForm> => {
+  return new FormGroup<MontoItemForm>({
+    metodo_pago_id: new FormControl(0, [...GastoCrudValidators['user_id']]),
+    monto: new FormControl(0, [...GastoCrudValidators['precio']]),
   });
 };
 
@@ -54,3 +74,6 @@ export const GastoCrudFormBuilder = () =>
 export const agregarGasto = (form: FormGroup<GastoCrudForm>) => {
   form.controls.gastos.push(crearGastoForm()); // Agregar una nueva instancia
 };
+// export const agregarMetodoPago = (form: FormGroup<MontoItemForm>) => {
+//   form.controls.gastos.push(crearMetodosForm()); // Agregar una nueva instancia
+// };

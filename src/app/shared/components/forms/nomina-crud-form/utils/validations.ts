@@ -9,6 +9,7 @@ export const NominaCrudValidators: FormGroupValidators = {
   monto: [Validators.required, Validators.min(1)],
   monto_total: [Validators.required, Validators.min(1)],
   presentismo: [Validators.required],
+  metodo_pago_id: [Validators.required],
   descripcion: [Validators.maxLength(100)],
 };
 
@@ -31,5 +32,8 @@ export const NominaCrudErrorMessages: FormErrorMessages = {
   },
   descripcion: {
     maxlength: 'El máximo es de 100 caracteres.',
+  },
+  metodo_pago_id: {
+    required: 'El método de pago es requerido.',
   },
 };

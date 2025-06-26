@@ -148,8 +148,35 @@
         </div>
       </td>
     </tr>
-    <tr valign="middle">
-      <td colspan="5">
+    <tr valign="middle" [formGroup]="NominaCrudForm">
+      <td colspan="2" style="max-width: 75px">
+        <div class="text-end px-3">
+          <div cFormFloating>
+            <select
+              cSelect
+              id="metodo_pago_id"
+              formControlName="metodo_pago_id"
+            >
+              <option value="0" hidden>Seleccione un método de pago</option>
+              <option
+                *ngFor="let MetodoPago of MetodosPagos; let i = index"
+                [ngValue]="MetodoPago.id"
+              >
+                {{ MetodoPago.descripcion | titlecase }}
+              </option>
+            </select>
+            <label cLabel for="metodo_pago_id"
+              >Método de pago
+              <c-spinner size="sm" *ngIf="loadingMetodosPagos" />
+            </label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getControlError('metodo_pago_id')"
+            [messages]="NominaCrudErrorMessages['metodo_pago_id']"
+          ></app-valid-messages-form>
+        </div>
+      </td>
+      <td colspan="3">
         <div class="text-end px-3">
           <h5>
             Total a pagar:

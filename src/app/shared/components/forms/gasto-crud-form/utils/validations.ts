@@ -34,6 +34,7 @@ export const GastoCrudValidators: FormGroupValidators = {
   tipo_gasto_id: [Validators.required],
   is_local: [Validators.required],
   tipo_usuario: [],
+  metodo_pago_id: [Validators.required],
 };
 
 export const GastoCrudErrorMessages: FormErrorMessages = {
@@ -84,5 +85,11 @@ export const GastoCrudErrorMessages: FormErrorMessages = {
     required: 'El local es requerido',
     min: 'Seleccione un tipo válido',
     pattern: 'Solo números enteros permitidos',
+  },
+  metodo_pago_id: {
+    required: 'El método de pago es requerido',
+  },
+  monto: {
+    required: 'El monto es requerido',
   },
 };

@@ -4,6 +4,7 @@ import { NominaCrudValidators } from './validations';
 export interface NominaCrudForm {
   extras_nomina: FormArray<FormGroup<ExtraNominaForm>>;
   presentismo: FormControl<number | null>;
+  metodo_pago_id: FormControl<number | null>;
 }
 export interface ExtraNominaForm {
   extra_id: FormControl<number | null>;
@@ -19,6 +20,9 @@ export const NominaCrudFormBuilder = () =>
     ]), // Inicializar con un gasto
     presentismo: new FormControl({ disabled: false, value: 5 }, [
       ...NominaCrudValidators['presentismo'],
+    ]),
+    metodo_pago_id: new FormControl({ disabled: false, value: 0 }, [
+      ...NominaCrudValidators['metodo_pago_id'],
     ]),
   });
 

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import {
+  AbstractControl,
   FormArray,
   FormControl,
   FormGroup,
@@ -17,7 +18,12 @@ import {
   RowComponent,
   SpinnerModule,
 } from '@coreui/angular';
-import { agregarGasto, GastoCrudFormBuilder } from './utils/form';
+import {
+  agregarGasto,
+  crearMetodosForm,
+  GastoCrudFormBuilder,
+  MontoItemForm,
+} from './utils/form';
 import { CommonModule } from '@angular/common';
 import { GastoCrudErrorMessages } from './utils/validations';
 import Swal from 'sweetalert2';
@@ -51,6 +57,8 @@ import { Producto } from '../../../../models/Producto.model';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { TipoGasto } from '../../../../models/TipoGasto.model';
 import { TipoGastoService } from '../../../../services/tipo_gasto.service';
+import { MetodoPago } from '../../../../models/MetodoPago.model';
+import { MetodoPagoService } from '../../../../services/metodos_pago.service';
 
 @Component({
   selector: 'app-gasto-crud-form',
@@ -90,11 +98,15 @@ export class GastoCrudFormComponent {
   loadingTipoGasto: boolean = false;
   TiposGasto: TipoGasto[] = [];
 
+  loadingMetodosPagos: boolean = false;
+  MetodosPagos: MetodoPago[] = [];
+
   #colorModeService = inject(ColorModeService);
   private _EmpleadosService = inject(EmpleadosService);
   private _ProductosService = inject(ProductosService);
   private _UsuarioService = inject(UsuarioesService);
   private _TipoGastoService = inject(TipoGastoService);
+  private _MetodoPagoService = inject(MetodoPagoService);
 
   @Input() Nomina!: Nomina;
   @Output() FormsValues = new EventEmitter<any>();
@@ -106,6 +118,7 @@ export class GastoCrudFormComponent {
     this.getEmpleados();
     this.getUsuarios();
     this.getTipoGasto();
+    this.getMetodosPagos();
 
     // this.GastoCrudForm.valueChanges.subscribe((data) => {
     //   logger.log('data', data);
@@ -220,6 +233,45 @@ export class GastoCrudFormComponent {
     logger.log(this.Nomina);
   }
 
+  getMetodosPagos() {
+    this.loadingMetodosPagos = true;
+    this._MetodoPagoService
+      .getMetodoPago({
+        estado: 1,
+        disablePaginate: '1',
+        link: null,
+      })
+      // .pipe(delay(3000))
+      .pipe(takeUntil(this.destruir$))
+      .subscribe((data: MetodoPago[]) => {
+        this.loadingMetodosPagos = false;
+        this.MetodosPagos = [...data];
+      });
+  }
+
+  getMetodosPagoControls(gasto: AbstractControl): AbstractControl[] {
+    const metodos = gasto.get('metodos_pagos') as FormArray;
+    return metodos?.controls ?? [];
+  }
+
+  getMetodosPagosForm(i: number): FormArray<FormGroup<MontoItemForm>> {
+    return this.gastos.at(i).get('metodos_pagos') as FormArray<
+      FormGroup<MontoItemForm>
+    >;
+  }
+
+  getMetodoPagoError(i: number, j: number, campo: keyof MontoItemForm) {
+    return this.getMetodosPagosForm(i).at(j).get(campo)?.errors;
+  }
+
+  agregarMetodoPago(i: number): void {
+    this.getMetodosPagosForm(i).push(crearMetodosForm());
+  }
+
+  eliminarMetodoPago(i: number, j: number): void {
+    this.getMetodosPagosForm(i).removeAt(j);
+  }
+
   getEmpleados() {
     this.loadingEmpleados = true;
     this._EmpleadosService
@@ -327,6 +379,8 @@ export class GastoCrudFormComponent {
           cantidad: g.cantidad ? Number(g.cantidad) : 0,
           precio_unitario: g.precio_unitario ? Number(g.precio_unitario) : 0,
           producto_id: g.producto_id ? g.producto_id.id : null,
+          // metodo_pago_id: g.metodo_pago_id,
+          metodos_pagos: [],
         };
       });
       const FORM_DATA = {
@@ -338,7 +392,8 @@ export class GastoCrudFormComponent {
             ? null
             : this.GastoCrudForm.value.empleado_id,
       };
-      this.FormsValues.emit(FORM_DATA);
+      logger.log('FORM_DATA', FORM_DATA);
+      // this.FormsValues.emit(FORM_DATA);
     } else {
       Swal.mixin({
         customClass: {

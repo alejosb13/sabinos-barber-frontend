@@ -51,6 +51,8 @@ import { Factura } from '../../../../models/Factura.model';
 import { LoginService } from '../../../../services/login.service';
 import { NominaService } from '../../../../services/nomina.service';
 import { IconComponent, IconDirective } from '@coreui/icons-angular';
+import { MetodoPago } from '../../../../models/MetodoPago.model';
+import { MetodoPagoService } from '../../../../services/metodos_pago.service';
 
 @Component({
   selector: 'app-nomina-crud-form',
@@ -87,11 +89,15 @@ export class NominaCrudFormComponent {
   Empleados: Empleado[] = [];
   EmpleadoId: number = 0;
 
+  loadingMetodosPagos: boolean = false;
+  MetodosPagos: MetodoPago[] = [];
+
   #colorModeService = inject(ColorModeService);
   private _EmpleadosService = inject(EmpleadosService);
   private _NominaService = inject(NominaService);
   private _LocalesService = inject(LocalesService);
   private _LoginService = inject(LoginService);
+  private _MetodoPagoService = inject(MetodoPagoService);
 
   @Input() NominaData: any;
   @Output() FormsValues = new EventEmitter<any>();
@@ -110,7 +116,7 @@ export class NominaCrudFormComponent {
 
   ngOnInit(): void {
     logger.log('NominaData', this.NominaData);
-    // this.getEmpleados();
+    this.getMetodosPagos();
     // this.changeEmpleado();
     // this.getLocales();
     this.changeExtraValues();
@@ -284,6 +290,22 @@ export class NominaCrudFormComponent {
       });
   }
 
+  getMetodosPagos() {
+    this.loadingMetodosPagos = true;
+    this._MetodoPagoService
+      .getMetodoPago({
+        estado: 1,
+        disablePaginate: '1',
+        link: null,
+      })
+      // .pipe(delay(3000))
+      .pipe(takeUntil(this.destruir$))
+      .subscribe((data: MetodoPago[]) => {
+        this.loadingMetodosPagos = false;
+        this.MetodosPagos = [...data];
+      });
+  }
+
   getNominaEmpleado() {
     // this.loadingEmpleados = true;
     this._NominaService
@@ -328,6 +350,7 @@ export class NominaCrudFormComponent {
         // monto_facturado: SERVICIOS_FACTURADOS_TOTAL.facturado,
         monto_facturado: this.NominaData.facturaFinal,
         presentismo: this.NominaCrudForm.controls.presentismo.value,
+        metodo_pago_id: this.NominaCrudForm.controls.metodo_pago_id.value,
         presentismoTotal: this.getPresentismo(),
         // total_facturado: this.NominaData.facturaFinal,
         total_facturado: this.getTotalSeccion(),
