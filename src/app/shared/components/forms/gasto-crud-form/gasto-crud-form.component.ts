@@ -380,9 +380,15 @@ export class GastoCrudFormComponent {
           precio_unitario: g.precio_unitario ? Number(g.precio_unitario) : 0,
           producto_id: g.producto_id ? g.producto_id.id : null,
           // metodo_pago_id: g.metodo_pago_id,
-          metodos_pagos: [],
+          metodos_pagos: g.metodos_pagos.map((m: any) => {
+            return {
+              metodo_pago_id: m.metodo_pago_id,
+              monto: m.monto ? Number(m.monto) : 0,
+            };
+          }),
         };
       });
+
       const FORM_DATA = {
         ...this.GastoCrudForm.getRawValue(),
         // ...this.GastoCrudForm.value,
@@ -393,7 +399,7 @@ export class GastoCrudFormComponent {
             : this.GastoCrudForm.value.empleado_id,
       };
       logger.log('FORM_DATA', FORM_DATA);
-      // this.FormsValues.emit(FORM_DATA);
+      this.FormsValues.emit(FORM_DATA);
     } else {
       Swal.mixin({
         customClass: {
