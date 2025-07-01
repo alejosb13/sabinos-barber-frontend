@@ -47,7 +47,6 @@
                 <th class="bg-body-tertiary">#</th>
                 <th class="bg-body-tertiary">Cliente</th>
                 <th class="bg-body-tertiary">Servicio</th>
-                <th class="bg-body-tertiary">MetodoPago</th>
                 <th class="bg-body-tertiary">Total</th>
                 <th class="bg-body-tertiary"></th>
               </tr>
@@ -62,10 +61,12 @@
                   {{ FacDetalle.cliente?.apellido }}
                 </td>
                 <td>{{ FacDetalle.servicio?.descripcion }}</td>
-                <td>{{ FacDetalle.metodo_pago?.tipo }}</td>
                 <td>
                   <!-- {{ FacDetalle.factura_producto.reduce((sum, prod) => sum + prod.precio, 0) | currency }} -->
-                  0
+                  {{
+                    sumarTodosLosMetodosPagos(FacDetalle.metodos_pago_detalle)
+                      | currency : "ARS"
+                  }}
                 </td>
                 <td>
                   <button (click)="toggleDetail(i)" class="btn btn-link">
@@ -76,23 +77,52 @@
               <tr *ngIf="expandedRow === i" [attr.data-index]="i">
                 <td colspan="6">
                   <div class="border p-3">
-                    <h5>Productos</h5>
-                    <ul class="list-group">
-                      <li
-                        *ngFor="let product of FacDetalle.factura_producto"
-                        class="list-group-item d-flex justify-content-between"
-                      >
-                        <span>{{ product.producto_id }}</span>
-                        <!-- <span>{{ product. }}</span> -->
-                        <span>NOmbre</span>
-                        <span>x{{ product.cantidad }}</span>
-                        <span>{{ product.gratis == 1 ? "Si" : "No" }}</span>
-                        <span>{{
-                          product.precio_unitario | currency : "ARS"
-                        }}</span>
-                        <span>{{ product.precio | currency : "ARS" }}</span>
-                      </li>
-                    </ul>
+                    <div
+                      class="mb-4"
+                      *ngIf="
+                        FacDetalle.factura_producto &&
+                        FacDetalle.factura_producto.length > 0
+                      "
+                    >
+                      <h5>Productos</h5>
+                      <ul class="list-group">
+                        <li
+                          *ngFor="let product of FacDetalle.factura_producto"
+                          class="list-group-item d-flex justify-content-between"
+                        >
+                          <!-- <span>{{ product.producto_id }}</span> -->
+                          <!-- <span>{{ product. }}</span> -->
+                          <span>{{ product.producto.marca }}</span>
+                          <!-- <span>x{{ product.cantidad }}</span> -->
+                          <span>{{ product.gratis == 1 ? "Si" : "No" }}</span>
+                          <span
+                            >{{
+                              product.precio_unitario | currency : "ARS"
+                            }}
+                            x{{ product.cantidad }}</span
+                          >
+                          <span>{{ product.precio | currency : "ARS" }}</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div
+                      *ngIf="
+                        FacDetalle.metodos_pago_detalle &&
+                        FacDetalle.metodos_pago_detalle.length > 0
+                      "
+                    >
+                      <h5>Método de Pago</h5>
+                      <ul class="list-group">
+                        <li
+                          *ngFor="let Mp of FacDetalle.metodos_pago_detalle"
+                          class="list-group-item d-flex justify-content-between"
+                        >
+                          <span>{{ Mp.metodo_pago?.tipo }}</span>
+                          <span>{{ Mp.monto | currency : "ARS" }}</span>
+                          <!-- <span>{{ product. }}</span> -->
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -108,10 +138,10 @@
           <div class="col-md-9"><strong>Descuento:</strong></div>
           <div class="col-md-3">{{ Factura.descuento }} %</div>
         </div> -->
-        <div class="row text-end fw-bold fs-5">
+        <!-- <div class="row text-end fw-bold fs-5">
           <div class="col-md-9">Total a Pagar:</div>
-          <!-- <div class="col-md-3">{{ Factura.total | currency : "ARS" }}</div> -->
-        </div>
+          <div class="col-md-3">{{ Factura.total | currency : "ARS" }}</div>
+        </div> -->
       </div>
     </c-container>
     <c-container [fluid]="true" class="px-0 text-center" *ngIf="loaderFactura">

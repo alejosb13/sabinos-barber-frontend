@@ -144,6 +144,7 @@ export class FacturaDetalleFormComponent {
   sendValueFom() {
     logger.log('sendValueFom', this.PedidoCrudForm);
     logger.log('this.PedidoCrudForm.valid', this.PedidoCrudForm.valid);
+    const LOCAL_ID = this._LoginService.getUserData().local_id;
 
     if (this.PedidoCrudForm.valid) {
       // Swal.fire({

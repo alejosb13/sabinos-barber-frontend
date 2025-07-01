@@ -20,21 +20,12 @@ import {
 import { IconDirective } from '@coreui/icons-angular';
 import { FacturasService } from '../../../services/facturas.service';
 import { CommonModule } from '@angular/common';
-import { Listado } from 'src/app/models/Listados.model';
-import { Producto } from 'src/app/models/Producto.model';
 import { ParametersUrl } from 'src/app/models/Parameter.model';
 import { FiltrosListFormComponent } from '../../../shared/components/forms/filtros-list-form/filtros-list-form.component';
-import { IModalAction } from '@coreui/angular/lib/modal/modal.service';
 import logger from 'src/app/shared/utils/logger';
-import { Filtro, FiltroKeys } from 'src/app/models/Filter.model';
-import dayjs from 'dayjs';
-import { HelpersService } from 'src/app/services/helpers.service';
-import Swal from 'sweetalert2';
-import { ColorModeService } from '@coreui/angular';
-import { environment } from 'src/environments/environment';
 import { FormsModule } from '@angular/forms';
 import { Factura } from '../../../models/Factura.model';
-import { SpinnersComponent } from '../../../documentacion/base/spinners/spinners.component';
+import { FacturaDetalleMetodoPago } from '../../../models/FacturaDetail';
 
 @Component({
   selector: 'app-factura-detalle',
@@ -107,5 +98,15 @@ export class FacturaDetalleComponent {
 
   toggleDetail(index: number) {
     this.expandedRow = this.expandedRow === index ? null : index;
+  }
+
+  sumarTodosLosMetodosPagos(
+    MetodoPagoDetalle: FacturaDetalleMetodoPago[] | undefined
+  ): number {
+    if (!MetodoPagoDetalle) return 0;
+
+    return MetodoPagoDetalle.reduce((total, metodo) => {
+      return total + metodo.monto;
+    }, 0);
   }
 }
