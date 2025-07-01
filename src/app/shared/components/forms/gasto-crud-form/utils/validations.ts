@@ -34,7 +34,7 @@ export const GastoCrudValidators: FormGroupValidators = {
   tipo_gasto_id: [Validators.required],
   is_local: [Validators.required],
   tipo_usuario: [],
-  metodo_pago_id: [Validators.required],
+  metodo_pago_id: [Validators.required, Validators.min(1)],
 };
 
 export const GastoCrudErrorMessages: FormErrorMessages = {

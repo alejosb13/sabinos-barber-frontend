@@ -85,6 +85,7 @@ export class FacturaDetalleService {
     factura_detalle_id: number;
     metodo_pago_id: number;
     monto: number;
+    local_id: number;
   }): Observable<any> {
     return this.http.post<any>(
       `${URL_Factura}/metodo_pago`,
@@ -100,6 +101,7 @@ export class FacturaDetalleService {
       factura_detalle_id: number;
       metodo_pago_id: number;
       monto: number;
+      local_id: number;
     },
     Id: number
   ): Observable<any> {

@@ -132,12 +132,23 @@
 
   <!-- Sección de gastos -->
   <div formArrayName="gastos">
-    <div
-      *ngFor="let gasto of gastos.controls; let i = index"
-      [formGroupName]="i"
-      class="mb-4 border p-3 position-relative"
-    >
-      <c-row class="form-gasto">
+    <div class="d-flex align-items-center mb-3">
+      <h5 class="me-3">Gastos</h5>
+      <button
+        cButton
+        color="primary"
+        type="button"
+        (click)="agregarNuevoGasto()"
+      >
+        <svg cIcon height="18" name="cil-plus"></svg>
+      </button>
+    </div>
+    <div class="mb-4 border p-3 position-relative">
+      <c-row
+        class="form-gasto"
+        *ngFor="let gasto of gastos.controls; let i = index; let isLast = last"
+        [formGroupName]="i"
+      >
         <h6 class="mb-3">Gasto Nro. {{ i + 1 }}</h6>
         <c-col [md]="11">
           <c-row>
@@ -273,85 +284,6 @@
                 [messages]="GastoCrudErrorMessages['precio']"
               ></app-valid-messages-form>
             </c-col>
-            <hr />
-
-            <c-col [md]="12" formArrayName="metodos_pagos">
-              <div class="d-flex align-items-center mb-3">
-                <h6 class="me-3">Métodos de Pago</h6>
-                <button
-                  cButton
-                  color="primary"
-                  type="button"
-                  (click)="agregarMetodoPago(i)"
-                  [disabled]="getMetodosPagosForm(i).length == 2"
-                >
-                  <svg cIcon height="18" name="cil-plus"></svg>
-                </button>
-              </div>
-              <c-row
-                *ngFor="
-                  let mPago of getMetodosPagoControls(gasto);
-                  let j = index
-                "
-                [formGroupName]="j"
-                class="mb-4 m-3 pt-4 border position-relative flex-row"
-              >
-                <c-col [md]="3">
-                  <div cFormFloating>
-                    <select
-                      cSelect
-                      id="metodo_pago_id"
-                      formControlName="metodo_pago_id"
-                    >
-                      <option value="0" hidden>
-                        Seleccione un método de pago
-                      </option>
-                      <option
-                        *ngFor="let MetodoPago of MetodosPagos; let i = index"
-                        [ngValue]="MetodoPago.id"
-                      >
-                        {{ MetodoPago.descripcion | titlecase }}
-                      </option>
-                    </select>
-                    <label cLabel for="metodo_pago_id"
-                      >Método de pago
-                      <c-spinner size="sm" *ngIf="loadingMetodosPagos" />
-                    </label>
-                  </div>
-                  <app-valid-messages-form
-                    [errors]="getMetodoPagoError(i, j, 'metodo_pago_id')"
-                    [messages]="GastoCrudErrorMessages['metodo_pago_id']"
-                  ></app-valid-messages-form>
-                </c-col>
-                <c-col [md]="3">
-                  <div cFormFloating>
-                    <input
-                      cFormControl
-                      id="monto_{{ j }}"
-                      formControlName="monto"
-                      type="text"
-                      placeholder="Cantidad"
-                      appOnlyNumbers
-                    />
-                    <label cLabel for="monto_{{ i }}">Cantidad</label>
-                  </div>
-                  <app-valid-messages-form
-                    [errors]="getMetodoPagoError(i, j, 'monto')"
-                    [messages]="GastoCrudErrorMessages['monto']"
-                  ></app-valid-messages-form>
-                </c-col>
-                <c-col [md]="1">
-                  <button
-                    cButton
-                    color="danger"
-                    (click)="eliminarMetodoPago(i, j)"
-                    [disabled]="getMetodosPagosForm(i).length <= 1"
-                  >
-                    <svg cIcon height="18" name="cil-trash"></svg>
-                  </button>
-                </c-col>
-              </c-row>
-            </c-col>
           </c-row>
         </c-col>
 
@@ -365,13 +297,94 @@
             <svg cIcon height="18" name="cil-trash"></svg>
           </button>
         </c-col>
+        @if(!isLast){
+        <hr />
+        }
       </c-row>
     </div>
-    <button cButton color="primary" type="button" (click)="agregarNuevoGasto()">
-      <svg cIcon height="18" name="cil-plus"></svg>
-    </button>
   </div>
 
+  <div formArrayName="metodos_pago">
+    <div class="d-flex align-items-center mb-3">
+      <h5 class="me-3">Métodos de Pago</h5>
+      <button
+        cButton
+        color="primary"
+        type="button"
+        (click)="agregarMetodoPago()"
+        [disabled]="MetodosPagoControls.controls.length == 2"
+      >
+        <svg cIcon height="18" name="cil-plus"></svg>
+      </button>
+    </div>
+    <div class="mb-4 border p-3 position-relative">
+      <c-row
+        class="form-metodo-pago"
+        *ngFor="
+          let mPago of MetodosPagoControls.controls;
+          let j = index;
+          let isLastMp = last
+        "
+        [formGroupName]="j"
+      >
+        <c-col [md]="3" class="mb-4">
+          <div cFormFloating>
+            <select
+              cSelect
+              id="metodo_pago_id_{{ j }}"
+              formControlName="metodo_pago_id"
+            >
+              <option value="0" hidden>Seleccione un método de pago</option>
+              <option
+                *ngFor="let MetodoPago of MetodosPagos; let i = index"
+                [ngValue]="MetodoPago.id"
+              >
+                {{ MetodoPago.descripcion | titlecase }}
+              </option>
+            </select>
+            <label cLabel for="metodo_pago_id_{{ j }}"
+              >Método de pago
+              <c-spinner size="sm" *ngIf="loadingMetodosPagos" />
+            </label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getMetodoPagoError(j, 'metodo_pago_id')"
+            [messages]="GastoCrudErrorMessages['metodo_pago_id']"
+          ></app-valid-messages-form>
+        </c-col>
+        <c-col [md]="3">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="monto_{{ j }}"
+              formControlName="monto"
+              type="text"
+              placeholder="Cantidad"
+              appOnlyNumbers
+            />
+            <label cLabel for="monto_{{ j }}">Monto</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getMetodoPagoError(j, 'monto')"
+            [messages]="GastoCrudErrorMessages['monto']"
+          ></app-valid-messages-form>
+        </c-col>
+        <c-col [md]="1">
+          <button
+            cButton
+            color="danger"
+            (click)="eliminarMetodoPago(j)"
+            [disabled]="MetodosPagoControls.controls.length <= 1"
+          >
+            <svg cIcon height="18" name="cil-trash"></svg>
+          </button>
+        </c-col>
+        @if(!isLastMp){
+        <hr />
+        }
+      </c-row>
+    </div>
+  </div>
   <!-- Botón para enviar el formulario -->
   <c-row class="mb-4">
     <c-col class="text-center">

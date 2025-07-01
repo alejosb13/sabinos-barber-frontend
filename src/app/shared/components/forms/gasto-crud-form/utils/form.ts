@@ -9,6 +9,7 @@ export interface GastoCrudForm {
   tipo_usuario: FormControl<boolean | null>;
   is_local: FormControl<boolean | null>;
   gastos: FormArray<FormGroup<GastoItemForm>>;
+  metodos_pago: FormArray<FormGroup<MontoItemForm>>;
 }
 
 export interface GastoItemForm {
@@ -17,7 +18,6 @@ export interface GastoItemForm {
   precio_unitario: FormControl<number | null>;
   precio: FormControl<number | null>;
   tipo_gasto_id: FormControl<number | null>;
-  metodos_pagos: FormArray<FormGroup<MontoItemForm>>;
 }
 
 export interface MontoItemForm {
@@ -41,15 +41,14 @@ const crearGastoForm = (): FormGroup<GastoItemForm> => {
     // metodo_pago_id: new FormControl(0, [
     //   ...GastoCrudValidators['metodo_pago_id'],
     // ]),
-    metodos_pagos: new FormArray<FormGroup<MontoItemForm>>([
-      crearMetodosForm(),
-    ]),
   });
 };
 
 export const crearMetodosForm = (): FormGroup<MontoItemForm> => {
   return new FormGroup<MontoItemForm>({
-    metodo_pago_id: new FormControl(0, [...GastoCrudValidators['user_id']]),
+    metodo_pago_id: new FormControl(0, [
+      ...GastoCrudValidators['metodo_pago_id'],
+    ]),
     monto: new FormControl(0, [...GastoCrudValidators['precio']]),
   });
 };
@@ -68,6 +67,7 @@ export const GastoCrudFormBuilder = () =>
     ]),
     is_local: new FormControl(false, [...GastoCrudValidators['is_local']]),
     gastos: new FormArray<FormGroup<GastoItemForm>>([crearGastoForm()]), // Inicializar con un gasto
+    metodos_pago: new FormArray<FormGroup<MontoItemForm>>([crearMetodosForm()]),
   });
 
 // Función para agregar un nuevo gasto al FormArray

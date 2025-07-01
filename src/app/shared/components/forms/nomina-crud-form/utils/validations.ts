@@ -9,7 +9,7 @@ export const NominaCrudValidators: FormGroupValidators = {
   monto: [Validators.required, Validators.min(1)],
   monto_total: [Validators.required, Validators.min(1)],
   presentismo: [Validators.required],
-  metodo_pago_id: [Validators.required],
+  metodo_pago_id: [Validators.required, Validators.min(1)],
   descripcion: [Validators.maxLength(100)],
 };
 

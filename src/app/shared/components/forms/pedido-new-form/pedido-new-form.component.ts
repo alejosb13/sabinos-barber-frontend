@@ -63,6 +63,7 @@ import { Servicios } from '../../../../models/Servicios.model';
 import { FacturaDetalle } from '../../../../models/FacturaDetail';
 import { FacturaPedidoService } from '../../../../services/factura_pedido.service';
 import { FacturaDetalleService } from '../../../../services/factura_detalle.service';
+import { LoginService } from '../../../../services/login.service';
 
 @Component({
   selector: 'app-pedido-new-form',
@@ -97,6 +98,7 @@ export class PedidoNewFormComponent {
   _ProductosService = inject(ProductosService);
   _FacturaPedidoService = inject(FacturaPedidoService);
   _FacturaDetalleService = inject(FacturaDetalleService);
+  _LoginService = inject(LoginService);
 
   @Input() PedidoDetail!: FacturaDetalle;
   @Input() Clientes: Cliente[] = [];
@@ -616,7 +618,7 @@ export class PedidoNewFormComponent {
 
   guardarMetodoPago(index: number, MetodoP: any) {
     // logger.log('index', index);
-    // logger.log('prod', prod.getRawValue());
+    const LOCAL_ID = this._LoginService.getUserData().local.id;
     const ACCION = MetodoP.get('editable').value;
     this.MetodosPagoFormArray.at(index).patchValue({
       pendiente: true,
@@ -636,6 +638,7 @@ export class PedidoNewFormComponent {
             factura_detalle_id: Number(this.PedidoDetail.id),
             metodo_pago_id: MetodoP.get('metodo_pago_id').value,
             monto: MetodoP.get('monto').value,
+            local_id: Number(LOCAL_ID),
           },
           FD_METODO_PAGO_ID
         )
@@ -659,6 +662,7 @@ export class PedidoNewFormComponent {
           factura_detalle_id: Number(this.PedidoDetail.id),
           metodo_pago_id: MetodoP.get('metodo_pago_id').value,
           monto: MetodoP.get('monto').value,
+          local_id: Number(LOCAL_ID),
         })
         .subscribe((data) => {
           this.MetodosPagoFormArray.at(index).patchValue({

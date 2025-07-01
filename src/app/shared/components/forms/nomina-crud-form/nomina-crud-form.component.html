@@ -12,114 +12,114 @@
     </ul>
   </c-col>
 </c-row>
+<div [formGroup]="NominaCrudForm">
+  <div formArrayName="extras_nomina" class="mb-4 border">
+    <div class="d-flex align-items-center mb-2 p-3">
+      <h5 class="me-3">Extras</h5>
+      <button
+        cButton
+        color="info"
+        class="btn-action-table"
+        (click)="agregarExtraInNomina()"
+      >
+        <svg cIcon height="18" name="cil-plus"></svg>
+      </button>
+    </div>
 
-<table
-  class="table table-bordered text-center mb-4"
-  [formGroup]="NominaCrudForm"
->
-  <thead>
-    <tr>
-      <th colspan="5" class="text-start">
-        <button
-          cButton
-          color="info"
-          class="btn-action-table mx-3"
-          (click)="agregarExtraInNomina()"
-        >
-          <span class="">
-            <svg cIcon height="18" name="cil-plus"></svg> Agregar Extra</span
+    <div
+      *ngFor="let extraGroup of ExtraNominaFormArray.controls; let i = index"
+      [formGroupName]="i"
+      class="card mb-3 p-3"
+    >
+      <div class="row g-2">
+        <div class="col-md-2">
+          <div cFormFloating>
+            <select cSelect id="extra_id_{{ i }}" formControlName="extra_id">
+              <option value="1">Adición</option>
+              <option value="2">Deducción</option>
+            </select>
+            <label cLabel for="extra_id_{{ i }}">Tipo Extra</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getExtraNominaFormControlError(i, 'extra_id')"
+            [messages]="NominaCrudErrorMessages['extra_id']"
+          ></app-valid-messages-form>
+        </div>
+
+        <div class="col-md-2">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="monto_{{ i }}"
+              formControlName="monto"
+              type="text"
+              placeholder="Monto"
+              appOnlyNumberAndPoint
+            />
+            <label cLabel for="monto_{{ i }}">Monto</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getExtraNominaFormControlError(i, 'monto')"
+            [messages]="NominaCrudErrorMessages['monto']"
+          ></app-valid-messages-form>
+        </div>
+
+        <div class="col-md-2">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="monto_total_{{ i }}"
+              formControlName="monto_total"
+              type="text"
+              placeholder="Monto Total"
+              appOnlyNumberAndPoint
+            />
+            <label cLabel for="monto_total_{{ i }}">Monto Total</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getExtraNominaFormControlError(i, 'monto_total')"
+            [messages]="NominaCrudErrorMessages['monto_total']"
+          ></app-valid-messages-form>
+        </div>
+
+        <div class="col-md-4">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="descripcion_{{ i }}"
+              formControlName="descripcion"
+              type="text"
+              placeholder="Detalle"
+              appOnlyAlphanumeric
+            />
+            <label cLabel for="descripcion_{{ i }}">Detalle</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getExtraNominaFormControlError(i, 'descripcion')"
+            [messages]="NominaCrudErrorMessages['descripcion']"
+          ></app-valid-messages-form>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-center">
+          <button
+            cButton
+            color="danger"
+            class="btn-action-table"
+            (click)="eliminarExtraForm(i)"
           >
-        </button>
-      </th>
-    </tr>
-  </thead>
-  <tbody formArrayName="extras_nomina">
-    @for ( nominaF of ExtraNominaFormArray.controls; track $index; let m =
-    $index) {
-    <tr [formGroupName]="m">
-      <td style="max-width: 75px">
-        <div cFormFloating>
-          <select cSelect id="extra_idlInput{{ m }}" formControlName="extra_id">
-            <option value="1">Adición</option>
-            <option value="2">Deducción</option>
-          </select>
-          <label cLabel for="extra_idlInput{{ m }}">Extra </label>
+            <svg cIcon height="18" name="cil-trash"></svg>
+          </button>
         </div>
-        <app-valid-messages-form
-          [errors]="getExtraNominaFormControlError(m, 'extra_id')"
-          [messages]="NominaCrudErrorMessages['extra_id']"
-        ></app-valid-messages-form>
-      </td>
-      <td style="max-width: 75px">
-        <div cFormFloating>
-          <input
-            cFormControl
-            id="monto_{{ m }}"
-            formControlName="monto"
-            type="text"
-            placeholder="monto"
-            appOnlyNumberAndPoint
-          />
-          <label cLabel for="monto_{{ m }}">Monto</label>
-        </div>
-        <app-valid-messages-form
-          [errors]="getExtraNominaFormControlError(m, 'monto')"
-          [messages]="NominaCrudErrorMessages['monto']"
-        ></app-valid-messages-form>
-      </td>
-      <td style="max-width: 75px">
-        <div cFormFloating>
-          <input
-            cFormControl
-            id="monto_total_{{ m }}"
-            formControlName="monto_total"
-            type="text"
-            placeholder="Monto Total"
-            appOnlyNumberAndPoint
-          />
-          <label cLabel for="monto_total_{{ m }}">Monto</label>
-        </div>
-        <app-valid-messages-form
-          [errors]="getExtraNominaFormControlError(m, 'monto_total')"
-          [messages]="NominaCrudErrorMessages['monto_total']"
-        ></app-valid-messages-form>
-      </td>
-      <td style="max-width: 150px">
-        <div cFormFloating>
-          <input
-            cFormControl
-            id="descripcion_{{ m }}"
-            formControlName="descripcion"
-            type="text"
-            placeholder="Descripcion"
-            appOnlyAlphanumeric
-          />
-          <label cLabel for="descripcion_{{ m }}">Detalle</label>
-        </div>
-        <app-valid-messages-form
-          [errors]="getExtraNominaFormControlError(m, 'descripcion')"
-          [messages]="NominaCrudErrorMessages['descripcion']"
-        ></app-valid-messages-form>
-      </td>
-      <td style="max-width: 75px">
-        <button
-          cButton
-          color="danger"
-          class="btn-action-table me-3"
-          (click)="eliminarExtraForm(m)"
-        >
-          <span class=""> <svg cIcon height="18" name="cil-trash"></svg> </span>
-        </button>
-      </td>
-    </tr>
-    }
-    <tr [formGroup]="NominaCrudForm">
-      <td colspan="3" valign="middle" class="bg-info">
-        <div class="text-center px-3">
-          <h6>Presentismo</h6>
-        </div>
-      </td>
-      <td style="max-width: 75px">
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-4 p-3 border" [formGroup]="NominaCrudForm">
+    <div class="row align-items-center justify-content-between">
+      <div class="col-md-3">
+        <h5>Presentismo</h5>
+      </div>
+      <div class="col-md-3">
         <div class="input-group">
           <input
             cFormControl
@@ -135,60 +135,109 @@
             }"
             appOnlyAlphanumeric
           />
-          <span class="input-group-text" id="basic-addon2">%</span>
+          <span class="input-group-text">%</span>
         </div>
         <app-valid-messages-form
           [errors]="getControlError('presentismo')"
           [messages]="NominaCrudErrorMessages['presentismo']"
         ></app-valid-messages-form>
-      </td>
-      <td valign="middle" class="bg-info">
-        <div class="text-center px-3">
-          <h6>{{ getPresentismo() | currency : "ARS" }}</h6>
-        </div>
-      </td>
-    </tr>
-    <tr valign="middle" [formGroup]="NominaCrudForm">
-      <td colspan="2" style="max-width: 75px">
-        <div class="text-end px-3">
+      </div>
+      <div class="col-md-3">
+        <h6>Total presentismo: {{ getPresentismo() | currency : "ARS" }}</h6>
+      </div>
+    </div>
+  </div>
+  <div formArrayName="metodos_pago" class="mb-4 border">
+    <div class="d-flex align-items-center mb-2 p-3">
+      <h5 class="me-3">Métodos de Pago</h5>
+      <button
+        cButton
+        color="info"
+        class="btn-action-table"
+        [disabled]="MetodoPagoNominaFormArray.length >= 2"
+        (click)="agregarMetodoPago()"
+      >
+        <svg cIcon height="18" name="cil-plus"></svg>
+      </button>
+    </div>
+
+    <div
+      *ngFor="
+        let metodoGroup of MetodoPagoNominaFormArray.controls;
+        let i = index
+      "
+      [formGroupName]="i"
+      class="card mb-3 p-3"
+    >
+      <div class="row g-2">
+        <div class="col-md-4">
           <div cFormFloating>
             <select
               cSelect
-              id="metodo_pago_id"
+              id="metodo_pago_id_{{ i }}"
               formControlName="metodo_pago_id"
             >
               <option value="0" hidden>Seleccione un método de pago</option>
               <option
-                *ngFor="let MetodoPago of MetodosPagos; let i = index"
+                *ngFor="let MetodoPago of MetodosPagos"
                 [ngValue]="MetodoPago.id"
               >
                 {{ MetodoPago.descripcion | titlecase }}
               </option>
             </select>
-            <label cLabel for="metodo_pago_id"
-              >Método de pago
+            <label cLabel for="metodo_pago_id_{{ i }}">
+              Método de pago
               <c-spinner size="sm" *ngIf="loadingMetodosPagos" />
             </label>
           </div>
           <app-valid-messages-form
-            [errors]="getControlError('metodo_pago_id')"
+            [errors]="getMetodoPagoNominaFormControlError(i, 'metodo_pago_id')"
             [messages]="NominaCrudErrorMessages['metodo_pago_id']"
           ></app-valid-messages-form>
         </div>
-      </td>
-      <td colspan="3">
-        <div class="text-end px-3">
-          <h5>
-            Total a pagar:
-            <span class="badge bg-primary rounded-pill">{{
-              getTotalSeccion() | currency : "ARS"
-            }}</span>
-          </h5>
+
+        <div class="col-md-4">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="monto_metodo_{{ i }}"
+              formControlName="monto"
+              type="text"
+              placeholder="Monto"
+              appOnlyNumberAndPoint
+            />
+            <label cLabel for="monto_metodo_{{ i }}">Monto</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getMetodoPagoNominaFormControlError(i, 'monto')"
+            [messages]="NominaCrudErrorMessages['monto']"
+          ></app-valid-messages-form>
         </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+
+        <div class="col-md-2 d-flex align-items-center">
+          <button
+            cButton
+            color="danger"
+            class="btn-action-table"
+            (click)="eliminarMetodoPago(i)"
+            [disabled]="MetodoPagoNominaFormArray.length <= 1"
+          >
+            <svg cIcon height="18" name="cil-trash"></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-end p-3 mb-4 border">
+    <h5>
+      Total a pagar:
+      <span class="badge bg-primary rounded-pill">
+        {{ getTotalSeccion() | currency : "ARS" }}
+      </span>
+    </h5>
+  </div>
+</div>
 <div class="text-center">
   <button
     cButton

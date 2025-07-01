@@ -25,7 +25,9 @@ import {
 } from '@coreui/angular';
 import {
   agregarExtraInArrayForm,
+  crearMetodosForm,
   ExtraNominaForm,
+  MontoItemForm,
   NominaCrudFormBuilder,
 } from './utils/form';
 import { CommonModule } from '@angular/common';
@@ -236,11 +238,30 @@ export class NominaCrudFormComponent {
     >;
   }
 
+  get MetodoPagoNominaFormArray(): FormArray<FormGroup<MontoItemForm>> {
+    return this.NominaCrudForm.get('metodos_pago') as FormArray<
+      FormGroup<MontoItemForm>
+    >;
+  }
+
   getExtraNominaFormControlError(
     index: number,
     controlName: string
   ): ValidationErrors | null {
     const extraFormGroup = this.ExtraNominaFormArray.at(index) as FormGroup;
+    const control = extraFormGroup.get(controlName);
+    return control && control.touched && control.invalid
+      ? control.errors
+      : null;
+  }
+
+  getMetodoPagoNominaFormControlError(
+    index: number,
+    controlName: string
+  ): ValidationErrors | null {
+    const extraFormGroup = this.MetodoPagoNominaFormArray.at(
+      index
+    ) as FormGroup;
     const control = extraFormGroup.get(controlName);
     return control && control.touched && control.invalid
       ? control.errors
@@ -334,6 +355,23 @@ export class NominaCrudFormComponent {
       });
   }
 
+  agregarMetodoPago(): void {
+    if (this.MetodoPagoNominaFormArray.length >= 2) {
+      // // Lógica de advertencia (puede ser alert, snackbar, toast, etc.)
+      // alert('No se pueden agregar más de 2 métodos de pago.');
+      return;
+    }
+    this.MetodoPagoNominaFormArray.push(crearMetodosForm());
+  }
+
+  eliminarMetodoPago(i: number): void {
+    if (this.MetodoPagoNominaFormArray.length <= 1) {
+      // alert('Debe haber al menos un método de pago.');
+      return;
+    }
+    this.MetodoPagoNominaFormArray.removeAt(i);
+  }
+
   sendValueFom() {
     if (this.NominaCrudForm.valid) {
       // const USER_DATA = this._LoginService.userData();
@@ -350,10 +388,18 @@ export class NominaCrudFormComponent {
         // monto_facturado: SERVICIOS_FACTURADOS_TOTAL.facturado,
         monto_facturado: this.NominaData.facturaFinal,
         presentismo: this.NominaCrudForm.controls.presentismo.value,
-        metodo_pago_id: this.NominaCrudForm.controls.metodo_pago_id.value,
+        // metodo_pago_id: this.NominaCrudForm.controls.metodo_pago_id.value,
         presentismoTotal: this.getPresentismo(),
         // total_facturado: this.NominaData.facturaFinal,
         total_facturado: this.getTotalSeccion(),
+        metodos_pago: this.NominaCrudForm.controls.metodos_pago
+          .getRawValue()
+          .map((m: any) => {
+            return {
+              metodo_pago_id: m.metodo_pago_id,
+              monto: m.monto ? Number(m.monto) : 0,
+            };
+          }),
         vales: this.NominaCrudForm.controls.extras_nomina
           .getRawValue()
           .map((extra: any) => ({
@@ -372,12 +418,12 @@ export class NominaCrudFormComponent {
 
         // userNominaSelected: {
         //   facturaFinal: this.NominaData.facturaFinal,
-        //   fecha_fin: this.NominaData.fecha_fin,
-        //   fecha_inicio: this.NominaData.fecha_inicio,
+        fecha_fin: this.NominaData.fecha_fin,
+        fecha_inicio: this.NominaData.fecha_inicio,
         //   nomina_empleado: this.NominaData.nomina_empleado,
         // },
       };
-      logger.log(NOMINA);
+      // logger.log(NOMINA);
 
       this.FormsValues.emit(NOMINA);
     } else {

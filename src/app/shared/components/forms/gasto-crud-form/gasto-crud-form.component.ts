@@ -59,6 +59,7 @@ import { TipoGasto } from '../../../../models/TipoGasto.model';
 import { TipoGastoService } from '../../../../services/tipo_gasto.service';
 import { MetodoPago } from '../../../../models/MetodoPago.model';
 import { MetodoPagoService } from '../../../../services/metodos_pago.service';
+import { LoginService } from '../../../../services/login.service';
 
 @Component({
   selector: 'app-gasto-crud-form',
@@ -107,6 +108,7 @@ export class GastoCrudFormComponent {
   private _UsuarioService = inject(UsuarioesService);
   private _TipoGastoService = inject(TipoGastoService);
   private _MetodoPagoService = inject(MetodoPagoService);
+  private _LoginService = inject(LoginService);
 
   @Input() Nomina!: Nomina;
   @Output() FormsValues = new EventEmitter<any>();
@@ -249,27 +251,32 @@ export class GastoCrudFormComponent {
       });
   }
 
-  getMetodosPagoControls(gasto: AbstractControl): AbstractControl[] {
-    const metodos = gasto.get('metodos_pagos') as FormArray;
-    return metodos?.controls ?? [];
+  get MetodosPagoControls() {
+    return this.GastoCrudForm.get('metodos_pago') as FormArray;
   }
 
-  getMetodosPagosForm(i: number): FormArray<FormGroup<MontoItemForm>> {
-    return this.gastos.at(i).get('metodos_pagos') as FormArray<
+  getMetodosPagosForm(): FormArray<FormGroup<MontoItemForm>> {
+    return this.gastos.get('metodos_pago') as FormArray<
       FormGroup<MontoItemForm>
     >;
   }
 
-  getMetodoPagoError(i: number, j: number, campo: keyof MontoItemForm) {
-    return this.getMetodosPagosForm(i).at(j).get(campo)?.errors;
+  getMetodoPagoError(
+    index: number,
+    controlName: string
+  ): ValidationErrors | null {
+    const metodoPagoFormGroup = this.MetodosPagoControls.at(index) as FormGroup;
+    const control = metodoPagoFormGroup?.get(controlName);
+    return control && control.touched && control.invalid
+      ? control.errors
+      : null;
+  }
+  agregarMetodoPago(): void {
+    this.MetodosPagoControls.push(crearMetodosForm());
   }
 
-  agregarMetodoPago(i: number): void {
-    this.getMetodosPagosForm(i).push(crearMetodosForm());
-  }
-
-  eliminarMetodoPago(i: number, j: number): void {
-    this.getMetodosPagosForm(i).removeAt(j);
+  eliminarMetodoPago(i: number): void {
+    this.getMetodosPagosForm().removeAt(i);
   }
 
   getEmpleados() {
@@ -368,6 +375,8 @@ export class GastoCrudFormComponent {
 
   sendValueFom() {
     if (this.GastoCrudForm.valid) {
+      let datoUsuario = this._LoginService.userData().user;
+      const LOCAL_ID = Number(datoUsuario.local.id);
       // let gastos = this.GastoCrudForm.value.gastos || [];
       let gastos = this.GastoCrudForm.controls.gastos.getRawValue() || [];
       gastos = gastos.map((g: any) => {
@@ -380,25 +389,31 @@ export class GastoCrudFormComponent {
           precio_unitario: g.precio_unitario ? Number(g.precio_unitario) : 0,
           producto_id: g.producto_id ? g.producto_id.id : null,
           // metodo_pago_id: g.metodo_pago_id,
-          metodos_pagos: g.metodos_pagos.map((m: any) => {
-            return {
-              metodo_pago_id: m.metodo_pago_id,
-              monto: m.monto ? Number(m.monto) : 0,
-            };
-          }),
+          // metodos_pagos: g.metodos_pagos.map((m: any) => {
+          //   return {
+          //     metodo_pago_id: m.metodo_pago_id,
+          //     monto: m.monto ? Number(m.monto) : 0,
+          //   };
+          // }),
         };
       });
 
+      const FORM_VALUES = this.GastoCrudForm.getRawValue();
       const FORM_DATA = {
-        ...this.GastoCrudForm.getRawValue(),
+        ...FORM_VALUES,
         // ...this.GastoCrudForm.value,
         gastos: gastos,
         empleado_id:
           this.GastoCrudForm.value.empleado_id == 0
             ? null
             : this.GastoCrudForm.value.empleado_id,
+        local_id: LOCAL_ID,
+        metodos_pago: FORM_VALUES.metodos_pago.map((m: any) => ({
+          metodo_pago_id: m.metodo_pago_id,
+          monto: m.monto ? Number(m.monto) : 0,
+        })),
       };
-      logger.log('FORM_DATA', FORM_DATA);
+      // logger.log('FORM_DATA', FORM_DATA);
       this.FormsValues.emit(FORM_DATA);
     } else {
       Swal.mixin({
