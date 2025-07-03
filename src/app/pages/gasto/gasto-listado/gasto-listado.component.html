@@ -74,6 +74,9 @@
                 <th class="bg-body-tertiary">Usuario</th>
                 <th class="bg-body-tertiary">Empleado</th>
                 <th class="bg-body-tertiary">Monto</th>
+                <th class="bg-body-tertiary">Local</th>
+                <th class="bg-body-tertiary">Estado</th>
+                <th class="bg-body-tertiary">Fecha</th>
                 <!-- <th class="bg-body-tertiary">Adicional</th>
                 <th class="bg-body-tertiary">Porcentaje</th>
                 <th class="bg-body-tertiary">Total</th>  -->
@@ -97,6 +100,15 @@
                 </td>
                 <td>
                   <span>{{ gasto.total | currency : "ARS" }}</span>
+                </td>
+                <td>
+                  <span>{{ gasto.is_local == 1 ? "Si" : "No" }}</span>
+                </td>
+                <td>
+                  <span>{{ gasto.pagado == 1 ? "Pagado" : "Sin Pagar" }}</span>
+                </td>
+                <td>
+                  <span>{{ gasto.created_at | date : "dd-MM-yyyy" }}</span>
                 </td>
                 <!-- <td>
                   <span>{{ gasto.adicional }}</span>

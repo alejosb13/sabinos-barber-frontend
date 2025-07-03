@@ -9,7 +9,10 @@ export interface Nomina {
   total: number;
 
   empleado?: Empleado;
-
+  total_facturado?: number;
+  presentismo?: number;
+  fecha_fin: string;
+  fecha_inicio: string;
   estado?: number;
   created_at?: Date;
   updated_at?: Date;

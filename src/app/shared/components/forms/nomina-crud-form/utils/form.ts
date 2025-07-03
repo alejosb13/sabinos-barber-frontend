@@ -11,6 +11,8 @@ export interface ExtraNominaForm {
   monto: FormControl<number | null>;
   monto_total: FormControl<number | null>;
   descripcion: FormControl<string | null>;
+  isGasto: FormControl<boolean | null>;
+  idGasto: FormControl<number | null>;
 }
 
 export interface MontoItemForm {
@@ -53,6 +55,8 @@ const crearExtraArrayForm = (): FormGroup<ExtraNominaForm> => {
       descripcion: new FormControl({ disabled: false, value: '' }, [
         ...NominaCrudValidators['descripcion'],
       ]),
+      isGasto: new FormControl({ disabled: false, value: false }, []),
+      idGasto: new FormControl({ disabled: false, value: null }, []),
     },
     { updateOn: 'change' }
   );

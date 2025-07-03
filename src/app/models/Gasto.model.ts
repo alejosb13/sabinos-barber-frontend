@@ -12,6 +12,9 @@ export interface Gasto {
   total?: number;
   detalle_gasto_id: number;
 
+  is_local: number;
+  pagado: number;
+
   empleado?: Empleado;
   user?: Usuario;
   gasto_detalle?: GastoDetalle[];

@@ -73,10 +73,11 @@
                 <th class="bg-body-tertiary">#</th>
                 <th class="bg-body-tertiary">Empleado</th>
                 <th class="bg-body-tertiary">Descripción</th>
-                <th class="bg-body-tertiary">Monto</th>
+                <!-- <th class="bg-body-tertiary">Monto</th> -->
                 <!-- <th class="bg-body-tertiary">Adicional</th> -->
-                <th class="bg-body-tertiary">Porcentaje</th>
+                <th class="bg-body-tertiary">Presentismo</th>
                 <th class="bg-body-tertiary">Total</th>
+                <th class="bg-body-tertiary">Fecha</th>
                 <th class="bg-body-tertiary"></th>
               </tr>
             </thead>
@@ -94,21 +95,29 @@
                   <span>{{ nomina.empleado?.nombre_completo }}</span>
                 </td>
                 <td>
-                  <span>{{ nomina.descripcion }}</span>
+                  <span>{{ nomina.descripcion || "--" }}</span>
                 </td>
-                <td>
+                <!-- <td>
                   <span>{{
                     nomina.monto_facturado | currency : "ARS" : "symbol"
                   }}</span>
-                </td>
+                </td> -->
                 <!-- <td>
                   <span>{{ nomina.adicional }}</span>
                 </td> -->
                 <td>
-                  <span>{{ nomina.porcentaje_adicional }}%</span>
+                  <span>{{ nomina.presentismo }}%</span>
                 </td>
                 <td>
-                  <span>{{ nomina.total | currency : "ARS" : "symbol" }} </span>
+                  <span
+                    >{{ nomina.total_facturado | currency : "ARS" : "symbol" }}
+                  </span>
+                </td>
+                <td>
+                  <span
+                    >{{ nomina.fecha_inicio | date : "dd-MM-yyyy" }} -
+                    {{ nomina.fecha_fin | date : "dd-MM-yyyy" }}
+                  </span>
                 </td>
                 <td>
                   <div class="d-flex flex-direction">

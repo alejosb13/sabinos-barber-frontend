@@ -21,19 +21,23 @@
               <strong>Fecha:</strong>
               {{ Gasto.created_at | date : "dd-MM-yyyy" }}
             </p>
-            <!-- <p class="my-1">
+            <p class="my-1">
+              <strong>Local:</strong>
+              {{ Gasto.is_local == 1 ? "Si" : "No" }}
+            </p>
+            <p class="my-1">
               <strong>Estado:</strong>
               <span
                 class="badge ms-2"
                 [ngClass]="{
-                  'bg-success': Factura.estado == 1,
-                  'text-dark': Factura.estado == 1,
-                  'bg-danger': Factura.estado == 0,
-                  'text-white': Factura.estado == 0
+                  'bg-success': Gasto.pagado == 1,
+                  'text-dark': Gasto.estado == 1,
+                  'bg-danger': Gasto.pagado == 0,
+                  'text-white': Gasto.estado == 0
                 }"
-                >{{ Factura.estado == 1 ? "Finalizada" : "Eliminada" }}</span
+                >{{ Gasto.pagado == 1 ? "Pagado" : "Sin pagar" }}</span
               >
-            </p> -->
+            </p>
           </div>
         </div>
         <div class="row mb-5">

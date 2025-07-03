@@ -12,6 +12,83 @@
     </ul>
   </c-col>
 </c-row>
+<div class="mb-4 p-3 border">
+  <c-row class="align-items-center justify-content-center">
+    <c-col
+      [md]="12"
+      (click)="isGastosCollapsed = !isGastosCollapsed"
+      [attr.aria-expanded]="!isGastosCollapsed"
+      aria-controls="collapseExample"
+      class="mb-3 d-flex justify-content-between align-items-center pointer"
+    >
+      <h5 class="mb-0">Gastos pendientes</h5>
+      <svg
+        cIcon
+        height="18"
+        name="fa-chevron-down"
+        class="transition"
+        [ngClass]="{ 'rotate-180': !isGastosCollapsed }"
+      ></svg>
+    </c-col>
+
+    <c-col [md]="6" #collapse="ngbCollapse" [(ngbCollapse)]="isGastosCollapsed">
+      <div
+        class="list-group"
+        *ngFor="let NGasto of NominaData.nomina_empleado.gastos; let i = index"
+      >
+        <!-- Cabecera del gasto -->
+        <div
+          class="list-group-item d-flex align-items-center justify-content-between gap-2"
+          (click)="
+            isGastosDetalleCollapsed === i
+              ? (isGastosDetalleCollapsed = null)
+              : (isGastosDetalleCollapsed = i)
+          "
+          style="cursor: pointer"
+        >
+          <!-- Checkbox separado del colapso -->
+          <input
+            style="width: 1.12em !important; height: 1.12em !important"
+            class="form-check-input mt-0 me-2 pointer"
+            type="checkbox"
+            (click)="
+              $event.stopPropagation(); checkGastoPendiente(NGasto, $event)
+            "
+          />
+
+          <!-- Fecha (clickeable) -->
+          <div class="d-flex align-items-center gap-2 pointer">
+            <span class="flex-grow-1 fw-bold">
+              {{ NGasto.created_at | date : "dd-MM-yyyy" }}
+            </span>
+          </div>
+
+          <!-- Monto (clickeable) -->
+          <h6 class="badge-primary badge-pill pointer">
+            {{ sumarTodosLosMetodosPagos(NGasto) | currency : "ARS" }}
+          </h6>
+        </div>
+
+        <!-- Collapse debajo del ítem actual -->
+        <div *ngIf="isGastosDetalleCollapsed === i" class="list-group-item">
+          <p class="mb-1"><strong>Detalle del gasto:</strong></p>
+          <ul
+            class="list-group list-group-flush"
+            *ngFor="let NGastoDetalle of NGasto.gasto_detalle"
+          >
+            <li class="list-group-item">
+              Tipo de gasto: {{ NGastoDetalle.tipo_gasto.descripcion }}
+            </li>
+            <li class="list-group-item">
+              Monto: {{ NGastoDetalle.precio | currency : "ARS" }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </c-col>
+  </c-row>
+</div>
+
 <div [formGroup]="NominaCrudForm">
   <div formArrayName="extras_nomina" class="mb-4 border">
     <div class="d-flex align-items-center mb-2 p-3">
@@ -147,6 +224,7 @@
       </div>
     </div>
   </div>
+
   <div formArrayName="metodos_pago" class="mb-4 border">
     <div class="d-flex align-items-center mb-2 p-3">
       <h5 class="me-3">Métodos de Pago</h5>

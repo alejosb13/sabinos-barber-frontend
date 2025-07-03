@@ -12,6 +12,7 @@ import { ColorModeService } from '@coreui/angular';
 import Swal from 'sweetalert2';
 import { throwError } from 'rxjs';
 import logger from '../shared/utils/logger';
+import moment, { Moment, MomentInput } from 'moment';
 
 const URL_PRODUCTO = `${environment.apiUrl}productos`;
 @Injectable({
@@ -141,5 +142,9 @@ export class HelpersService {
       });
 
     return throwError(() => httpErrorResponse);
+  }
+
+  IMoment(date: MomentInput = null, format: string | [] | null = null): Moment {
+    return date ? (format ? moment(date, format) : moment(date)) : moment();
   }
 }

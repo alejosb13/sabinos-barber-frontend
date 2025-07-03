@@ -32,7 +32,10 @@ import {
 } from './utils/form';
 import { CommonModule } from '@angular/common';
 import { ValidMessagesFormComponent } from '../../valid-messages-form/valid-messages-form.component';
-import { NominaCrudErrorMessages } from './utils/validations';
+import {
+  NominaCrudErrorMessages,
+  NominaCrudValidators,
+} from './utils/validations';
 import Swal from 'sweetalert2';
 import logger from 'src/app/shared/utils/logger';
 import { environment } from 'src/environments/environment';
@@ -55,6 +58,9 @@ import { NominaService } from '../../../../services/nomina.service';
 import { IconComponent, IconDirective } from '@coreui/icons-angular';
 import { MetodoPago } from '../../../../models/MetodoPago.model';
 import { MetodoPagoService } from '../../../../services/metodos_pago.service';
+import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import { Gasto } from '../../../../models/Gasto.model';
+import { HelpersService } from '../../../../services/helpers.service';
 
 @Component({
   selector: 'app-nomina-crud-form',
@@ -73,6 +79,7 @@ import { MetodoPagoService } from '../../../../services/metodos_pago.service';
     SpinnerModule,
     DateRangePickerComponent,
     IconDirective,
+    NgbCollapse,
   ],
   templateUrl: './nomina-crud-form.component.html',
   styleUrl: './nomina-crud-form.component.scss',
@@ -100,6 +107,7 @@ export class NominaCrudFormComponent {
   private _LocalesService = inject(LocalesService);
   private _LoginService = inject(LoginService);
   private _MetodoPagoService = inject(MetodoPagoService);
+  private _HelpersService = inject(HelpersService);
 
   @Input() NominaData: any;
   @Output() FormsValues = new EventEmitter<any>();
@@ -112,6 +120,9 @@ export class NominaCrudFormComponent {
   loadingNomina: boolean = false;
   TotalExtras: number = 0;
   TotalSeccion: number = 0;
+
+  isGastosCollapsed = true;
+  isGastosDetalleCollapsed: number | null = null;
   constructor() {
     // this.changeSesionStorage();
   }
@@ -151,39 +162,31 @@ export class NominaCrudFormComponent {
   }
 
   changeExtraValues() {
-    this.NominaCrudForm.controls.extras_nomina.valueChanges.subscribe(
-      (extras) => {
-        this.TotalExtras = this.NominaData.facturaFinal;
-        let totalFinalSalario = this.NominaData.facturaFinal || 0;
-        extras.forEach((extra, index) => {
-          if (extra.extra_id == 1) {
-            totalFinalSalario += Number(extra.monto);
-          } else {
-            totalFinalSalario -= Number(extra.monto);
-          }
-          this.ExtraNominaFormArray.at(index).patchValue(
-            {
-              monto_total: totalFinalSalario,
-            },
-            { emitEvent: false }
-          );
-        });
-        this.TotalExtras = totalFinalSalario;
+    this.NominaCrudForm.controls.extras_nomina.valueChanges.subscribe(() => {
+      logger.log('extras (triggered valueChanges)');
 
-        // const presentismovalue =
-        //   this.NominaCrudForm.controls.presentismo.value || 0;
-        // const Porcentaje = 1 + presentismovalue / 100;
-        // this.Presentismo = this.TotalExtras * Porcentaje;
-        // this.NominaCrudForm.patchValue(
-        //   {
-        //     presentismo: this.Presentismo,
-        //   },
-        //   { emitEvent: false }
-        // );
+      this.TotalExtras = this.NominaData.facturaFinal;
+      let totalFinalSalario = this.NominaData.facturaFinal || 0;
 
-        // logger.log('total ', this.NominaData.facturaFinal);
-      }
-    );
+      const extrasRaw = this.ExtraNominaFormArray.getRawValue();
+
+      extrasRaw.forEach((extra, index) => {
+        if (extra.extra_id == 1) {
+          totalFinalSalario += Number(extra.monto);
+        } else {
+          totalFinalSalario -= Number(extra.monto);
+        }
+
+        this.ExtraNominaFormArray.at(index).patchValue(
+          {
+            monto_total: totalFinalSalario,
+          },
+          { emitEvent: false }
+        );
+      });
+
+      this.TotalExtras = totalFinalSalario;
+    });
   }
 
   changePresentismo() {
@@ -380,7 +383,7 @@ export class NominaCrudFormComponent {
           (serv: any) => serv.descripcion === 'TOTAL'
         );
       const USER_DATA = this._LoginService.getUserData();
-
+      logger.log(this.NominaCrudForm.controls.extras_nomina.getRawValue());
       const NOMINA = {
         // ...this.NominaCrudForm.value,
         empleado_id: this.NominaData.empleado,
@@ -402,12 +405,17 @@ export class NominaCrudFormComponent {
           }),
         vales: this.NominaCrudForm.controls.extras_nomina
           .getRawValue()
+          .filter((extra: any) => !extra.isGasto)
           .map((extra: any) => ({
             tipo: extra.extra_id,
             monto: Number(extra.monto),
             descripcion: extra.descripcion,
             // monto_total: extra.monto_total,
           })),
+        gastos: this.NominaCrudForm.controls.extras_nomina
+          .getRawValue()
+          .filter((extra: any) => extra.isGasto)
+          .map((extra: any) => extra.idGasto),
         servicios: this.NominaData.nomina_empleado.servicios.filter(
           (item: any) => item.descripcion !== 'TOTAL'
         ),
@@ -481,6 +489,68 @@ export class NominaCrudFormComponent {
       // monto: this.OperacionExtra(Number(extra_id), Number(monto)) ?? null,
       // monto_total: this.OperacionExtra(Number(extra_id), Number(monto)) ?? null,
     });
+  }
+
+  sumarTodosLosMetodosPagos(gastos: any): number {
+    // logger.log('asf', gastos);
+    if (!gastos) return 0;
+
+    return gastos.metodo_pago.reduce((total: any, metodo: any) => {
+      return Number(total) + Number(metodo.monto);
+    }, 0);
+  }
+
+  checkGastoPendiente(Gasto: Gasto, isCheck: any) {
+    // logger.log('checkGastoPendiente', Gasto);
+
+    const extrasNominaArray = this.NominaCrudForm.controls.extras_nomina;
+
+    if (isCheck.target.checked) {
+      extrasNominaArray.push(
+        new FormGroup<ExtraNominaForm>(
+          {
+            extra_id: new FormControl({ disabled: false, value: 1 }, [
+              ...NominaCrudValidators['extra_id'],
+            ]),
+            monto: new FormControl(
+              { disabled: true, value: this.sumarTodosLosMetodosPagos(Gasto) },
+              [...NominaCrudValidators['monto']]
+            ),
+            monto_total: new FormControl({ disabled: true, value: 0 }, [
+              ...NominaCrudValidators['monto_total'],
+            ]),
+            descripcion: new FormControl(
+              {
+                disabled: false,
+                value: `Gasto ${this._HelpersService
+                  .IMoment(Gasto.created_at, 'YYYY-MM-DDTHH:mm:ss')
+                  .format('DD-MM-YYYY')}`,
+              },
+              [...NominaCrudValidators['descripcion']]
+            ),
+            isGasto: new FormControl({ disabled: true, value: true }, []),
+            idGasto: new FormControl(
+              { disabled: true, value: Number(Gasto.id) },
+              []
+            ),
+          },
+          { updateOn: 'change' }
+        ),
+        { emitEvent: true }
+      );
+    } else {
+      // Buscar el índice del FormGroup con idGasto igual al Gasto.id
+      const indexToRemove = extrasNominaArray.controls.findIndex(
+        (group: any) => {
+          return group.get('idGasto')?.value === Number(Gasto.id);
+        }
+      );
+
+      // Si lo encontró, lo elimina
+      if (indexToRemove !== -1) {
+        extrasNominaArray.removeAt(indexToRemove);
+      }
+    }
   }
 
   ngOnDestroy(): void {
