@@ -12,11 +12,12 @@ import { HelpersService } from '../../../services/helpers.service';
 import { Nomina } from '../../../models/Nomina.model';
 import { NominaService } from '../../../services/nomina.service';
 import { NominaCrudFormComponent } from '../../../shared/components/forms/nomina-crud-form/nomina-crud-form.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-nomina-editar',
   standalone: true,
-  imports: [CardModule, GridModule, NominaCrudFormComponent],
+  imports: [CardModule, GridModule, NominaCrudFormComponent, CommonModule],
   templateUrl: './nomina-editar.component.html',
   styleUrl: './nomina-editar.component.scss',
 })
@@ -30,12 +31,26 @@ export class NominaEditarComponent {
 
   loader: boolean = true;
   Id!: number;
-  Nomina!: Nomina;
+  Nomina!: any;
 
   ngOnInit(): void {
     this.Id = Number(this._ActivatedRoute.snapshot.paramMap.get('id'));
 
-    this.getEmpleadoById();
+    this.getNominas();
+  }
+
+  getNominas() {
+    this.loader = true;
+
+    this._NominaService
+      .getNominaById(this.Id)
+      // .pipe(delay(3000))
+      .pipe(takeUntil(this.destruir$))
+      .subscribe((data: any) => {
+        this.loader = false;
+        this.Nomina = { ...data };
+        logger.log(data);
+      });
   }
 
   FormsValues(Nomina: Nomina) {

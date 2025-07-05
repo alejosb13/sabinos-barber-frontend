@@ -11,6 +11,7 @@ export interface Nomina {
   empleado?: Empleado;
   total_facturado?: number;
   presentismo?: number;
+  servicios: ServicioNomina[];
   fecha_fin: string;
   fecha_inicio: string;
   estado?: number;

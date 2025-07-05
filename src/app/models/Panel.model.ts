@@ -1,8 +1,13 @@
 export interface Panel {
-  total_facturado: number;
-  total_facturas: number;
   total_productos: number;
-  total_facturas_eliminadas: number;
   total_gastos: number;
-  total_gastos_acumulado: number;
+  caja_factura: Cajafactura[];
+  caja_gastos: Cajafactura[];
+  caja_nomina: Cajafactura[];
+}
+
+interface Cajafactura {
+  id: number;
+  tipo: string;
+  total: number;
 }

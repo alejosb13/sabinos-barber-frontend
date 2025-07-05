@@ -509,7 +509,7 @@ export class NominaCrudFormComponent {
       extrasNominaArray.push(
         new FormGroup<ExtraNominaForm>(
           {
-            extra_id: new FormControl({ disabled: false, value: 1 }, [
+            extra_id: new FormControl({ disabled: false, value: 2 }, [
               ...NominaCrudValidators['extra_id'],
             ]),
             monto: new FormControl(

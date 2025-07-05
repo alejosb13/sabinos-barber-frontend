@@ -119,6 +119,16 @@ export class PanelListComponent {
     this._ModalService.toggle(action);
   }
 
+  sumaMetodosPago(index: string) {
+    let Factura = this.Panel.caja_factura.find((item) => item.tipo === index);
+    let Gastos = this.Panel.caja_gastos.find((item) => item.tipo === index);
+    let Nomina = this.Panel.caja_nomina.find((item) => item.tipo === index);
+
+    return (
+      (Factura?.total || 0) - (Number(Gastos?.total) + Number(Nomina?.total))
+    );
+  }
+
   filtroEvent(filtros: Filtro) {
     logger.log('filtros', filtros);
 

@@ -54,14 +54,36 @@
           <c-spinner aria-hidden="true" size="sm" variant="grow" />
           }@else{
           <c-widget-stat-c
-            [title]="'Cantidad de Facturas'"
+            [title]="'Caja efectivo'"
             color="success"
             inverse
-            value="{{
-              Panel.total_facturas == 1
-                ? Panel.total_facturas + ' Fac.'
-                : Panel.total_facturas + ' Facs.'
-            }}"
+            value="{{ sumaMetodosPago('Efectivo') | currency : 'ARS' }}"
+          >
+            <ng-template cTemplateId="widgetIconTemplate">
+              <svg cIcon height="36" name="faFileInvoiceDollar"></svg>
+            </ng-template>
+          </c-widget-stat-c>
+
+          }
+        </c-col>
+
+        <c-col
+          xl="3"
+          lg="4"
+          sm="6"
+          class=""
+          [ngClass]="{
+            'align-items-center justify-content-center d-flex': loaderPanel
+          }"
+        >
+          @if(loaderPanel){
+          <c-spinner aria-hidden="true" size="sm" variant="grow" />
+          }@else{
+          <c-widget-stat-c
+            [title]="'Caja Mercado Pago'"
+            color="success"
+            inverse
+            value="{{ sumaMetodosPago('Mercado Pago') | currency : 'ARS' }}"
           >
             <ng-template cTemplateId="widgetIconTemplate">
               <svg cIcon height="36" name="faFileInvoiceDollar"></svg>
@@ -152,7 +174,7 @@
           </c-widget-stat-c>
           }
         </c-col>
-        <c-col
+        <!-- <c-col
           xl="3"
           lg="4"
           sm="6"
@@ -167,18 +189,14 @@
             class="bg-1"
             [title]="'Gastos Acumulados'"
             inverse
-            value="{{
-              Panel.total_gastos_acumulado == 1
-                ? Panel.total_gastos_acumulado + ' Gto.'
-                : Panel.total_gastos_acumulado + ' Gtos.'
-            }}"
+            value="asfasf"
           >
             <ng-template cTemplateId="widgetIconTemplate">
               <svg cIcon height="36" name="faHandHoldingDollar"></svg>
             </ng-template>
           </c-widget-stat-c>
           }
-        </c-col>
+        </c-col> -->
       </c-row>
     </c-container>
   </c-card-body>
