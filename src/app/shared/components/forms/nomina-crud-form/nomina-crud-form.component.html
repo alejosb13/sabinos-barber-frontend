@@ -260,7 +260,7 @@
                 *ngFor="let MetodoPago of MetodosPagos"
                 [ngValue]="MetodoPago.id"
               >
-                {{ MetodoPago.descripcion | titlecase }}
+                {{ MetodoPago.tipo | titlecase }}
               </option>
             </select>
             <label cLabel for="metodo_pago_id_{{ i }}">

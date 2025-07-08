@@ -8,7 +8,7 @@ import logger from 'src/app/shared/utils/logger';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { EmpleadoCrudFormComponent } from '../../../shared/components/forms/empleado-crud-form/empleado-crud-form.component';
-import { Subject, takeUntil } from 'rxjs';
+import { catchError, Subject, takeUntil } from 'rxjs';
 import { HelpersService } from '../../../services/helpers.service';
 
 @Component({
@@ -37,7 +37,15 @@ export class EmpleadoInsertarComponent {
 
     this._EmpleadosService
       .createEmpleado(Empleado)
-      .pipe(takeUntil(this.destruir$))
+      .pipe(
+        takeUntil(this.destruir$),
+        catchError((error) =>
+          this._HelpersService.handleErrorApiCrud(
+            error,
+            'No se pudo guardar el empleado.'
+          )
+        )
+      )
       .subscribe((response) => {
         this.loader = false;
         logger.log(response);

@@ -8,6 +8,15 @@
       <div class="card p-4 shadow-sm">
         <div class="row mb-5">
           <div class="col-md-6">
+            <button
+              cButton
+              color="info"
+              class="btn-action-table me-3 mb-3"
+              (click)="modalStatusById('filtros', true)"
+            >
+              <svg cIcon height="18" name="cil-filter"></svg>
+              Filtros
+            </button>
             <h5 class="text-capitalize">
               <strong>Empleado:</strong> {{ Factura.empleado?.nombre_completo }}
             </h5>
@@ -157,3 +166,18 @@
     </c-container>
   </c-card-body>
 </c-card>
+
+<c-modal id="filtros">
+  <c-modal-header>
+    <h5 cModalTitle><svg cIcon height="18" name="cil-filter"></svg> Filtros</h5>
+    <button (click)="modalStatusById('filtros', false)" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <app-filtros-list-form
+      (filtrar)="filtroEvent($event)"
+      [showDate]="false"
+      [showEstado]="true"
+      [showValidDates]="false"
+    />
+  </c-modal-body>
+</c-modal>

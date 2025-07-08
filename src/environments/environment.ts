@@ -3,5 +3,5 @@ export const environment = {
   SabinosTheme: 'Sabinos-Theme',
   SabinosStorage: 'Sabinos-App',
   SabinosCarrito: 'Sabinos-Carrito',
-  apiUrl: 'https://staging.example.com/api',
+  apiUrl: 'https://darkgray-termite-177914.hostingersite.com/api',
 };

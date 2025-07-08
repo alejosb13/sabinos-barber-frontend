@@ -114,7 +114,7 @@ export class NominaInsertarComponent {
 
     const resultado =
       totalFacturado * (Nomina.nomina_empleado.porcentaje / 100);
-    resultado;
+
     console.log(resultado); // 12000
     this.NominaEmpleadoSelecion = { ...Nomina, facturaFinal: resultado };
 

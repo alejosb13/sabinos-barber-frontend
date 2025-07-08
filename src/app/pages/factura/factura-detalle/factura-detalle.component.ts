@@ -26,6 +26,10 @@ import logger from 'src/app/shared/utils/logger';
 import { FormsModule } from '@angular/forms';
 import { Factura } from '../../../models/Factura.model';
 import { FacturaDetalleMetodoPago } from '../../../models/FacturaDetail';
+import dayjs from 'dayjs';
+import { HelpersService } from '../../../services/helpers.service';
+import { Filtro } from '../../../models/Filter.model';
+import { IModalAction } from '@coreui/angular/lib/modal/modal.service';
 
 @Component({
   selector: 'app-factura-detalle',
@@ -50,6 +54,7 @@ import { FacturaDetalleMetodoPago } from '../../../models/FacturaDetail';
     ButtonModule,
     FormsModule,
     SpinnerComponent,
+    FiltrosListFormComponent,
   ],
   templateUrl: './factura-detalle.component.html',
   styleUrl: './factura-detalle.component.scss',
@@ -58,6 +63,8 @@ export class FacturaDetalleComponent {
   private destruir$: Subject<void> = new Subject<void>();
   private _FacturasService = inject(FacturasService);
   private _ActivatedRoute = inject(ActivatedRoute);
+  private _HelpersService = inject(HelpersService);
+  private _ModalService = inject(ModalService);
 
   ParametrosURL: ParametersUrl = {
     allDates: false,
@@ -108,5 +115,32 @@ export class FacturaDetalleComponent {
     return MetodoPagoDetalle.reduce((total, metodo) => {
       return total + metodo.monto;
     }, 0);
+  }
+
+  filtroEvent(filtros: Filtro) {
+    logger.log('filtros', filtros);
+
+    // filtros.fecha_inicio = dayjs(filtros.fecha.startDate).format('YYYY-MM-DD');
+    // filtros.fecha_fin = dayjs(filtros.fecha.endDate).format('YYYY-MM-DD');
+    const FILTROS_SANETIZE = this._HelpersService.filterData(filtros);
+
+    this.ParametrosURL = {
+      ...this.ParametrosURL,
+      ...FILTROS_SANETIZE,
+      fecha_inicio: FILTROS_SANETIZE.fecha_inicio,
+    };
+
+    if (this.ParametrosURL.allDates) {
+      delete this.ParametrosURL.fecha_fin;
+      delete this.ParametrosURL.fecha_inicio;
+    }
+    logger.log('this.ParametrosURL', this.ParametrosURL);
+
+    this.getFactura();
+  }
+
+  modalStatusById(id: string, show: boolean) {
+    const action: IModalAction = { show, id };
+    this._ModalService.toggle(action);
   }
 }

@@ -63,6 +63,8 @@
                       @if( servicio.descripcion != 'TOTAL'){{{ servicio.precio_nomina | currency : "ARS"
 
 
+
+
                       }}}
                     </td>
                   </tr>
@@ -89,7 +91,7 @@
                       "
                       class="bg-warning"
                     >
-                      40%
+                      {{ NominaEmpleadoSelecion.nomina_empleado.porcentaje }}%
                     </td>
                   </tr>
                 </tbody>

@@ -129,6 +129,13 @@ export class PanelListComponent {
     );
   }
 
+  sumaFacturacion() {
+    let Factura = this.Panel.caja_factura.reduce((acumulador, item) => {
+      return acumulador + Number(item.total || 0);
+    }, 0);
+
+    return Factura;
+  }
   filtroEvent(filtros: Filtro) {
     logger.log('filtros', filtros);
 
