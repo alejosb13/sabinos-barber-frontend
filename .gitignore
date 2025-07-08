@@ -407,3 +407,5 @@ package-lock.json
 .github/
 .vscode/
 dist/
+
+docs

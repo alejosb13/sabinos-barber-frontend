@@ -5,7 +5,7 @@ import {
   HttpHeaders,
   HttpParams,
 } from '@angular/common/http';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { ParametersUrl } from '../models/Parameter.model';
 import { Filtro } from '../models/Filter.model';
 import { ColorModeService } from '@coreui/angular';
