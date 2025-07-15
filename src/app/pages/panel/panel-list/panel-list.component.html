@@ -267,7 +267,8 @@
     <app-filtros-list-form
       (filtrar)="filtroEvent($event)"
       [showDate]="true"
-      [showValidDates]="true"
+      [showValidDates]="false"
+      [fechaFilter]="ParametrosURL"
     />
   </c-modal-body>
 </c-modal>

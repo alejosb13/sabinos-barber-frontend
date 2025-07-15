@@ -90,8 +90,10 @@ export class PanelListComponent {
     link: null,
     local_id: 1,
     disablePaginate: '1',
-    fecha_inicio: dayjs().startOf('month').format('YYYY-MM-DD'),
-    fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
+    // fecha_inicio: dayjs().startOf('month').format('YYYY-MM-DD'),
+    // fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
+    fecha_inicio: dayjs().format('YYYY-MM-DD'),
+    fecha_fin: dayjs().format('YYYY-MM-DD'),
   };
 
   ngOnInit(): void {

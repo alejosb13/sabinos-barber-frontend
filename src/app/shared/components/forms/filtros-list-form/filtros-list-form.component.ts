@@ -71,6 +71,7 @@ export class FiltrosListFormComponent {
   @Input() validDateValue!: boolean | undefined;
   @Input() showEmpleados: boolean = false;
   @Input() showUsers: boolean = false;
+  @Input() fechaFilter?: any = undefined;
   @Output() filtrar = new EventEmitter<Filtro>();
 
   private _LocalesServices = inject(LocalesService);
@@ -113,6 +114,20 @@ export class FiltrosListFormComponent {
       allDates: this.validDateValue
         ? this.validDateValue
         : IniciarFiltro.allDates,
+      // fecha_inicio: this.fechaFilter
+      //   ? this.fechaFilter.fecha_inicio
+      //   : IniciarFiltro.fecha.startDate,
+      // fecha_fin: this.fechaFilter
+      //   ? this.fechaFilter.fecha_fin
+      //   : IniciarFiltro.fecha.endDate,
+      fecha: {
+        startDate: this.fechaFilter
+          ? dayjs(this.fechaFilter.fecha_inicio)
+          : IniciarFiltro.fecha.startDate,
+        endDate: this.fechaFilter
+          ? dayjs(this.fechaFilter.fecha_fin)
+          : IniciarFiltro.fecha.endDate,
+      },
     };
   }
 

@@ -51,7 +51,7 @@ export class UsuarioInsertarComponent {
       .subscribe((data) => {
         this.loader = false;
         logger.log(data);
-        this._HelpersService.handleErrorApiCrud(data);
+
         Swal.mixin({
           customClass: {
             container: this.#colorModeService.getStoredTheme(
