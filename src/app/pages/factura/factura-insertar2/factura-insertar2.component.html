@@ -48,28 +48,39 @@
               *ngFor="let empFactura of empleado.facturas?.[0]?.factura_detalle || [] ; let j = index"
             >
               <c-col>
-                <div class="small text-body-secondary mt-3 border p-4">
-                  <div class="d-flex align-items-center">
-                    <p class="h5 text-info">
-                      {{ j + 1 }} - {{ empFactura.cliente?.nombre }}
-                      {{ empFactura.cliente?.apellido }}
-                    </p>
+                <div
+                  class="small text-body-secondary mt-3 border p-4"
+                  [class.hasPago]="estadosPagos[j]"
+                >
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div class="d-flex align-items-center">
+                      <p class="h5 text-info">
+                        Cliente: {{ empFactura.cliente?.nombre }}
+                        {{ empFactura.cliente?.apellido }}
+                      </p>
 
-                    <span
-                      class="ms-3 pointer"
-                      (click)="
-                        eliminarFacturaDetalle(
-                          empFactura,
-                          numberValue(empleado.id)
-                        )
-                      "
-                    >
-                      <svg
-                        cIcon
-                        height="18"
-                        class="text-danger"
-                        name="cil-trash"
-                      ></svg>
+                      <span
+                        class="ms-3 pointer"
+                        (click)="
+                          eliminarFacturaDetalle(
+                            empFactura,
+                            numberValue(empleado.id)
+                          )
+                        "
+                      >
+                        <svg
+                          cIcon
+                          height="18"
+                          class="text-danger"
+                          name="cil-trash"
+                        ></svg>
+                      </span>
+                    </div>
+                    <span class="ms-3">
+                      <strong>Fecha:</strong>
+                      {{ empFactura.created_at | date : "dd/MM/yyyy HH:mm" }}
                     </span>
                     <!-- <button cButton color="danger">
                     </button> -->
@@ -84,6 +95,7 @@
                     [PedidoDetail]="empFactura"
                     (ActualizarProductos)="ActualizarProductos($event)"
                     [EmpleadoId]="numberValue(empleado.id)"
+                    (TienePago)="actualizarEstadoPago($event, j)"
                   ></app-pedido-new-form>
                 </div>
               </c-col>

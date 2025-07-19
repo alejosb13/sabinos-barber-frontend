@@ -469,17 +469,15 @@
                 [messages]="PedidoCrudErrorMessages['precio']"
               ></app-valid-messages-form>
             </c-col>
-            <c-col
-              [md]="2"
-              class="align-content-center mb-3"
-              *ngIf="prod.valid"
-            >
+            <c-col [md]="2" class="align-content-center mb-3">
               <button
                 cButton
                 color="primary"
                 (click)="guardarProducto(i, prod)"
                 [disabled]="
-                  prod.get('completado')?.value || prod.get('pendiente')?.value
+                  prod.get('completado')?.value ||
+                  prod.get('pendiente')?.value ||
+                  !prod.valid
                 "
                 class="me-4"
               >
@@ -516,10 +514,7 @@
                 cButton
                 color="danger"
                 (click)="eliminarProducto(i, prod)"
-                [disabled]="
-                  ProductorFormArray.controls.length == 1 &&
-                  !prod.get('editable')?.value
-                "
+                [disabled]="ProductorFormArray.controls.length > 1"
               >
                 <c-spinner
                   aria-hidden="true"

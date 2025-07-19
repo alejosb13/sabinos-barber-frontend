@@ -183,7 +183,7 @@ export class NominaSeleccionEmpleadoFormComponent {
   }
 
   getNominaEmpleado() {
-    // this.loadingEmpleados = true;
+    this._NominaService.LoadingCrud = true;
     this._NominaService
       .getNominaEmpleado(this.EmpleadoId, {
         estado: 1,

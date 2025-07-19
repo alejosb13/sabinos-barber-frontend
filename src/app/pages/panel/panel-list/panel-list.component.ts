@@ -83,6 +83,7 @@ export class PanelListComponent {
 
   loaderPanel: boolean = true;
   Panel!: Panel;
+  today = new Date();
 
   ParametrosURL: ParametersUrl = {
     allDates: false,

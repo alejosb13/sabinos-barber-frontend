@@ -109,6 +109,7 @@ export class PedidoNewFormComponent {
 
   @Output() FormsValues = new EventEmitter<any>();
   @Output() ActualizarProductos = new EventEmitter<any>();
+  @Output() TienePago = new EventEmitter<boolean>(false);
 
   loadingServicios: boolean = false;
   loadingProductos: boolean = false;
@@ -119,10 +120,18 @@ export class PedidoNewFormComponent {
   ngOnInit(): void {
     this.changeCantidad(this.PedidoCrudForm);
 
-    // this.PedidoCrudForm.valueChanges.subscribe((value) => {
-    //   // logger.log('value', value);
-    //   // console.log('Total de precios:', totalPrecio);
-    // });
+    this.PedidoCrudForm.valueChanges.subscribe((value) => {
+      logger.log('value', value);
+      // console.log('Total de precios:', totalPrecio);
+      if (
+        (value.metodos_pagos?.length ?? 0) > 0 &&
+        value.metodos_pagos?.some((m) => m.editable === true)
+      ) {
+        this.TienePago.emit(true);
+      } else {
+        this.TienePago.emit(false);
+      }
+    });
     this.PedidoCrudForm.get('servicio_id')?.valueChanges.subscribe(() => {
       this.changeServices();
     });
@@ -326,7 +335,7 @@ export class PedidoNewFormComponent {
       this.PedidoDetail.gratis == 1 ? 0 : Number(dataService?.precio)
     );
 
-    // logger.log('this.PedidoCrudForm', this.PedidoCrudForm.value);
+    logger.log('this.PedidoCrudForm', this.PedidoCrudForm.value);
   }
 
   getValueFacturaTotal() {

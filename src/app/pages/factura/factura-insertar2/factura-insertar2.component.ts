@@ -85,6 +85,7 @@ export class FacturaInsertar2Component {
   Clientes: Cliente[] = [];
 
   FacturasDetalles: any[] = [];
+  estadosPagos: boolean[] = [];
 
   private ParametrosURL: ParametersUrl = {
     allDates: false,
@@ -130,6 +131,10 @@ export class FacturaInsertar2Component {
   ActualizarProductos(index: number) {
     // logger.log('index', index);
     this.getProductos();
+  }
+
+  actualizarEstadoPago(valor: boolean, index: number) {
+    this.estadosPagos[index] = valor;
   }
 
   getEmpleados() {

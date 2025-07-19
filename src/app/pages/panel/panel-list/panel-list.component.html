@@ -5,7 +5,7 @@
   <c-card-body class="pt-4 pb-5">
     <c-container [fluid]="true" class="px-0">
       <c-row class="g-4" class="mb-5">
-        <c-col md="12">
+        <c-col md="6">
           <button
             cButton
             color="info"
@@ -15,6 +15,9 @@
             <svg cIcon height="18" name="cil-filter"></svg>
             Filtros
           </button>
+        </c-col>
+        <c-col md="6" class="text-end align-content-center">
+          <h4 class="text-muted">{{ today | date : "dd/MM/yyyy HH:mm" }}</h4>
         </c-col>
       </c-row>
       <c-row class="g-4">
