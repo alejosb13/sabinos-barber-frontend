@@ -1,0 +1,192 @@
+<c-card class="my-4">
+  <c-card-body class="pt-4">
+    <c-container [fluid]="true" class="my-table-full px-0" *ngIf="!loaderTable">
+      <c-container
+        [fluid]="true"
+        class="px-0 mb-3 d-flex flex-wrap botones-table"
+      >
+        <button
+          cButton
+          color="info"
+          class="btn-action-table me-3"
+          (click)="modalStatusById('filtros', true)"
+        >
+          <svg cIcon height="18" name="cil-filter"></svg>
+          Filtros
+        </button>
+
+        <!-- <button cButton color="info" class="mx-3 btn-action-table">
+          <svg cIcon height="18" name="cil-fax"></svg>
+          Descargar
+        </button> -->
+
+        <a
+          [routerLink]="['insertar']"
+          cButton
+          color="info"
+          class="mr-3 btn-action-table"
+        >
+          <svg cIcon height="18" name="cil-plus"></svg> Agregar</a
+        >
+      </c-container>
+      <c-row class="mb-4">
+        <c-col>
+          <div class="small text-body-secondary mt-3">
+            <span class=""> Locales: {{ SaldoList.total }}</span>
+          </div>
+        </c-col>
+        <c-col class="d-flex justify-content-end" md="4">
+          <c-input-group class="">
+            <input
+              class=""
+              aria-describedby="button-addon2"
+              cFormControl
+              name="buscar"
+              id="buscarId"
+              [(ngModel)]="ParametrosURL.filtro"
+            />
+            <button
+              cButton
+              color="secondary"
+              id="buscarId"
+              type="button"
+              variant="outline"
+              (click)="buscar()"
+            >
+              Buscar
+            </button>
+          </c-input-group>
+        </c-col>
+      </c-row>
+      @if(SaldoList.data.length > 0){
+      <c-row class="mb-4">
+        <c-col>
+          <table
+            [hover]="true"
+            [responsive]="true"
+            align="middle"
+            cTable
+            class="mb-0"
+          >
+            <thead class="text-nowrap text-truncate">
+              <tr>
+                <th class="bg-body-tertiary">#</th>
+                <th class="bg-body-tertiary">Metodo de pago</th>
+                <th class="bg-body-tertiary">Monto</th>
+                <th class="bg-body-tertiary"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (Saldo of SaldoList.data; track Saldo.id; let i = $index) {
+              <tr>
+                <td>
+                  <span>{{ Saldo.id }}</span>
+                  <!-- <div class="small text-body-secondary text-nowrap">
+                      <span> Registered: </span>
+                    </div> -->
+                </td>
+                <td>
+                  <span>{{ Saldo.metodo_pago?.tipo }}</span>
+                </td>
+                <td>
+                  <span>{{ Saldo.monto | currency : "ARS" }}</span>
+                </td>
+                <td>
+                  <div class="d-flex flex-direction">
+                    <div class="me-3" ngbTooltip="Editar">
+                      <a
+                        [routerLink]="[
+                          '/ajustes',
+                          'saldos',
+                          'editar',
+                          Saldo.id
+                        ]"
+                        cTooltip="Editar"
+                      >
+                        <svg cIcon height="18" name="cil-pencil"></svg>
+                      </a>
+                    </div>
+                    <div
+                      class=""
+                      ngbTooltip="Eliminar"
+                      (click)="eliminar(Saldo)"
+                    >
+                      <span
+                        class="text-primary pointer"
+                        role="button"
+                        cTooltip="Eliminar"
+                      >
+                        <svg cIcon height="18" name="cil-trash"></svg>
+                      </span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </c-col>
+      </c-row>
+      <c-row>
+        <c-col>
+          <c-pagination aria-label="Page navigation">
+            <!-- [ngClass]="{
+                active: listado.active,
+                disabled: listado.url == null
+              }" -->
+            <li
+              cPageItem
+              *ngFor="let listado of SaldoList.links"
+              [active]="listado.active ? true : false"
+              [disabled]="listado.url ? false : true"
+              (click)="newPage(listado)"
+              class="pointer"
+            >
+              <span cPageLink [routerLink] [innerHTML]="listado.label"></span>
+            </li>
+          </c-pagination>
+        </c-col>
+      </c-row>
+      }@else{
+      <c-row>
+        <c-col>
+          <c-container [fluid]="true">
+            <h4 class="text-center py-5">No se encontraron Locals</h4>
+          </c-container>
+        </c-col>
+      </c-row>
+      }
+    </c-container>
+    <c-container
+      [fluid]="true"
+      class="my-table-full px-0 text-center"
+      *ngIf="loaderTable"
+    >
+      <c-row class="mb-4">
+        <c-col>
+          <div class="small text-body-secondary mt-3">
+            <span class="h4">
+              Cargando
+              <c-spinner size="sm" />
+            </span>
+          </div>
+        </c-col>
+      </c-row>
+    </c-container>
+  </c-card-body>
+</c-card>
+
+<c-modal id="filtros">
+  <c-modal-header>
+    <h5 cModalTitle><svg cIcon height="18" name="cil-filter"></svg> Filtros</h5>
+    <button (click)="modalStatusById('filtros', false)" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <app-filtros-list-form
+      (filtrar)="filtroEvent($event)"
+      [showDate]="true"
+      [showEstado]="true"
+      [showValidDates]="true"
+    />
+  </c-modal-body>
+</c-modal>

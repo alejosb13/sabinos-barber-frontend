@@ -1,0 +1,66 @@
+<form cForm [formGroup]="SaldoCrudForm" class="form-Local-crud">
+  <c-row class="mb-4 flex-wrap">
+    <c-col [md]="4">
+      <div cFormFloating class="mb-3">
+        <input
+          cFormControl
+          id="monto"
+          formControlName="monto"
+          type="text"
+          placeholder="Monto"
+          appOnlyNumberAndPoint
+          [ngClass]="{
+            'is-invalid':
+              getControl('monto').invalid && getControl('monto').touched,
+            'is-valid': getControl('monto').valid
+          }"
+          appOnlyAlphanumeric
+        />
+        <label cLabel for="montoInput">Monto</label>
+        <app-valid-messages-form
+          [errors]="getControlError('monto')"
+          [messages]="SaldoCrudErrorMessages['monto']"
+        ></app-valid-messages-form>
+      </div>
+    </c-col>
+    <c-col [md]="4">
+      <div cFormFloating>
+        <select
+          cSelect
+          id="metodoInput"
+          formControlName="metodo_pago_id"
+          [ngClass]="{
+            'is-invalid':
+              getControl('metodo_pago_id').invalid &&
+              getControl('metodo_pago_id').touched,
+            'is-valid': getControl('metodo_pago_id').valid
+          }"
+        >
+          <option hidden value="0">Seleccione un método de pago</option>
+          <option
+            *ngFor="let MetodosPago of MetodosPagos"
+            [ngValue]="MetodosPago.id"
+          >
+            {{ MetodosPago.tipo | uppercase }}
+          </option>
+        </select>
+        <label cLabel for="metodoInput"
+          >Método de Pago <c-spinner size="sm" *ngIf="loadingMetodosPagos"
+        /></label>
+      </div>
+      <app-valid-messages-form
+        [errors]="getControlError('metodo_pago_id')"
+        [messages]="SaldoCrudErrorMessages['metodo_pago_id']"
+      ></app-valid-messages-form>
+    </c-col>
+  </c-row>
+  <c-row class="mb-4">
+    <c-col class="text-center">
+      @if (Saldo) {
+      <button cButton color="info" (click)="sendValueFom()">Editar</button>
+      } @else {
+      <button cButton color="info" (click)="sendValueFom()">Agregar</button>
+      }
+    </c-col>
+  </c-row>
+</form>

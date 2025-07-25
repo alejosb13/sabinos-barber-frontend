@@ -1,0 +1,16 @@
+<c-card class="my-4">
+  <c-card-header>
+    <p class="h3">Agregar Saldo</p>
+  </c-card-header>
+  <c-card-body class="pt-4">
+    <c-container [fluid]="true" class="px-0">
+      <c-row class="mb-4">
+        <c-col>
+          <div class="small text-body-secondary mt-3">
+            <app-saldo-crud-form (FormsValues)="FormsValues($event)" />
+          </div>
+        </c-col>
+      </c-row>
+    </c-container>
+  </c-card-body>
+</c-card>

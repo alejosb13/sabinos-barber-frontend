@@ -98,6 +98,11 @@ export const navItemsProject: INavData[] = [
         url: '/ajustes/servicios',
         icon: 'nav-icon-bullet',
       },
+      {
+        name: 'Saldos',
+        url: '/ajustes/saldos',
+        icon: 'nav-icon-bullet',
+      },
     ],
     attributes: {
       roles: ['administrador'],

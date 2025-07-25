@@ -1,0 +1,33 @@
+<c-card class="my-4">
+  <c-card-header>
+    <p class="h3">Editar saldo</p>
+  </c-card-header>
+  <c-card-body class="pt-4">
+    @if(loader){
+    <c-container [fluid]="true" class="px-0 text-center">
+      <c-row class="mb-4">
+        <c-col>
+          <div class="small text-body-secondary mt-3">
+            <span class="h4">
+              Cargando <c-spinner aria-hidden="true" size="sm" variant="grow"
+            /></span>
+          </div>
+        </c-col>
+      </c-row>
+    </c-container>
+    }@else {
+    <c-container [fluid]="true" class="px-0">
+      <c-row class="mb-4">
+        <c-col>
+          <div class="small text-body-secondary mt-3">
+            <app-saldo-crud-form
+              (FormsValues)="FormsValues($event)"
+              [Saldo]="Saldo"
+            />
+          </div>
+        </c-col>
+      </c-row>
+    </c-container>
+    }
+  </c-card-body>
+</c-card>

@@ -63,6 +63,24 @@ export const routes: Routes = [
         redirectTo: '',
         pathMatch: 'full',
       },
+      {
+        path: 'saldos',
+        loadChildren: () =>
+          import('./saldo/saldo.routes').then((m) => m.routes),
+        data: {
+          title: 'Saldo',
+        },
+      },
+    ],
+  },
+  {
+    path: '',
+    children: [
+      {
+        path: '',
+        redirectTo: '',
+        pathMatch: 'full',
+      },
     ],
   },
 ];
