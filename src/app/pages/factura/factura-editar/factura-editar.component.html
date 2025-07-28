@@ -35,32 +35,45 @@
               "
             >
               <c-col>
-                <div class="small text-body-secondary mt-3 border p-4">
-                  <div class="d-flex align-items-center mb-4">
-                    <p class="h5">
-                      {{ j + 1 }} - {{ facturaDetail.cliente?.nombre }}
-                      {{ facturaDetail.cliente?.apellido }}
-                    </p>
+                <div
+                  class="small text-body-secondary mt-3 border p-4"
+                  [class.hasPago]="estadosPagos[j]"
+                >
+                  <div
+                    class="d-flex align-items-center justify-content-between mb-4"
+                  >
+                    <div class="d-flex align-items-center">
+                      <p class="h5">
+                        {{ j + 1 }} - {{ facturaDetail.cliente?.nombre }}
+                        {{ facturaDetail.cliente?.apellido }}
+                      </p>
 
-                    <span
-                      class="ms-3 pointer"
-                      (click)="
-                        eliminarFacturaDetalle(
-                          facturaDetail,
-                          numberValue(Factura.empleado_id)
-                        )
-                      "
-                    >
-                      <svg
-                        cIcon
-                        height="18"
-                        class="text-danger"
-                        name="cil-trash"
-                      ></svg>
+                      <span
+                        class="ms-3 pointer"
+                        (click)="
+                          eliminarFacturaDetalle(
+                            facturaDetail,
+                            numberValue(Factura.empleado_id)
+                          )
+                        "
+                      >
+                        <svg
+                          cIcon
+                          height="18"
+                          class="text-danger"
+                          name="cil-trash"
+                        ></svg>
+                      </span>
+                    </div>
+
+                    <span class="ms-3">
+                      <strong>Fecha:</strong>
+                      {{ Factura.created_at | date : "dd/MM/yyyy HH:mm" }}
                     </span>
                     <!-- <button cButton color="danger">
                     </button> -->
                   </div>
+                  <hr class="mb-4" />
                   <app-pedido-new-form
                     (FormsValues)="FormsValues($event)"
                     [Clientes]="Clientes"
@@ -69,6 +82,7 @@
                     [Servicios]="Servicios"
                     [PedidoDetail]="facturaDetail"
                     (ActualizarProductos)="ActualizarProductos($event)"
+                    (TienePago)="actualizarEstadoPago($event, j)"
                   ></app-pedido-new-form>
                 </div>
               </c-col>

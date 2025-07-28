@@ -120,24 +120,21 @@ export class PedidoNewFormComponent {
   ngOnInit(): void {
     this.changeCantidad(this.PedidoCrudForm);
 
-    this.PedidoCrudForm.valueChanges.subscribe((value) => {
-      logger.log('value', value);
-      // console.log('Total de precios:', totalPrecio);
-      if (
-        (value.metodos_pagos?.length ?? 0) > 0 &&
-        value.metodos_pagos?.some((m) => m.editable === true)
-      ) {
-        this.TienePago.emit(true);
-      } else {
-        this.TienePago.emit(false);
-      }
-    });
     this.PedidoCrudForm.get('servicio_id')?.valueChanges.subscribe(() => {
       this.changeServices();
     });
 
     this.PedidoCrudForm.get('servicio_gratis')?.valueChanges.subscribe(() => {
       this.changeServices();
+    });
+
+    let metodosP = this.PedidoCrudForm.controls.metodos_pagos.getRawValue();
+    this.validarTienePago(metodosP);
+
+    this.PedidoCrudForm.valueChanges.subscribe((value) => {
+      // logger.log('value', value);
+      // console.log('Total de precios:', totalPrecio);
+      this.validarTienePago(value?.metodos_pagos);
     });
   }
 
@@ -207,7 +204,7 @@ export class PedidoNewFormComponent {
   }
 
   setFormValues() {
-    // logger.log('setFormValues', this.PedidoDetail);
+    logger.log('setFormValues', this.PedidoDetail);
 
     let cliente: any = this.Clientes.find(
       (cliente) => cliente.id === this.PedidoDetail.cliente_id
@@ -425,6 +422,17 @@ export class PedidoNewFormComponent {
       this.changeProducto(producGroup);
     }
     // agregarProductosArray(this.PedidoCrudForm);
+  }
+
+  validarTienePago(metodos_pagos: any) {
+    if (
+      (metodos_pagos?.length ?? 0) > 0 &&
+      metodos_pagos?.some((m: any) => m.editable === true)
+    ) {
+      this.TienePago.emit(true);
+    } else {
+      this.TienePago.emit(false);
+    }
   }
 
   guardarCambioFacturaDetalle() {

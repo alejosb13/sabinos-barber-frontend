@@ -122,14 +122,30 @@ export class PanelListComponent {
     this._ModalService.toggle(action);
   }
 
-  sumaMetodosPago(index: string) {
-    let Factura = this.Panel.caja_factura.find((item) => item.tipo === index);
-    let Gastos = this.Panel.caja_gastos.find((item) => item.tipo === index);
-    let Nomina = this.Panel.caja_nomina.find((item) => item.tipo === index);
+  sumaMetodosPago(idMetodoPago: number) {
+    let Factura = this.Panel.caja_factura.find(
+      (item) => item.id === idMetodoPago
+    );
+    let Gastos = this.Panel.caja_gastos.find(
+      (item) => item.id === idMetodoPago
+    );
+    let Nomina = this.Panel.caja_nomina.find(
+      (item) => item.id === idMetodoPago
+    );
+    let Saldo = this.Panel.saldo.find((item) => item.id === idMetodoPago);
 
     return (
-      (Factura?.total || 0) - (Number(Gastos?.total) + Number(Nomina?.total))
+      (Factura?.total || 0) -
+      (Number(Gastos?.total) + Number(Nomina?.total) + Number(Saldo?.total))
     );
+  }
+
+  sumaGastos() {
+    let TotalGasto = this.Panel.caja_gastos.reduce((acumulador, item) => {
+      return acumulador + Number(item.total || 0);
+    }, 0);
+
+    return TotalGasto;
   }
 
   sumaFacturacion() {

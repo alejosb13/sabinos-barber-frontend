@@ -18,6 +18,7 @@ export interface GastoItemForm {
   precio_unitario: FormControl<number | null>;
   precio: FormControl<number | null>;
   tipo_gasto_id: FormControl<number | null>;
+  comentario: FormControl<string | null>;
 }
 
 export interface MontoItemForm {
@@ -38,6 +39,7 @@ const crearGastoForm = (): FormGroup<GastoItemForm> => {
     tipo_gasto_id: new FormControl(0, [
       ...GastoCrudValidators['tipo_gasto_id'],
     ]),
+    comentario: new FormControl('', [...GastoCrudValidators['comentario']]),
     // metodo_pago_id: new FormControl(0, [
     //   ...GastoCrudValidators['metodo_pago_id'],
     // ]),

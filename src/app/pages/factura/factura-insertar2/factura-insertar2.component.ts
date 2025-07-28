@@ -134,6 +134,7 @@ export class FacturaInsertar2Component {
   }
 
   actualizarEstadoPago(valor: boolean, index: number) {
+    logger.log('Valor del pago:', valor, 'Index:', index);
     this.estadosPagos[index] = valor;
   }
 

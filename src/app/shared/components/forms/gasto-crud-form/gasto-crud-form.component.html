@@ -284,6 +284,22 @@
                 [messages]="GastoCrudErrorMessages['precio']"
               ></app-valid-messages-form>
             </c-col>
+            <c-col [md]="3">
+              <div cFormFloating>
+                <input
+                  cFormControl
+                  id="precio_{{ i }}"
+                  formControlName="comentario"
+                  type="text"
+                  placeholder="precio"
+                />
+                <label cLabel for="precio_{{ i }}">Comentario</label>
+              </div>
+              <app-valid-messages-form
+                [errors]="getGastoControlError(i, 'comentario')"
+                [messages]="GastoCrudErrorMessages['comentario']"
+              ></app-valid-messages-form>
+            </c-col>
           </c-row>
         </c-col>
 

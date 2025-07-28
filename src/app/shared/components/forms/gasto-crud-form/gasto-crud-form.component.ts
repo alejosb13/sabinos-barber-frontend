@@ -388,6 +388,7 @@ export class GastoCrudFormComponent {
           cantidad: g.cantidad ? Number(g.cantidad) : 0,
           precio_unitario: g.precio_unitario ? Number(g.precio_unitario) : 0,
           producto_id: g.producto_id ? g.producto_id.id : null,
+          comentario: g.comentario,
           // metodo_pago_id: g.metodo_pago_id,
           // metodos_pagos: g.metodos_pagos.map((m: any) => {
           //   return {

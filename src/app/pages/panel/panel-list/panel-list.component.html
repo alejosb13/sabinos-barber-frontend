@@ -86,7 +86,7 @@
             [title]="'Caja efectivo'"
             color="success"
             inverse
-            value="{{ sumaMetodosPago('Efectivo') | currency : 'ARS' }}"
+            value="{{ sumaMetodosPago(2) | currency : 'ARS' }}"
           >
             <ng-template cTemplateId="widgetIconTemplate">
               <svg cIcon height="36" name="faFileInvoiceDollar"></svg>
@@ -112,7 +112,7 @@
             [title]="'Caja Mercado Pago'"
             color="success"
             inverse
-            value="{{ sumaMetodosPago('Mercado Pago') | currency : 'ARS' }}"
+            value="{{ sumaMetodosPago(1) | currency : 'ARS' }}"
           >
             <ng-template cTemplateId="widgetIconTemplate">
               <svg cIcon height="36" name="faFileInvoiceDollar"></svg>
@@ -148,7 +148,7 @@
           </c-widget-stat-c>
           }
         </c-col> -->
-        <c-col
+        <!-- <c-col
           xl="3"
           lg="4"
           sm="6"
@@ -167,6 +167,33 @@
               Panel.total_productos == 1
                 ? Panel.total_productos + ' Prod.'
                 : Panel.total_productos + ' Prods.'
+            }}"
+          >
+            <ng-template cTemplateId="widgetIconTemplate">
+              <svg cIcon height="36" name="cil-cut"></svg>
+            </ng-template>
+          </c-widget-stat-c>
+          }
+        </c-col> -->
+        <c-col
+          xl="3"
+          lg="4"
+          sm="6"
+          [ngClass]="{
+            'align-items-center justify-content-center d-flex': loaderPanel
+          }"
+        >
+          @if(loaderPanel){
+          <c-spinner aria-hidden="true" size="sm" variant="grow" />
+          }@else{
+          <c-widget-stat-c
+            [title]="'Servicios Mensuales'"
+            color="warning"
+            inverse
+            value="{{
+              Panel.Servicios_mensual.cantidadTotal > 1
+                ? Panel.Servicios_mensual.cantidadTotal + ' Servs.'
+                : Panel.Servicios_mensual.cantidadTotal + ' Serv.'
             }}"
           >
             <ng-template cTemplateId="widgetIconTemplate">
@@ -222,11 +249,7 @@
             [title]="'Gastos'"
             color="primary"
             inverse
-            value="{{
-              Panel.total_gastos == 1
-                ? Panel.total_gastos + ' Gto.'
-                : Panel.total_gastos + ' Gtos.'
-            }}"
+            value="{{ sumaGastos() | currency : 'ARS' }}"
           >
             <ng-template cTemplateId="widgetIconTemplate">
               <svg cIcon height="36" name="faHandHoldingDollar"></svg>

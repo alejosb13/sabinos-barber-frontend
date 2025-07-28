@@ -115,6 +115,8 @@ export class FacturaEditarComponent {
 
   scrollPosition = 0;
 
+  estadosPagos: boolean[] = [];
+
   constructor() {
     effect(() => {
       this._LoginService.getUserData();
@@ -177,10 +179,15 @@ export class FacturaEditarComponent {
     this._FacturasService
       .getFacturaById(this.Id, {
         ...this.ParametrosURL,
-        factura_model: '1',
-        factura_detalle_model: '1',
-        factura_producto_model: '1',
+        // factura_model: '1',
+        // factura_detalle_model: '1',
+        // factura_producto_model: '1',
+        // empleado_model: '1',
+        user_model: '1',
         empleado_model: '1',
+        factura_detalle_model: '1',
+        estado: '1',
+        disablePaginate: '1',
         // local_id: this._LoginService.getUserData().local.id,
       })
       .pipe(takeUntil(this.destruir$))
@@ -197,6 +204,11 @@ export class FacturaEditarComponent {
 
         // logger.log(this._FacturaPedidoService.facturaDetalle());
       });
+  }
+
+  actualizarEstadoPago(valor: boolean, index: number) {
+    logger.log('Valor del pago:', valor, 'Index:', index);
+    this.estadosPagos[index] = valor;
   }
 
   getServicios() {

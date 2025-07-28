@@ -33,6 +33,7 @@ export const GastoCrudValidators: FormGroupValidators = {
   ],
   tipo_gasto_id: [Validators.required],
   is_local: [Validators.required],
+  comentario: [],
   tipo_usuario: [],
   metodo_pago_id: [Validators.required, Validators.min(1)],
 };
@@ -91,5 +92,8 @@ export const GastoCrudErrorMessages: FormErrorMessages = {
   },
   monto: {
     required: 'El monto es requerido',
+  },
+  comentario: {
+    required: 'El comentario es requerido',
   },
 };

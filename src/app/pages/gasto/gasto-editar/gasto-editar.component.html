@@ -50,6 +50,7 @@
                 <!-- <th class="bg-body-tertiary">Linea</th> -->
                 <th class="bg-body-tertiary">Subtotal</th>
                 <th class="bg-body-tertiary">Cantidad</th>
+                <th class="bg-body-tertiary">Comentario</th>
                 <th class="bg-body-tertiary">Total</th>
               </tr>
             </thead>
@@ -73,6 +74,7 @@
                 <!-- <td>{{ gast.producto?.linea }} u.</td> -->
                 <td>-</td>
                 <td>-</td>
+                <td>{{ gast.comentario ? gast.comentario : "-" }}</td>
                 <td>{{ gast.precio | currency : "ARS" }}</td>
                 }
               </tr>
