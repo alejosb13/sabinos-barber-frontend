@@ -40,7 +40,7 @@ export class HelpersService {
       }
 
       if (value && key != 'link') {
-        logger.log([key, value]);
+        // logger.log([key, value]);
         params = params.set(key, value);
       }
     });
