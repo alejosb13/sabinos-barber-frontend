@@ -103,6 +103,7 @@ export class ServicioCrudFormComponent {
     this.ServicioCrudForm.patchValue({
       descripcion: this.Servicio.descripcion,
       precio: this.Servicio.precio,
+      precio_nomina: this.Servicio.precio_nomina,
     });
     // this.fecha_nacimiento = obtenerRangoFecha(this..fecha_nacimiento);
   }

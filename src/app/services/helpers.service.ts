@@ -33,9 +33,14 @@ export class HelpersService {
   formatParameters(parametersURL: ParametersUrl): HttpParams {
     let params = new HttpParams();
     Object.entries(parametersURL).forEach(([key, value]) => {
-      // logger.log([key, value]);
       // Solo agregar valores que no sean undefined o null
-      if ((value && key != 'link') || key === 'estado') {
+      if (key === 'estado') {
+        if (value === 2) return; // Excluir estado 2
+        if (value === 0) params = params.set(key, value);
+      }
+
+      if (value && key != 'link') {
+        logger.log([key, value]);
         params = params.set(key, value);
       }
     });
@@ -52,7 +57,7 @@ export class HelpersService {
 
   private excludeInFilter(key: string, value: any, filtros: Filtro): boolean {
     const exclusionRules: Record<string, any> = {
-      estado: 2,
+      // estado: 2,
       local_id: 0,
     };
 
