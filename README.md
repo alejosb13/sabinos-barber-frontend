@@ -38,14 +38,17 @@ Sabinos es una aplicación web desarrollada con **Angular 18**, diseñada como u
    ```
 
 5. **Acceder a la aplicación:**
+
    ```bash
     http://localhost:4200/.
    ```
 
-
+6. **Deploy Prod:**
+   ```bash
+    ng build --configuration production --output-hashing all
+   ```
 
 Para que los desarrolladores aparezcan en una fila, puedes agregar varias columnas en la misma tabla. Aquí tienes el código con dos desarrolladores en una fila:
-
 
 ## Desarrolladores
 

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import {
   ButtonDirective,
   ButtonModule,
@@ -38,6 +38,7 @@ import { Filtro } from '../../../models/Filter.model';
 import { WidgetsDropdownComponent } from '../../../documentacion/widgets/widgets-dropdown/widgets-dropdown.component';
 import { WidgetsBrandComponent } from '../../../documentacion/widgets/widgets-brand/widgets-brand.component';
 import { Panel } from '../../../models/Panel.model';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-panel-list',
@@ -79,6 +80,7 @@ export class PanelListComponent {
   private _ModalService = inject(ModalService);
   private _HelpersService = inject(HelpersService);
   private _PanelService = inject(PanelService);
+  private _LoginService = inject(LoginService);
   readonly #ColorModeService = inject(ColorModeService);
 
   loaderPanel: boolean = true;
@@ -97,17 +99,23 @@ export class PanelListComponent {
     fecha_fin: dayjs().format('YYYY-MM-DD'),
   };
 
+  constructor() {
+    this.changeSesionStorage();
+  }
+
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.getPanel();
   }
 
   getPanel() {
     this.loaderPanel = true;
 
     this._PanelService
-      .getPanel(this.ParametrosURL)
+      .getPanel({
+        ...this.ParametrosURL,
+        local_id: this._LoginService.getUserData().local.id,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data) => {
@@ -115,6 +123,13 @@ export class PanelListComponent {
         this.Panel = { ...data };
         logger.log(data);
       });
+  }
+
+  changeSesionStorage() {
+    effect(() => {
+      this._LoginService.getUserData();
+      this.getPanel();
+    });
   }
 
   modalStatusById(id: string, show: boolean) {
