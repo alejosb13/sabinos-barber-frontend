@@ -135,8 +135,8 @@ export class PanelListComponent {
     let Saldo = this.Panel.saldo.find((item) => item.id === idMetodoPago);
 
     return (
-      (Factura?.total || 0) -
-      (Number(Gastos?.total) + Number(Nomina?.total) + Number(Saldo?.total))
+      (Factura?.total || 0 + Number(Saldo?.total)) -
+      (Number(Gastos?.total) + Number(Nomina?.total))
     );
   }
 
