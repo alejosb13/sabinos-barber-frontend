@@ -115,7 +115,7 @@ export class FacturaEditarComponent {
 
   scrollPosition = 0;
 
-  estadosPagos: boolean[] = [];
+  estadosPagos: any[] = [];
 
   constructor() {
     effect(() => {
@@ -141,10 +141,10 @@ export class FacturaEditarComponent {
     // this.getClientes();
   }
 
-  @HostListener('window:scroll', [])
-  onScroll(): void {
-    this.scrollPosition = window.scrollY || document.documentElement.scrollTop;
-  }
+  // @HostListener('window:scroll', [])
+  // onScroll(): void {
+  //   this.scrollPosition = window.scrollY || document.documentElement.scrollTop;
+  // }
 
   tabChange(event: any) {
     // logger.log(event);
@@ -206,9 +206,27 @@ export class FacturaEditarComponent {
       });
   }
 
-  actualizarEstadoPago(valor: boolean, index: number) {
-    logger.log('Valor del pago:', valor, 'Index:', index);
-    this.estadosPagos[index] = valor;
+  actualizarEstadoPago(item: any, index: number) {
+    // const EmpleadoId = this.EmpleadoId
+    const indiceExistente = this.estadosPagos.findIndex(
+      (elemento) => elemento.index === index
+    );
+
+    if (indiceExistente !== -1) {
+      // Ya existe, actualizamos
+      this.estadosPagos[indiceExistente] = { ...item, index };
+    } else {
+      // No existe, lo agregamos
+      this.estadosPagos.push({ ...item, index });
+    }
+
+    logger.log('Estados de pago actualizados:', this.estadosPagos);
+  }
+
+  validarEstadoPago(index: number, empleado_id: number): boolean | null {
+    const item = this.estadosPagos.find((elemento) => elemento.index === index);
+
+    return item ? item.validacion : null; // o false por defecto si preferís
   }
 
   getServicios() {

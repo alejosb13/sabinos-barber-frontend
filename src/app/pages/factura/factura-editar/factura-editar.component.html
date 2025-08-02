@@ -37,7 +37,7 @@
               <c-col>
                 <div
                   class="small text-body-secondary mt-3 border p-4"
-                  [class.hasPago]="estadosPagos[j]"
+                  [class.hasPago]="validarEstadoPago(j, numberValue(this.Id))"
                 >
                   <div
                     class="d-flex align-items-center justify-content-between mb-4"

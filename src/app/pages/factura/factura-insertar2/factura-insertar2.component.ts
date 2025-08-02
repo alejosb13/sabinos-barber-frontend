@@ -85,7 +85,7 @@ export class FacturaInsertar2Component {
   Clientes: Cliente[] = [];
 
   FacturasDetalles: any[] = [];
-  estadosPagos: boolean[] = [];
+  estadosPagos: any[] = [];
 
   private ParametrosURL: ParametersUrl = {
     allDates: false,
@@ -133,9 +133,30 @@ export class FacturaInsertar2Component {
     this.getProductos();
   }
 
-  actualizarEstadoPago(valor: boolean, index: number) {
-    logger.log('Valor del pago:', valor, 'Index:', index);
-    this.estadosPagos[index] = valor;
+  actualizarEstadoPago(item: any, index: number) {
+    const indiceExistente = this.estadosPagos.findIndex(
+      (elemento) =>
+        elemento.empleado_id === item.empleado_id && elemento.index === index
+    );
+
+    if (indiceExistente !== -1) {
+      // Ya existe, actualizamos
+      this.estadosPagos[indiceExistente] = { ...item, index };
+    } else {
+      // No existe, lo agregamos
+      this.estadosPagos.push({ ...item, index });
+    }
+
+    logger.log('Estados de pago actualizados:', this.estadosPagos);
+  }
+
+  validarEstadoPago(index: number, empleado_id: number): boolean | null {
+    const item = this.estadosPagos.find(
+      (elemento) =>
+        elemento.index === index && elemento.empleado_id === empleado_id
+    );
+
+    return item ? item.validacion : null; // o false por defecto si preferís
   }
 
   getEmpleados() {

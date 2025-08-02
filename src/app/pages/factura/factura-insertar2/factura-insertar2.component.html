@@ -50,7 +50,9 @@
               <c-col>
                 <div
                   class="small text-body-secondary mt-3 border p-4"
-                  [class.hasPago]="estadosPagos[j]"
+                  [class.hasPago]="
+                    validarEstadoPago(j, numberValue(empleado.id))
+                  "
                 >
                   <div
                     class="d-flex justify-content-between align-items-center"

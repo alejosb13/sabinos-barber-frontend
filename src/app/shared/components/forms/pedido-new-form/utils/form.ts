@@ -101,8 +101,8 @@ const crearMetodoPagoArrayForm = (): FormGroup<PedidoMetodoPagoForm> => {
     metodo_pago_id: new FormControl(null, [
       ...PedidoCrudValidators['metodo_pago_id'],
     ]),
-    monto: new FormControl({ disabled: false, value: 0 }, [
-      ...PedidoCrudValidators['precio'],
+    monto: new FormControl({ disabled: false, value: null }, [
+      ...PedidoCrudValidators['monto'],
     ]),
     pendiente: new FormControl(false),
     completado: new FormControl(false),

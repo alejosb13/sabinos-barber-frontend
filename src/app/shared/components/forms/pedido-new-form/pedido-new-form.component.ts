@@ -109,7 +109,7 @@ export class PedidoNewFormComponent {
 
   @Output() FormsValues = new EventEmitter<any>();
   @Output() ActualizarProductos = new EventEmitter<any>();
-  @Output() TienePago = new EventEmitter<boolean>(false);
+  @Output() TienePago = new EventEmitter<any>();
 
   loadingServicios: boolean = false;
   loadingProductos: boolean = false;
@@ -291,7 +291,7 @@ export class PedidoNewFormComponent {
                 [...PedidoCrudValidators['metodo_pago_id']]
               ),
               monto: new FormControl(Number(item.monto) ?? null, [
-                ...PedidoCrudValidators['precio'],
+                ...PedidoCrudValidators['monto'],
               ]),
               pendiente: new FormControl(false),
               completado: new FormControl(false),
@@ -429,9 +429,9 @@ export class PedidoNewFormComponent {
       (metodos_pagos?.length ?? 0) > 0 &&
       metodos_pagos?.some((m: any) => m.editable === true)
     ) {
-      this.TienePago.emit(true);
+      this.TienePago.emit({ validacion: true, empleado_id: this.EmpleadoId });
     } else {
-      this.TienePago.emit(false);
+      this.TienePago.emit({ validacion: false, empleado_id: this.EmpleadoId });
     }
   }
 

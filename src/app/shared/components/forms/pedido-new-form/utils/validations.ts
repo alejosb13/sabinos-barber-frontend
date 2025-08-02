@@ -18,6 +18,11 @@ export const PedidoCrudValidators: FormGroupValidators = {
   cantidad: [Validators.required, Validators.maxLength(20)],
   precio_unitario: [Validators.required, Validators.maxLength(20)],
   precio: [Validators.required, Validators.maxLength(20)],
+  monto: [
+    Validators.required,
+    Validators.minLength(2),
+    Validators.maxLength(20),
+  ],
   gratis: [],
 };
 
@@ -50,6 +55,11 @@ export const PedidoCrudErrorMessages: FormErrorMessages = {
   precio: {
     required: 'El precio es requerido',
     maxlength: 'Solo se permite 20 caracteres.',
+  },
+  monto: {
+    required: 'El monto es requerido',
+    maxlength: 'Solo se permite 20 caracteres.',
+    min: 'El mínimo de caracteres es de 1.',
   },
   gratis: {
     required: '',
