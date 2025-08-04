@@ -138,26 +138,9 @@ export class PanelListComponent {
   }
 
   sumaMetodosPago(idMetodoPago: number) {
-    let Factura = this.Panel.caja_factura.find(
-      (item) => item.id === idMetodoPago
-    );
-    let Gastos = this.Panel.caja_gastos.find(
-      (item) => item.id === idMetodoPago
-    );
-    let Nomina = this.Panel.caja_nomina.find(
-      (item) => item.id === idMetodoPago
-    );
     let Saldo = this.Panel.saldo.find((item) => item.id === idMetodoPago);
 
-    // logger.log('Factura', Factura?.total);
-    // logger.log('Gastos', Gastos?.total);
-    // logger.log('Nomina', Nomina?.total);
-    // logger.log('Saldo', Saldo?.total);
-    return (
-      Number(Factura?.total || 0) +
-      Number(Saldo?.total) -
-      (Number(Gastos?.total) + Number(Nomina?.total))
-    );
+    return Number(Saldo?.total);
   }
 
   sumaGastos() {
