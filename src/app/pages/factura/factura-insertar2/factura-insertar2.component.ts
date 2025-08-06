@@ -8,6 +8,7 @@ import {
   ModalModule,
   SpinnerComponent,
   Tabs2Module,
+  TemplateIdDirective,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import { FormModule } from '@coreui/angular';
@@ -60,6 +61,8 @@ import { numberValue } from '../../../shared/utils/constants/function-value';
     FacturarClienteModalComponent,
     AccordionModule,
     SpinnerComponent,
+    AccordionModule,
+    TemplateIdDirective,
   ],
   templateUrl: './factura-insertar2.component.html',
   styleUrl: './factura-insertar2.component.scss',

@@ -41,6 +41,10 @@
 
 // Si el tema es oscuro, aplica a cualquier elemento con .hasPago
 ::ng-deep {
+  .accordion-item {
+    margin-bottom: 10px;
+  }
+
   [data-coreui-theme="dark"] {
     .hasPago {
       background-color: #2e3c35 !important;

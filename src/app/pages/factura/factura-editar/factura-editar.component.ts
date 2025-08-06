@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  AccordionModule,
   ButtonModule,
   CardModule,
   ColorModeService,
@@ -7,6 +8,7 @@ import {
   ModalModule,
   SpinnerComponent,
   Tabs2Module,
+  TemplateIdDirective,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import { FormModule } from '@coreui/angular';
@@ -63,6 +65,8 @@ import { numberValue } from '../../../shared/utils/constants/function-value';
     Tabs2Module,
     FacturarClienteModalComponent,
     SpinnerComponent,
+    AccordionModule,
+    TemplateIdDirective,
   ],
   templateUrl: './factura-editar.component.html',
   styleUrl: './factura-editar.component.scss',
