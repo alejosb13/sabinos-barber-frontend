@@ -6,6 +6,8 @@ import { FacturaDetalle } from './FacturaDetail';
 export interface Factura {
   id?: number;
 
+  cantidad_facturas?: number;
+
   // cliente_id: number;
   // empleado_id: number;
   // productos: Producto[];

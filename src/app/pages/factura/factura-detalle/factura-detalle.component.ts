@@ -25,11 +25,20 @@ import { FiltrosListFormComponent } from '../../../shared/components/forms/filtr
 import logger from 'src/app/shared/utils/logger';
 import { FormsModule } from '@angular/forms';
 import { Factura } from '../../../models/Factura.model';
-import { FacturaDetalleMetodoPago } from '../../../models/FacturaDetail';
+import {
+  FacturaDetalle,
+  FacturaDetalleMetodoPago,
+} from '../../../models/FacturaDetail';
 import dayjs from 'dayjs';
 import { HelpersService } from '../../../services/helpers.service';
 import { Filtro } from '../../../models/Filter.model';
 import { IModalAction } from '@coreui/angular/lib/modal/modal.service';
+
+type ServicioResumen = {
+  id: number;
+  descripcion: string;
+  cantidad: number;
+};
 
 @Component({
   selector: 'app-factura-detalle',
@@ -81,6 +90,8 @@ export class FacturaDetalleComponent {
   Factura!: Factura;
   loaderFactura: boolean = false;
 
+  ContadorServicios: ServicioResumen[] = [];
+
   expandedRow: number | null = null;
 
   ngOnInit(): void {
@@ -99,7 +110,10 @@ export class FacturaDetalleComponent {
       .subscribe((data: Factura) => {
         this.loaderFactura = false;
         this.Factura = { ...data };
-        logger.log(data);
+        // logger.log(data);
+        this.ContadorServicios = this.agruparServiciosPorId(
+          data.factura_detalle || []
+        );
       });
   }
 
@@ -113,7 +127,7 @@ export class FacturaDetalleComponent {
     if (!MetodoPagoDetalle) return 0;
 
     return MetodoPagoDetalle.reduce((total, metodo) => {
-      return total + metodo.monto;
+      return Number(total) + Number(metodo.monto);
     }, 0);
   }
 
@@ -142,5 +156,25 @@ export class FacturaDetalleComponent {
   modalStatusById(id: string, show: boolean) {
     const action: IModalAction = { show, id };
     this._ModalService.toggle(action);
+  }
+
+  agruparServiciosPorId(FacturaDetalle: FacturaDetalle[]): ServicioResumen[] {
+    const conteo = new Map<number, ServicioResumen>();
+
+    for (const item of FacturaDetalle) {
+      const Servicio = item.servicio;
+
+      if (conteo.has(Number(Servicio?.id))) {
+        conteo.get(Number(Servicio?.id))!.cantidad += 1;
+      } else {
+        conteo.set(Number(Servicio?.id), {
+          id: Number(Servicio?.id),
+          descripcion: String(Servicio?.descripcion),
+          cantidad: 1,
+        });
+      }
+    }
+
+    return Array.from(conteo.values());
   }
 }

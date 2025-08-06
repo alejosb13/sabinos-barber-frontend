@@ -41,7 +41,9 @@
               "src/.htaccess"
             ],
             "styles": ["src/scss/styles.scss"],
-            "scripts": [],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
             "allowedCommonJsDependencies": [
               "moment",
               "sweetalert2",
@@ -73,11 +75,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": {
-                "fonts": false,
-                "scripts": true,
-                "styles": true
-              },
+              "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,

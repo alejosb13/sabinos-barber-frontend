@@ -74,6 +74,7 @@
                 <th class="bg-body-tertiary">Empleado</th>
                 <th class="bg-body-tertiary">Local</th>
                 <th class="bg-body-tertiary">Fecha creación</th>
+                <th class="bg-body-tertiary">Cantidad de factura</th>
                 <th class="bg-body-tertiary"></th>
               </tr>
             </thead>
@@ -95,6 +96,13 @@
                 </td>
                 <td>
                   <span>{{ Factura.created_at | date : "dd-MM-YYYY" }}</span>
+                </td>
+                <td>
+                  <span>{{
+                    numberValue(Factura?.cantidad_facturas) > 1
+                      ? numberValue(Factura?.cantidad_facturas) + " Facturas"
+                      : numberValue(Factura?.cantidad_facturas) + " Factura"
+                  }}</span>
                 </td>
                 <td>
                   <div class="d-flex flex-direction">

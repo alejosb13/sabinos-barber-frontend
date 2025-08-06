@@ -33,6 +33,7 @@ import { environment } from 'src/environments/environment';
 import { FormsModule } from '@angular/forms';
 import { Factura } from '../../../models/Factura.model';
 import { LoginService } from '../../../services/login.service';
+import { numberValue } from '../../../shared/utils/constants/function-value';
 
 @Component({
   selector: 'app-factura-listado',
@@ -81,6 +82,8 @@ export class FacturaListadoComponent {
     fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
   };
   FacturasList!: Listado<Factura>;
+
+  numberValue = numberValue;
 
   constructor() {
     effect((a) => {

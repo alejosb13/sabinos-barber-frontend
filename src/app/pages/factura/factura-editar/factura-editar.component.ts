@@ -220,7 +220,7 @@ export class FacturaEditarComponent {
       this.estadosPagos.push({ ...item, index });
     }
 
-    logger.log('Estados de pago actualizados:', this.estadosPagos);
+    // logger.log('Estados de pago actualizados:', this.estadosPagos);
   }
 
   validarEstadoPago(index: number, empleado_id: number): boolean | null {

@@ -14,7 +14,6 @@
             <p class="h3">
               Facturación {{ Factura.empleado?.nombre_completo }}
             </p>
-
             <h4>
               Facturado :
               {{
@@ -27,27 +26,48 @@
         </c-card-header>
         <c-card-body class="pt-4">
           <c-container [fluid]="true" class="px-0">
-            <c-row
-              class="mb-4"
-              *ngFor="
-                let facturaDetail of Factura.factura_detalle;
-                let j = index
-              "
+            <div
+              class="accordion"
+              [attr.id]="'accordion-' + Factura.empleado_id"
             >
-              <c-col>
+              <div
+                class="accordion-item"
+                *ngFor="
+                  let facturaDetail of Factura.factura_detalle;
+                  let j = index
+                "
+              >
                 <div
-                  class="small text-body-secondary mt-3 border p-4"
-                  [class.hasPago]="validarEstadoPago(j, numberValue(this.Id))"
+                  [attr.id]="'heading-' + Factura.empleado_id + '-' + j"
+                  class="d-flex justify-content-between align-items-center accordion-header"
                 >
-                  <div
-                    class="d-flex align-items-center justify-content-between mb-4"
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    [attr.data-bs-toggle]="'collapse'"
+                    [attr.data-bs-target]="
+                      '#collapse-' + Factura.empleado_id + '-' + j
+                    "
+                    [attr.aria-expanded]="'false'"
+                    [attr.aria-controls]="
+                      'collapse-' + Factura.empleado_id + '-' + j
+                    "
+                    [ngClass]="{
+                      hasPago: validarEstadoPago(
+                        j,
+                        numberValue(Factura.empleado_id)
+                      ),
+                      notHasPago: !validarEstadoPago(
+                        j,
+                        numberValue(Factura.empleado_id)
+                      )
+                    }"
                   >
                     <div class="d-flex align-items-center">
-                      <p class="h5">
+                      <p class="h5 text-info">
                         {{ j + 1 }} - {{ facturaDetail.cliente?.nombre }}
                         {{ facturaDetail.cliente?.apellido }}
                       </p>
-
                       <span
                         class="ms-3 pointer"
                         (click)="
@@ -65,51 +85,54 @@
                         ></svg>
                       </span>
                     </div>
-
-                    <span class="ms-3">
+                    <span class="ms-3 text-muted">
                       <strong>Fecha:</strong>
                       {{ Factura.created_at | date : "dd/MM/yyyy HH:mm" }}
                     </span>
-                    <!-- <button cButton color="danger">
-                    </button> -->
-                  </div>
-                  <hr class="mb-4" />
-                  <app-pedido-new-form
-                    (FormsValues)="FormsValues($event)"
-                    [Clientes]="Clientes"
-                    [MetodosPagos]="MetodosPagos"
-                    [Productos]="Productos"
-                    [Servicios]="Servicios"
-                    [PedidoDetail]="facturaDetail"
-                    (ActualizarProductos)="ActualizarProductos($event)"
-                    (TienePago)="actualizarEstadoPago($event, j)"
-                  ></app-pedido-new-form>
+                  </button>
                 </div>
-              </c-col>
-            </c-row>
+                <div
+                  [attr.id]="'collapse-' + Factura.empleado_id + '-' + j"
+                  class="accordion-collapse collapse"
+                  [attr.aria-labelledby]="
+                    'heading-' + Factura.empleado_id + '-' + j
+                  "
+                >
+                  <div class="accordion-body">
+                    <div
+                      class="small text-body-secondary mt-2 border p-4"
+                      [class.hasPago]="
+                        validarEstadoPago(j, numberValue(Factura.empleado_id))
+                      "
+                      [class.notHasPago]="
+                        !validarEstadoPago(j, numberValue(Factura.empleado_id))
+                      "
+                    >
+                      <app-pedido-new-form
+                        (FormsValues)="FormsValues($event)"
+                        [Clientes]="Clientes"
+                        [MetodosPagos]="MetodosPagos"
+                        [Productos]="Productos"
+                        [Servicios]="Servicios"
+                        [PedidoDetail]="facturaDetail"
+                        (ActualizarProductos)="ActualizarProductos($event)"
+                        [EmpleadoId]="numberValue(Factura.empleado_id)"
+                        (TienePago)="actualizarEstadoPago($event, j)"
+                      ></app-pedido-new-form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </c-container>
         </c-card-body>
-        <!-- Botón flotante dentro de la pestaña -->
-        <!-- <button
-          class="btn btn-primary btn-flotante"
-          (click)="agregarFactura(Factura.empleado_id)"
-          *ngIf="scrollPosition > 70"
-        >
-          <svg cIcon height="18" name="cil-plus"></svg>
-          Factura {{ Factura.empleado?.nombre_completo }}
-        </button> -->
       </c-tab-panel>
     </c-tabs-content>
   </c-tabs>
 </c-card>
-
-<c-card>
+<c-card *ngIf="loaderFacturas">
   <c-card-body>
-    <c-container
-      [fluid]="true"
-      class="my-table-full px-0 text-center"
-      *ngIf="loaderFacturas"
-    >
+    <c-container [fluid]="true" class="my-table-full px-0 text-center">
       <c-row class="mb-4">
         <c-col>
           <div class="small text-body-secondary mt-3">

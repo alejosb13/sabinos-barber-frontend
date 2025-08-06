@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {
+  AccordionModule,
   ButtonModule,
   CardModule,
   ColorModeService,
   GridModule,
   ModalModule,
+  SpinnerComponent,
   Tabs2Module,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
@@ -27,8 +29,6 @@ import { DirectivesModule } from '../../../shared/directivas/directives.module';
 import { HelpersService } from '../../../services/helpers.service';
 import { PedidoNewFormComponent } from '../../../shared/components/forms/pedido-new-form/pedido-new-form.component';
 import { ProductosService } from '../../../services/productos.service';
-import { LocalesService } from '../../../services/locales.service';
-import { Local } from '../../../models/Local.model';
 import { FacturarClienteModalComponent } from '../../../shared/modals/facturar-cliente-modal/facturar-cliente-modal.component';
 import { NOW } from '../../../shared/utils/constants/filtro';
 import { ServicioService } from '../../../services/servicios.service';
@@ -40,7 +40,6 @@ import { FacturaDetalleService } from '../../../services/factura_detalle.service
 import Swal from 'sweetalert2';
 import { environment } from '../../../../environments/environment';
 import { numberValue } from '../../../shared/utils/constants/function-value';
-import { Factura } from '../../../models/Factura.model';
 
 @Component({
   selector: 'app-factura-insertar2',
@@ -59,6 +58,8 @@ import { Factura } from '../../../models/Factura.model';
     PedidoNewFormComponent,
     Tabs2Module,
     FacturarClienteModalComponent,
+    AccordionModule,
+    SpinnerComponent,
   ],
   templateUrl: './factura-insertar2.component.html',
   styleUrl: './factura-insertar2.component.scss',
@@ -147,7 +148,7 @@ export class FacturaInsertar2Component {
       this.estadosPagos.push({ ...item, index });
     }
 
-    logger.log('Estados de pago actualizados:', this.estadosPagos);
+    // logger.log('Estados de pago actualizados:', this.estadosPagos);
   }
 
   validarEstadoPago(index: number, empleado_id: number): boolean | null {

@@ -24,16 +24,31 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-.hasPago {
-  background-color: #e6f4ea;
-  border: 3px solid #03990b;
+.accordion-item {
+  margin-bottom: 10px;
 }
 
+.hasPago {
+  background-color: #e6f4ea !important;
+  // color: #03990b !important;
+}
+
+.notHasPago {
+  background-color: transparent !important;
+  color: #212529;
+  border: none;
+}
+
+// Si el tema es oscuro, aplica a cualquier elemento con .hasPago
 ::ng-deep {
   [data-coreui-theme="dark"] {
     .hasPago {
-      background-color: #2e3c35;
-      border: 3px solid #03990b;
+      background-color: #2e3c35 !important;
+      // color: #03990b !important;
+    }
+    .notHasPago {
+      // background-color: transparent !important;
+      color: #fff;
     }
   }
 }

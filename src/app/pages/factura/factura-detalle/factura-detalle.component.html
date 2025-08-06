@@ -8,7 +8,7 @@
       <div class="card p-4 shadow-sm">
         <div class="row mb-5">
           <div class="col-md-6">
-            <button
+            <!-- <button
               cButton
               color="info"
               class="btn-action-table me-3 mb-3"
@@ -16,13 +16,17 @@
             >
               <svg cIcon height="18" name="cil-filter"></svg>
               Filtros
-            </button>
+            </button> -->
             <h5 class="text-capitalize">
               <strong>Empleado:</strong> {{ Factura.empleado?.nombre_completo }}
             </h5>
-            <!-- <p class="my-1">
-              <strong>Descripción:</strong> {{ Factura.descripcion }}
-            </p> -->
+
+            @for (countService of ContadorServicios; track countService.id;){
+            <p class="my-1">
+              <strong>{{ countService.descripcion }}:</strong>
+              {{ countService.cantidad }}
+            </p>
+            }
           </div>
           <div class="col-md-6 text-md-end">
             <h5><strong>Factura</strong></h5>

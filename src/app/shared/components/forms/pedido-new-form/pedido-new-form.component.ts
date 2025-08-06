@@ -204,7 +204,7 @@ export class PedidoNewFormComponent {
   }
 
   setFormValues() {
-    logger.log('setFormValues', this.PedidoDetail);
+    // logger.log('setFormValues', this.PedidoDetail);
 
     let cliente: any = this.Clientes.find(
       (cliente) => cliente.id === this.PedidoDetail.cliente_id
@@ -332,7 +332,7 @@ export class PedidoNewFormComponent {
       this.PedidoDetail.gratis == 1 ? 0 : Number(dataService?.precio)
     );
 
-    logger.log('this.PedidoCrudForm', this.PedidoCrudForm.value);
+    // logger.log('this.PedidoCrudForm', this.PedidoCrudForm.value);
   }
 
   getValueFacturaTotal() {
