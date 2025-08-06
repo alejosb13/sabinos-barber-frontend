@@ -198,8 +198,10 @@ export class EmpleadoListadoComponent {
             .deleteEmpleado(Number(Empleado.id))
             .pipe(takeUntil(this.destruir$))
             .subscribe((data) => {
+              // logger.log(this.EmpleadoList.data);
+              // logger.log(Empleado.id);
               this.EmpleadoList.data = this.EmpleadoList.data.filter(
-                (Empleado) => Empleado.id != Empleado.id
+                (Emp) => Emp.id != Empleado.id
               );
 
               Swal.mixin({

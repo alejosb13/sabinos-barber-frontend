@@ -176,6 +176,7 @@ export class FacturaInsertar2Component {
         total_facturado: '1',
         local_id: this._LoginService.getUserData().local.id,
         estado_detalle: 1,
+        estado: 1,
       })
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Empleado[]) => {
