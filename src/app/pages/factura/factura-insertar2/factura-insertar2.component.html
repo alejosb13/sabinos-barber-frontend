@@ -6,7 +6,7 @@
         [itemKey]="numberValue(empleado.id)"
         *ngFor="let empleado of EmpleadoList"
       >
-        {{ empleado.nombre_completo }}
+        <h5>{{ empleado.nombre_completo }}</h5>
       </button>
     </c-tabs-list>
     <c-tabs-content>
@@ -53,7 +53,7 @@
                       (click)="item.toggleItem()"
                       [collapsed]="!item.visible"
                       cAccordionButton
-                      class="w-100 text-start d-flex justify-content-between align-items-center"
+                      class="w-100 text-start d-flex align-items-center"
                       [ngClass]="{
                         hasPago: validarEstadoPago(j, numberValue(empleado.id)),
                         notHasPago: !validarEstadoPago(
@@ -62,33 +62,40 @@
                         )
                       }"
                     >
-                      <div class="d-flex align-items-center">
-                        <p class="h5 text-info">
-                          Cliente: {{ empFactura.cliente?.nombre }}
-                          {{ empFactura.cliente?.apellido }}
-                        </p>
-                        <span
-                          class="ms-3 pointer"
-                          (click)="
-                            eliminarFacturaDetalle(
-                              empFactura,
-                              numberValue(empleado.id)
-                            );
-                            $event.stopPropagation()
-                          "
-                        >
-                          <svg
-                            cIcon
-                            height="18"
-                            class="text-danger"
-                            name="cil-trash"
-                          ></svg>
+                      <div
+                        class="d-flex justify-content-between align-items-center w-100"
+                      >
+                        <div class="d-flex align-items-center">
+                          <p class="h5 text-info"></p>
+                          <p class="h5 text-info">
+                            Cliente: {{ empFactura.cliente?.nombre }}
+                            {{ empFactura.cliente?.apellido }}
+                          </p>
+                          <span
+                            class="ms-3 pointer"
+                            (click)="
+                              eliminarFacturaDetalle(
+                                empFactura,
+                                numberValue(empleado.id)
+                              );
+                              $event.stopPropagation()
+                            "
+                          >
+                            <svg
+                              cIcon
+                              height="18"
+                              class="text-danger"
+                              name="cil-trash"
+                            ></svg>
+                          </span>
+                        </div>
+                        <span class="me-2 text-muted">
+                          <strong>Fecha:</strong>
+                          {{
+                            empFactura.created_at | date : "dd/MM/yyyy HH:mm"
+                          }}
                         </span>
                       </div>
-                      <span class="mr-3 text-muted">
-                        <strong>Fecha:</strong>
-                        {{ empFactura.created_at | date : "dd/MM/yyyy HH:mm" }}
-                      </span>
                     </button>
                   </ng-template>
                   <ng-template cTemplateId="accordionBodyTemplate">

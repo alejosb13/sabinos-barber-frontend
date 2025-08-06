@@ -55,7 +55,7 @@ import dayjs from 'dayjs';
 import { Factura } from '../../../../models/Factura.model';
 import { LoginService } from '../../../../services/login.service';
 import { NominaService } from '../../../../services/nomina.service';
-import { IconComponent, IconDirective } from '@coreui/icons-angular';
+import { IconDirective } from '@coreui/icons-angular';
 import { MetodoPago } from '../../../../models/MetodoPago.model';
 import { MetodoPagoService } from '../../../../services/metodos_pago.service';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
@@ -133,7 +133,7 @@ export class NominaCrudFormComponent {
     // this.changeEmpleado();
     // this.getLocales();
     this.changeExtraValues();
-    this.changePresentismo();
+    // this.changePresentismo();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -192,6 +192,7 @@ export class NominaCrudFormComponent {
   changePresentismo() {
     this.NominaCrudForm.controls.presentismo.valueChanges.subscribe(
       (presentismo) => {
+        // servicio.facturado
         const TotalExtras = this.TotalExtras || 0;
         const Porcentaje = 1 + Number(presentismo) / 100;
         // this.Presentismo = TotalExtras * Porcentaje;
@@ -207,10 +208,17 @@ export class NominaCrudFormComponent {
   }
 
   getPresentismo(): number {
+    // servicio.facturado
+    const SERVICIOS_FACTURADOS_TOTAL =
+      this.NominaData.nomina_empleado.servicios.find(
+        (serv: any) => serv.descripcion === 'TOTAL'
+      ).facturado || 0;
+    // logger.log('aaaaaaa', SERVICIOS_FACTURADOS_TOTAL);
     const presentismoPorcentaje =
       this.NominaCrudForm.controls.presentismo.value || 0;
     const presentismo =
-      this.NominaData.facturaFinal * (presentismoPorcentaje / 100);
+      SERVICIOS_FACTURADOS_TOTAL * (presentismoPorcentaje / 100);
+    // this.NominaData.facturaFinal * (presentismoPorcentaje / 100);
     return presentismo;
   }
 

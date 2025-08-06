@@ -2,7 +2,7 @@
   <c-card-header>
     <div class="d-flex justify-content-between align-items-center">
       <p class="h3">Nomina #{{ Id }}</p>
-      <p class="h6">{{ Nomina.fecha_inicio }} - {{ Nomina.fecha_inicio }}</p>
+      <p class="h6">{{ Nomina?.fecha_inicio }} - {{ Nomina?.fecha_fin }}</p>
     </div>
   </c-card-header>
   <c-card-body class="pt-4">
@@ -22,15 +22,19 @@
         <c-col [md]="12">
           <ul class="list-group mx-auto col-6">
             <li
-              *ngFor="let servicios of Nomina.servicios"
+              *ngFor="let serv of Nomina.servicios"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
-              {{ servicios.descripcion }} -
-              {{ servicios.cantidad > 0 ? "Unds" : "Und" }}
+              {{ serv.descripcion }} -
+              {{
+                serv.cantidad > 0
+                  ? serv.cantidad + " Unds"
+                  : serv.cantidad + " Und"
+              }}
               <span
                 class="badge badge-primary badge-pill"
                 style="font-size: 1.02em"
-                >{{ servicios.precio_nomina * servicios.cantidad }}</span
+                >{{ serv.precio_nomina * serv.cantidad }}</span
               >
             </li>
           </ul>
