@@ -143,6 +143,9 @@ export class FacturaEditarComponent {
     // this.getProductos();
     // this.getMetodosPagos();
     // this.getClientes();
+    // setInterval(() => {
+    //   console.log('this.estadosPagos', this.estadosPagos);
+    // }, 10000);
   }
 
   // @HostListener('window:scroll', [])
@@ -210,25 +213,27 @@ export class FacturaEditarComponent {
       });
   }
 
-  actualizarEstadoPago(item: any, index: number) {
+  actualizarEstadoPago(item: any) {
     // const EmpleadoId = this.EmpleadoId
     const indiceExistente = this.estadosPagos.findIndex(
-      (elemento) => elemento.index === index
+      (elemento) => elemento.factura_detalle_id === item.factura_detalle_id
     );
 
     if (indiceExistente !== -1) {
       // Ya existe, actualizamos
-      this.estadosPagos[indiceExistente] = { ...item, index };
+      this.estadosPagos[indiceExistente] = { ...item };
     } else {
       // No existe, lo agregamos
-      this.estadosPagos.push({ ...item, index });
+      this.estadosPagos.push({ ...item });
     }
 
     // logger.log('Estados de pago actualizados:', this.estadosPagos);
   }
 
-  validarEstadoPago(index: number, empleado_id: number): boolean | null {
-    const item = this.estadosPagos.find((elemento) => elemento.index === index);
+  validarEstadoPago(factura_detalle_id: number): boolean | null {
+    const item = this.estadosPagos.find(
+      (elemento) => elemento.factura_detalle_id === factura_detalle_id
+    );
 
     return item ? item.validacion : null; // o false por defecto si preferís
   }

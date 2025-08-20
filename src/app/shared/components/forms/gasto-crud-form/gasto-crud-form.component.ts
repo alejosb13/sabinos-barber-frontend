@@ -380,7 +380,7 @@ export class GastoCrudFormComponent {
       // let gastos = this.GastoCrudForm.value.gastos || [];
       let gastos = this.GastoCrudForm.controls.gastos.getRawValue() || [];
       gastos = gastos.map((g: any) => {
-        console.log(g);
+        // console.log(g);
 
         return {
           tipo_gasto_id: Number(g.tipo_gasto_id),

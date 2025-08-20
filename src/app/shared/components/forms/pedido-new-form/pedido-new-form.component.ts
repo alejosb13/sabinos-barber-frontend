@@ -118,6 +118,7 @@ export class PedidoNewFormComponent {
   // TotalFactura: number = 0;
 
   ngOnInit(): void {
+    // logger.log('PedidoDetail', this.PedidoDetail);
     this.changeCantidad(this.PedidoCrudForm);
 
     this.PedidoCrudForm.get('servicio_id')?.valueChanges.subscribe(() => {
@@ -429,9 +430,17 @@ export class PedidoNewFormComponent {
       (metodos_pagos?.length ?? 0) > 0 &&
       metodos_pagos?.some((m: any) => m.editable === true)
     ) {
-      this.TienePago.emit({ validacion: true, empleado_id: this.EmpleadoId });
+      this.TienePago.emit({
+        validacion: true,
+        empleado_id: this.EmpleadoId,
+        factura_detalle_id: this.PedidoDetail.id,
+      });
     } else {
-      this.TienePago.emit({ validacion: false, empleado_id: this.EmpleadoId });
+      this.TienePago.emit({
+        validacion: false,
+        empleado_id: this.EmpleadoId,
+        factura_detalle_id: this.PedidoDetail.id,
+      });
     }
   }
 

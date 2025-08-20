@@ -5,6 +5,11 @@
         cTab
         [itemKey]="numberValue(empleado.id)"
         *ngFor="let empleado of EmpleadoList"
+        class=""
+        [ngClass]="{
+          hasPago: !tienePagosSinCompletar(numberValue(empleado.id)),
+          pagoSinCompletar: tienePagosSinCompletar(numberValue(empleado.id))
+        }"
       >
         <h5>{{ empleado.nombre_completo }}</h5>
       </button>
@@ -55,9 +60,12 @@
                       cAccordionButton
                       class="w-100 text-start d-flex align-items-center"
                       [ngClass]="{
-                        hasPago: validarEstadoPago(j, numberValue(empleado.id)),
+                        hasPago: validarEstadoPago(
+                          numberValue(empFactura.id),
+                          numberValue(empleado.id)
+                        ),
                         notHasPago: !validarEstadoPago(
-                          j,
+                          numberValue(empFactura.id),
                           numberValue(empleado.id)
                         )
                       }"
@@ -102,10 +110,16 @@
                     <div
                       class="small text-body-secondary mt-2 border p-4"
                       [class.hasPago]="
-                        validarEstadoPago(j, numberValue(empleado.id))
+                        validarEstadoPago(
+                          numberValue(empFactura.id),
+                          numberValue(empleado.id)
+                        )
                       "
                       [class.notHasPago]="
-                        !validarEstadoPago(j, numberValue(empleado.id))
+                        !validarEstadoPago(
+                          numberValue(empFactura.id),
+                          numberValue(empleado.id)
+                        )
                       "
                     >
                       <app-pedido-new-form
@@ -117,7 +131,7 @@
                         [PedidoDetail]="empFactura"
                         (ActualizarProductos)="ActualizarProductos($event)"
                         [EmpleadoId]="numberValue(empleado.id)"
-                        (TienePago)="actualizarEstadoPago($event, j)"
+                        (TienePago)="actualizarEstadoPago($event)"
                       ></app-pedido-new-form>
                     </div>
                   </ng-template>

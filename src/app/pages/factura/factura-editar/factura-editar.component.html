@@ -41,10 +41,10 @@
                       cAccordionButton
                       class="w-100 text-start"
                       [class.hasPago]="
-                        validarEstadoPago(j, numberValue(Factura.empleado_id))
+                        validarEstadoPago(numberValue(facturaDetail.id))
                       "
                       [class.notHasPago]="
-                        !validarEstadoPago(j, numberValue(Factura.empleado_id))
+                        !validarEstadoPago(numberValue(facturaDetail.id))
                       "
                     >
                       <div
@@ -84,10 +84,10 @@
                     <div
                       class="small text-body-secondary mt-2 border p-4"
                       [class.hasPago]="
-                        validarEstadoPago(j, numberValue(Factura.empleado_id))
+                        validarEstadoPago(numberValue(facturaDetail.id))
                       "
                       [class.notHasPago]="
-                        !validarEstadoPago(j, numberValue(Factura.empleado_id))
+                        !validarEstadoPago(numberValue(facturaDetail.id))
                       "
                     >
                       <app-pedido-new-form
@@ -99,7 +99,7 @@
                         [PedidoDetail]="facturaDetail"
                         (ActualizarProductos)="ActualizarProductos($event)"
                         [EmpleadoId]="numberValue(Factura.empleado_id)"
-                        (TienePago)="actualizarEstadoPago($event, j)"
+                        (TienePago)="actualizarEstadoPago($event)"
                       ></app-pedido-new-form>
                     </div>
                   </ng-template>

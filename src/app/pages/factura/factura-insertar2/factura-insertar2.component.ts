@@ -116,17 +116,15 @@ export class FacturaInsertar2Component {
     });
   }
   ngOnInit(): void {
-    // this.getEmpleados();
-    // this.getServicios();
-    // this.getProductos();
-    // this.getMetodosPagos();
-    // this.getClientes();
+    // setInterval(() => {
+    //   console.log('this.estadosPagos', this.estadosPagos);
+    // }, 10000);
   }
 
-  @HostListener('window:scroll', [])
-  onScroll(): void {
-    this.scrollPosition = window.scrollY || document.documentElement.scrollTop;
-  }
+  // @HostListener('window:scroll', [])
+  // onScroll(): void {
+  //   this.scrollPosition = window.scrollY || document.documentElement.scrollTop;
+  // }
 
   tabChange(event: any) {
     // logger.log(event);
@@ -137,29 +135,44 @@ export class FacturaInsertar2Component {
     this.getProductos();
   }
 
-  actualizarEstadoPago(item: any, index: number) {
+  actualizarEstadoPago(item: any) {
+    // logger.log('item', item);
+    // logger.log('index', index);
+    // const indiceExistente = this.estadosPagos.findIndex(
+    //   (elemento) =>
+    //     elemento.empleado_id === item.empleado_id && elemento.index === index
+    // );
+    // logger.log('asffasf', factura_detalle_id);
+    // logger.log('item', item);
     const indiceExistente = this.estadosPagos.findIndex(
       (elemento) =>
-        elemento.empleado_id === item.empleado_id && elemento.index === index
+        elemento.empleado_id === item.empleado_id &&
+        elemento.factura_detalle_id === item.factura_detalle_id
     );
 
     if (indiceExistente !== -1) {
       // Ya existe, actualizamos
-      this.estadosPagos[indiceExistente] = { ...item, index };
+      this.estadosPagos[indiceExistente] = { ...item };
     } else {
       // No existe, lo agregamos
-      this.estadosPagos.push({ ...item, index });
+      this.estadosPagos.push({ ...item });
     }
 
     // logger.log('Estados de pago actualizados:', this.estadosPagos);
   }
 
-  validarEstadoPago(index: number, empleado_id: number): boolean | null {
+  validarEstadoPago(
+    factura_detalle_id: number,
+    empleado_id: number
+  ): boolean | null {
     const item = this.estadosPagos.find(
       (elemento) =>
-        elemento.index === index && elemento.empleado_id === empleado_id
+        elemento.factura_detalle_id === factura_detalle_id &&
+        elemento.empleado_id === empleado_id
     );
-
+    // logger.log(' test 0', this.estadosPagos);
+    // logger.log(' test 1', item);
+    // logger.log(' test 2', { factura_detalle_id, empleado_id });
     return item ? item.validacion : null; // o false por defecto si preferís
   }
 
@@ -485,5 +498,14 @@ export class FacturaInsertar2Component {
     //         this._Router.navigateByUrl(`/clientes/editar/${data.id}`);
     //       });
     //   });
+  }
+
+  tienePagosSinCompletar(empleadoId: number): boolean {
+    // Filtra por empleado_id
+    const filtrados = this.estadosPagos.filter(
+      (item) => item.empleado_id === empleadoId
+    );
+    // Busca si alguno tiene validacion en false
+    return filtrados.some((item) => item.validacion === false);
   }
 }
