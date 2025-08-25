@@ -40,6 +40,7 @@ import { Cliente } from '../../../../models/Cliente.model';
 import { LoginService } from '../../../../services/login.service';
 import { FacturaDetalleService } from '../../../../services/factura_detalle.service';
 import { Servicios } from '../../../../models/Servicios.model';
+import { HelpersService } from '../../../../services/helpers.service';
 
 @Component({
   selector: 'app-factura-detalle-form',
@@ -73,6 +74,7 @@ export class FacturaDetalleFormComponent {
   _LoginService = inject(LoginService);
   activeModal = inject(NgbActiveModal);
   _FacturaDetalleService = inject(FacturaDetalleService);
+  _HelpersService = inject(HelpersService);
 
   @Input() Clientes: Cliente[] = [];
   @Input() MetodosPagos: MetodoPago[] = [];
@@ -173,6 +175,11 @@ export class FacturaDetalleFormComponent {
         user_id: this.User_id,
         local_id: this.Local_id,
       };
+
+      this._HelpersService.loaderSweetAlert({
+        title: 'Creando Factura',
+        text: 'Esto puede demorar un momento.',
+      });
 
       // agregar logica de llamado a la api
       this._FacturaDetalleService
