@@ -135,6 +135,24 @@ export const routesPages: Routes = [
         pathMatch: 'full',
       },
       {
+        path: 'ventas',
+        loadChildren: () =>
+          import('./ventas-productos/ventas.routes').then((m) => m.routes),
+        data: {
+          title: 'Ventas',
+        },
+      },
+    ],
+  },
+  {
+    path: '',
+    children: [
+      {
+        path: '',
+        redirectTo: '',
+        pathMatch: 'full',
+      },
+      {
         path: 'facturas',
         loadChildren: () =>
           import('./factura/facturas.routes').then((m) => m.routes),

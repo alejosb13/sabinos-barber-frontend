@@ -64,6 +64,14 @@ export const navItemsProject: INavData[] = [
     },
   },
   {
+    name: 'Ventas',
+    url: '/ventas',
+    iconComponent: { name: 'faFileInvoiceDollar' },
+    attributes: {
+      roles: ['administrador', 'encargado'],
+    },
+  },
+  {
     name: 'Nominas',
     url: '/nominas',
     iconComponent: { name: 'faPersonCircleCheck' },
