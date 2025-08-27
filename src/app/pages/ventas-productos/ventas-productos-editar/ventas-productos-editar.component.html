@@ -1,1 +1,31 @@
-<p>ventas-productos-editar works!</p>
+<c-card class="my-4">
+  <c-card-header>
+    <p class="h3">Editar producto</p>
+  </c-card-header>
+  <c-card-body class="pt-4">
+    @if(loader){
+    <c-container [fluid]="true" class="px-0 text-center">
+      <c-row class="mb-4">
+        <c-col>
+          <div class="small text-body-secondary mt-3">
+            <span class="h4"> Cargando <c-spinner size="sm" /> </span>
+          </div>
+        </c-col>
+      </c-row>
+    </c-container>
+    }@else {
+    <c-container [fluid]="true" class="px-0">
+      <c-row class="mb-4">
+        <c-col>
+          <div class="small text-body-secondary mt-3">
+            <app-ventas-productos-crud-form
+              (FormsValues)="FormsValues($event)"
+              [Venta]="Venta"
+            />
+          </div>
+        </c-col>
+      </c-row>
+    </c-container>
+    }
+  </c-card-body>
+</c-card>

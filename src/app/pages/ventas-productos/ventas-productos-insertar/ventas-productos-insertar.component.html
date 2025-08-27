@@ -7,7 +7,9 @@
       <c-row class="mb-4">
         <c-col>
           <div class="small text-body-secondary mt-3">
-            <app-ventas-productos-crud-form />
+            <app-ventas-productos-crud-form
+              (FormsValues)="FormsValues($event)"
+            />
           </div>
         </c-col>
       </c-row>

@@ -2,8 +2,12 @@ import { Producto } from './Producto.model';
 
 export interface Venta {
   id?: number;
-  producto_id: number;
 
+  cliente_id: number;
+
+  total: number;
+
+  producto_id: number;
   Producto?: Producto;
 
   estado?: number;

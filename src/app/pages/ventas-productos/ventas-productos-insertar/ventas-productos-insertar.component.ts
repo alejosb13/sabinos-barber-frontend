@@ -13,6 +13,8 @@ import { GastoService } from '../../../services/gasto.service';
 import { Gasto } from '../../../models/Gasto.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { VentasProductosCrudFormComponent } from 'src/app/shared/components/forms/ventas-productos-crud-form/ventas-productos-crud-form.component';
+import { Venta } from '../../../models/Venta.model';
+import { VentaService } from '../../../services/venta.service';
 
 @Component({
   selector: 'app-ventas-productos-insertar',
@@ -30,21 +32,21 @@ export class VentasProductosInsertarComponent {
   private destruir$: Subject<void> = new Subject<void>();
 
   #colorModeService = inject(ColorModeService);
-  private _GastoService = inject(GastoService);
+  private _VentaService = inject(VentaService);
   private _Router = inject(Router);
   private _HelpersService = inject(HelpersService);
 
   loader: boolean = true;
 
-  FormsValues(Gasto: Gasto) {
-    logger.log(Gasto);
+  FormsValues(venta: Venta) {
+    logger.log(venta);
     this._HelpersService.loaderSweetAlert({
-      title: 'Agregando gasto',
+      title: 'Agregando venta',
       text: 'Esto puede demorar un momento.',
     });
 
-    this._GastoService
-      .createGasto(Gasto)
+    this._VentaService
+      .createVenta(venta)
       .pipe(
         takeUntil(this.destruir$),
         catchError((error: HttpErrorResponse) => {
@@ -55,7 +57,7 @@ export class VentasProductosInsertarComponent {
               ),
             },
           }).fire({
-            text: 'Contraseña incorrecta',
+            text: 'Fallo al intentar crear la venta: ',
             icon: 'info',
           });
           return throwError(() => error);
@@ -72,11 +74,11 @@ export class VentasProductosInsertarComponent {
           },
         })
           .fire({
-            text: 'Gasto agregado con éxito',
+            text: 'Venta creada con éxito',
             icon: 'success',
           })
           .then((result) => {
-            this._Router.navigateByUrl(`/gastos`);
+            this._Router.navigateByUrl(`/ventas`);
           });
       });
   }

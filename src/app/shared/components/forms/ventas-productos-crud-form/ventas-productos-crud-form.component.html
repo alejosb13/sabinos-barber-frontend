@@ -1,1 +1,263 @@
-<p>ventas-productos-crud-form works!</p>
+<form cForm [formGroup]="VentasForm" class="form-Producto-crud">
+  <c-row class="mb-4 flex-wrap">
+    <c-col [md]="4" class="">
+      <div cFormFloating class="mb-3">
+        <input
+          cFormControl
+          id="clienteInput"
+          placeholder="cliente_id"
+          type="text"
+          formControlName="cliente_id"
+          type="text"
+          [ngClass]="{
+            'is-invalid':
+              getControl('cliente_id').invalid &&
+              getControl('cliente_id').touched,
+            'is-valid': getControl('cliente_id').valid
+          }"
+          appOnlyAlphanumeric
+          [ngbTypeahead]="searchClient"
+          [resultTemplate]="CLientTypeaHead"
+          [inputFormatter]="formatterValue"
+        />
+        <label cLabel for="clienteInput">Cliente</label>
+        <app-valid-messages-form
+          [errors]="getControlError('cliente_id')"
+          [messages]="ErrorMessages['cliente_id']"
+        ></app-valid-messages-form>
+        <ng-template
+          #CLientTypeaHead
+          let-resultado="result"
+          let-resaltado="term"
+        >
+          <ngb-highlight
+            [result]="resultado.id"
+            [term]="resaltado.id"
+          ></ngb-highlight>
+          -
+          <ngb-highlight
+            [result]="resultado.nombre"
+            [term]="resaltado.nombre"
+          ></ngb-highlight>
+          &nbsp;
+          <ngb-highlight
+            [result]="resultado.apellido"
+            [term]="resaltado.apellido"
+          ></ngb-highlight>
+        </ng-template>
+      </div>
+    </c-col>
+  </c-row>
+  <hr class="mb-4" />
+  <c-row class="flex-wrap mb-4">
+    <c-col [md]="12" class="d-flex align-items-center">
+      <h5 class="me-3">Productos</h5>
+      <button
+        cButton
+        color="info"
+        class="btn-action-table"
+        [disabled]="!VentasFormArray.valid"
+        (click)="agregarVenta()"
+      >
+        <svg cIcon height="18" name="cil-plus"></svg>
+      </button>
+    </c-col>
+  </c-row>
+  <c-row class="mb-4 flex-wrap" formArrayName="ventas">
+    <c-col [md]="12">
+      @for (prod of VentasFormArray.controls; track $index; let i = $index) {
+      <c-row [formGroupName]="i" class="mb-3">
+        <c-col [md]="3" class="mb-3">
+          <div cFormFloating>
+            <select
+              cSelect
+              id="producto_input{{ i }}"
+              formControlName="producto_id"
+              (change)="changeProducto(prod)"
+            >
+              <option value="null" hidden>Seleccione un producto</option>
+              <option
+                *ngFor="let producto of Productos; let i = index"
+                [ngValue]="producto.id"
+              >
+                {{ producto.marca | titlecase }} -
+                {{ producto.descripcion | titlecase }}
+              </option>
+            </select>
+            <label cLabel for="producto_input{{ i }}"
+              >Producto
+              <!-- <c-spinner size="sm" *ngIf="loadingProductos" /> -->
+            </label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getVentaFormControlError(i, 'producto_id')"
+            [messages]="ErrorMessages['producto_id']"
+          ></app-valid-messages-form>
+        </c-col>
+        <c-col [md]="2" class="mb-3">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="cantidad_{{ i }}"
+              formControlName="cantidad"
+              type="text"
+              placeholder="Cantidad"
+              (keyup)="changeCantidad(prod)"
+              (change)="changeCantidad(prod)"
+              appOnlyNumbers
+            />
+            <label cLabel for="cantidad_{{ i }}">Cantidad</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getVentaFormControlError(i, 'cantidad')"
+            [messages]="ErrorMessages['cantidad']"
+          ></app-valid-messages-form>
+        </c-col>
+        <c-col [md]="2" class="mb-3">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="precio_unitario_{{ i }}"
+              formControlName="precio_unitario"
+              type="text"
+              placeholder="Precio Unitario"
+            />
+            <label cLabel for="precio_unitario_{{ i }}">Precio Unitario</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getVentaFormControlError(i, 'precio_unitario')"
+            [messages]="ErrorMessages['precio_unitario']"
+          ></app-valid-messages-form>
+        </c-col>
+        <c-col [md]="2" class="mb-3">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="precio_{{ i }}"
+              formControlName="precio"
+              type="text"
+              placeholder="precio"
+            />
+            <label cLabel for="precio_{{ i }}">Total</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getVentaFormControlError(i, 'precio')"
+            [messages]="ErrorMessages['precio']"
+          ></app-valid-messages-form>
+        </c-col>
+        <c-col [md]="2">
+          <button
+            cButton
+            color="danger"
+            [disabled]="VentasFormArray.length <= 1"
+            (click)="eliminarVenta(i)"
+          >
+            <svg cIcon height="18" name="cil-trash"></svg>
+          </button>
+        </c-col>
+      </c-row>
+      }
+    </c-col>
+  </c-row>
+  <hr class="mb-4" />
+  <c-row class="flex-wrap mb-4">
+    <c-col [md]="12" class="d-flex align-items-center">
+      <h5 class="me-3">Métodos de Pago</h5>
+      <button
+        cButton
+        color="info"
+        class="btn-action-table"
+        [disabled]="
+          !MetodosPagoFormArray.valid || MetodosPagoFormArray.length >= 2
+        "
+        (click)="agregarMetodoPago()"
+      >
+        <svg cIcon height="18" name="cil-plus"></svg>
+      </button>
+    </c-col>
+  </c-row>
+  <c-row class="mb-4 flex-wrap" formArrayName="metodos_pago">
+    <c-col [md]="12">
+      @for (medioPagoForm of MetodosPagoFormArray.controls; track $index; let m
+      = $index) {
+      <c-row [formGroupName]="m" class="mb-3">
+        <c-col [md]="3" class="mb-3">
+          <div cFormFloating>
+            <select
+              cSelect
+              id="metodo_pago_input{{ m }}"
+              formControlName="metodo_pago_id"
+            >
+              <option value="null" hidden>Seleccione un método de pago</option>
+              <option
+                *ngFor="let MetodosPago of MetodosPagos"
+                [ngValue]="MetodosPago.id"
+              >
+                {{ MetodosPago.tipo | uppercase }}
+              </option>
+            </select>
+            <label cLabel for="metodo_pago_input{{ m }}"
+              >Método de pago
+              <!-- <c-spinner size="sm" *ngIf="loadingProductos" /> -->
+            </label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getMetodoPagoFormControlError(m, 'metodo_pago_id')"
+            [messages]="ErrorMessages['metodo_pago_id']"
+          ></app-valid-messages-form>
+        </c-col>
+        <c-col [md]="2" class="mb-3">
+          <div cFormFloating>
+            <input
+              cFormControl
+              id="monto_{{ m }}"
+              formControlName="monto"
+              type="text"
+              placeholder="monto"
+              appOnlyNumberAndPoint
+            />
+            <label cLabel for="monto_{{ m }}">Monto</label>
+          </div>
+          <app-valid-messages-form
+            [errors]="getMetodoPagoFormControlError(m, 'monto')"
+            [messages]="ErrorMessages['monto']"
+          ></app-valid-messages-form>
+        </c-col>
+        <c-col [md]="2">
+          <button
+            cButton
+            color="danger"
+            [disabled]="MetodosPagoFormArray.length <= 1"
+            (click)="eliminarMetodoPago(m)"
+          >
+            <svg cIcon height="18" name="cil-trash"></svg>
+          </button>
+        </c-col>
+      </c-row>
+      }
+    </c-col>
+  </c-row>
+  <c-row class="mb-4">
+    <c-col class="text-center">
+      @if (Venta) {
+      <button
+        cButton
+        color="info"
+        (click)="sendValueFom()"
+        [disabled]="!MetodosPagoFormArray.valid && !VentasFormArray.valid"
+      >
+        Editar
+      </button>
+      } @else {
+      <button
+        cButton
+        color="info"
+        (click)="sendValueFom()"
+        [disabled]="!VentasForm.valid"
+      >
+        Agregar
+      </button>
+      }
+    </c-col>
+  </c-row>
+</form>

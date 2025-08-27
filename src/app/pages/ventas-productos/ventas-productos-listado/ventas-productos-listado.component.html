@@ -71,8 +71,8 @@
             <thead class="text-nowrap text-truncate">
               <tr>
                 <th class="bg-body-tertiary">#</th>
-                <!-- <th class="bg-body-tertiary">Adicional</th>
-                <th class="bg-body-tertiary">Porcentaje</th>
+                <th class="bg-body-tertiary">Total</th>
+                <!-- <th class="bg-body-tertiary">Porcentaje</th>
                 <th class="bg-body-tertiary">Total</th>  -->
                 <th class="bg-body-tertiary"></th>
               </tr>
@@ -87,13 +87,16 @@
                     </div> -->
                 </td>
                 <td>
+                  <span>{{ venta.total }}</span>
+                </td>
+                <td>
                   <div class="d-flex flex-direction">
                     <div class="me-3" ngbTooltip="Editar">
                       <a
                         [routerLink]="['/ventas', 'editar', venta.id]"
                         cTooltip="Editar"
                       >
-                        <svg cIcon height="18" name="fa-eye"></svg>
+                        <svg cIcon height="18" name="cil-pencil"></svg>
                       </a>
                     </div>
                     <div

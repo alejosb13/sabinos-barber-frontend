@@ -7,7 +7,7 @@ import { ParametersUrl } from '../models/Parameter.model';
 import logger from '../shared/utils/logger';
 import { Venta } from '../models/Venta.model';
 
-const URL_VENTA = `${environment.apiUrl}ventas`;
+const URL_VENTA = `${environment.apiUrl}venta`;
 
 @Injectable({
   providedIn: 'root',
