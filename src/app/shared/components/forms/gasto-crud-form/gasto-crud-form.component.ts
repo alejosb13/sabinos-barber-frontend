@@ -276,7 +276,10 @@ export class GastoCrudFormComponent {
   }
 
   eliminarMetodoPago(i: number): void {
-    this.getMetodosPagosForm().removeAt(i);
+    // logger.log('i', i);
+    // logger.log('form', this.gastos.get('metodos_pago'));
+
+    this.GastoCrudForm.controls.metodos_pago.removeAt(i);
   }
 
   getEmpleados() {
