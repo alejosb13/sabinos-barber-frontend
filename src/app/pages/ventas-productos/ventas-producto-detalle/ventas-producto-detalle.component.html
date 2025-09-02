@@ -1,0 +1,98 @@
+<c-card class="my-4">
+  <c-card-body class="pt-4">
+    <c-container [fluid]="true" class="my-table-full px-0" *ngIf="!loaderGasto">
+      <div class="card p-4 shadow-sm">
+        <div class="row mb-5">
+          <div class="col-md-6">
+            <!-- <h5 class="text-capitalize" *ngIf="Venta.empleado_id">
+              <strong>Empleado:</strong> {{ Gasto.nombre_completo }}
+            </h5> -->
+            <h5 class="text-capitalize"></h5>
+            <p class="my-1">
+              <strong>#Cliente:</strong> #{{ Venta.cliente?.id }}
+            </p>
+            <p class="my-1">
+              <strong>Cliente:</strong> {{ Venta.cliente?.nombre }}
+              {{ Venta.cliente?.apellido }}
+            </p>
+            <p class="my-1">
+              <strong>Teléfono:</strong>
+              {{ Venta.cliente?.telefono || "-" }}
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <h5><strong>Venta</strong></h5>
+            <p class="my-1"><strong>#Venta:</strong> #{{ Venta.id }}</p>
+            <p class="my-1">
+              <strong>Usuario:</strong> {{ Venta.user?.nombre_completo }}
+            </p>
+            <p class="my-1">
+              <strong>Fecha:</strong>
+              {{ Venta.created_at | date : "dd-MM-yyyy" }}
+            </p>
+          </div>
+        </div>
+        <div class="row mb-5">
+          <h5>Productos</h5>
+          <table cTable [responsive]="true" [hover]="true">
+            <thead class="text-nowrap text-truncate">
+              <tr>
+                <th class="bg-body-tertiary">#</th>
+                <th class="bg-body-tertiary">Descripción</th>
+                <th class="bg-body-tertiary">Subtotal</th>
+                <th class="bg-body-tertiary">Cantidad</th>
+                <th class="bg-body-tertiary">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (producto of Venta.venta_detalle; track producto.id; let i =
+              $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ producto.producto?.descripcion }}</td>
+                <td>{{ producto.precio_unitario | currency : "ARS" }}</td>
+                <td>{{ producto.cantidad }} u.</td>
+                <td>{{ producto.precio | currency : "ARS" }}</td>
+              </tr>
+
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="row mb-5">
+          <h5>Métodos de Pago</h5>
+          <table cTable [responsive]="true" [hover]="true">
+            <thead class="text-nowrap text-truncate">
+              <tr>
+                <th class="bg-body-tertiary">#</th>
+                <th class="bg-body-tertiary">Tipo de pago</th>
+                <th class="bg-body-tertiary">Monto</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (mp of Venta.metodo_pago; track mp.id; let m= $index) {
+              <tr>
+                <td>{{ m + 1 }}</td>
+                <td>{{ mp.metodo_pago?.descripcion }}</td>
+                <td>{{ mp.monto | currency : "ARS" }}</td>
+              </tr>
+
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </c-container>
+    <c-container [fluid]="true" class="px-0 text-center" *ngIf="loaderGasto">
+      <c-row class="mb-4">
+        <c-col>
+          <div class="small text-body-secondary mt-3">
+            <span class="h4">
+              Cargando <c-spinner aria-hidden="true" size="sm" variant="grow"
+            /></span>
+          </div>
+        </c-col>
+      </c-row>
+    </c-container>
+  </c-card-body>
+</c-card>

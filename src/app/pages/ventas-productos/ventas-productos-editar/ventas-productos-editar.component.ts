@@ -85,7 +85,12 @@ export class VentasProductosEditarComponent {
 
   getVentaById() {
     this._VentaService
-      .getVentasById(this.Id)
+      .getVentasById(this.Id, {
+        link: null,
+        cliente_model: '1',
+        user_model: '1',
+        venta_detalle_model: '1',
+      })
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Venta) => {
         this.loader = false;

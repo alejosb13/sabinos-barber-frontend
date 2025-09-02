@@ -8,6 +8,7 @@ export interface Relaciones extends IdRelaciones {
   factura_model?: string;
   factura_detalle_model?: string;
   factura_producto_model?: string;
+  venta_detalle_model?: string;
 }
 
 interface IdRelaciones {

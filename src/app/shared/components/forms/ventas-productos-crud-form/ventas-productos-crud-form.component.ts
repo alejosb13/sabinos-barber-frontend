@@ -18,7 +18,10 @@ import {
   agregarVentaArray,
   agregarMetodoPagoArray,
 } from './utils/form';
-import { VentasProductosCrudErrorMessages } from './utils/validations';
+import {
+  VentasCrudValidators,
+  VentasProductosCrudErrorMessages,
+} from './utils/validations';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import {
@@ -120,30 +123,82 @@ export class VentasProductosCrudFormComponent {
     this.getProductos();
     this.VentasForm.valueChanges.subscribe((val) => {
       logger.log('control', this.VentasForm.controls);
-      logger.log('val', val);
+      // logger.log('val', val);
     });
+
+    if (this.Venta) {
+      this.setDataFormVentas();
+    }
   }
 
   eventChangeLocal() {
     const USER_DATA = this._LoginService.getUserData();
-    logger.log('USER_DATA', USER_DATA);
+    // logger.log('USER_DATA', USER_DATA);
     this.Local_id = Number(USER_DATA.local.id);
     this.User_id = Number(USER_DATA.id);
 
-    this.setDataFormVentas();
-  }
+    // logger.log('Local_id', this.Local_id);
+    // logger.log('User_id', this.User_id);
 
-  setDataFormVentas() {
     this.VentasForm.patchValue({
       local_id: this.Local_id,
       user_id: this.User_id,
     });
+  }
 
-    if (this.Venta) {
-      // this.VentasForm.patchValue({
-      //   local_id: this.Local_id,
-      // });
-    }
+  setDataFormVentas() {
+    logger.log('this.Venta', this.Venta);
+    this.VentasForm.patchValue({
+      cliente_id: this.Venta.cliente,
+    });
+
+    const productos =
+      this.Venta.venta_detalle?.map(
+        (item: any) =>
+          new FormGroup({
+            producto_id: new FormControl(item.producto_id, [
+              ...VentasCrudValidators['user_id'],
+            ]),
+            cantidad: new FormControl(item.cantidad, [
+              ...VentasCrudValidators['cantidad'],
+            ]),
+            precio_unitario: new FormControl(item.precio_unitario, [
+              ...VentasCrudValidators['precio_unitario'],
+            ]),
+            precio: new FormControl(item.precio, [
+              ...VentasCrudValidators['precio'],
+            ]),
+            id: new FormControl(item.id),
+          })
+      ) ?? [];
+
+    // Reemplazar el FormArray con los nuevos valores
+    this.VentasForm.setControl('ventas', new FormArray(productos), {
+      emitEvent: true,
+    });
+
+    const metodo_pago =
+      this.Venta.metodo_pago?.map(
+        (item: any) =>
+          new FormGroup(
+            {
+              metodo_pago_id: new FormControl(item.metodo_pago_id, [
+                ...VentasCrudValidators['metodo_pago_id'],
+              ]),
+              monto: new FormControl(item.monto, [
+                ...VentasCrudValidators['monto'],
+              ]),
+              id: new FormControl(item.id),
+            },
+            { updateOn: 'change' }
+          )
+      ) ?? [];
+    logger.log('metodo_pago', metodo_pago);
+
+    // Reemplazar el FormArray con los nuevos valores
+    this.VentasForm.setControl('metodos_pago', new FormArray(metodo_pago), {
+      emitEvent: true,
+    });
   }
 
   // Getters para los form arrays
@@ -160,6 +215,7 @@ export class VentasProductosCrudFormComponent {
   }
 
   eliminarVenta(index: number) {
+    logger.log('index', index);
     this.VentasFormArray.removeAt(index);
   }
 
@@ -168,6 +224,7 @@ export class VentasProductosCrudFormComponent {
   }
 
   eliminarMetodoPago(index: number) {
+    logger.log('index', index);
     this.MetodosPagoFormArray.removeAt(index);
   }
 
@@ -205,26 +262,6 @@ export class VentasProductosCrudFormComponent {
     return control && control.touched && control.invalid
       ? control.errors
       : null;
-  }
-
-  sendValueForm() {
-    if (this.VentasForm.valid) {
-      const FORM_VALUE = {
-        ...this.VentasForm.value,
-      };
-      this.FormsValues.emit(FORM_VALUE);
-    } else {
-      Swal.mixin({
-        customClass: {
-          container: this.#colorModeService.getStoredTheme(
-            environment.SabinosTheme
-          ),
-        },
-      }).fire({
-        text: 'Complete todos los campos obligatorios',
-        icon: 'warning',
-      });
-    }
   }
 
   formatterValue = (x: { nombre: string; apellido: string } | string) => {
@@ -343,13 +380,18 @@ export class VentasProductosCrudFormComponent {
   }
 
   sendValueFom() {
+    logger.log('this.VentasForm.controls ', this.VentasForm.controls);
     if (this.VentasForm.valid) {
       const VALUES_RESPONSE = this.VentasForm.getRawValue();
       logger.log('VALUES_RESPONSE', VALUES_RESPONSE);
 
       this.FormsValues.emit({
         ...VALUES_RESPONSE,
-        cliente_id: VALUES_RESPONSE.cliente_id.id,
+        // cliente_id: VALUES_RESPONSE.cliente_id.id,
+        cliente_id:
+          typeof VALUES_RESPONSE.cliente_id === 'string'
+            ? VALUES_RESPONSE.cliente_id
+            : VALUES_RESPONSE.cliente_id.id,
       });
     } else {
       Swal.mixin({

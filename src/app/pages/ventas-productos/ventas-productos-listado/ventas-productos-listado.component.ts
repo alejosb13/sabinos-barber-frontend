@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -33,6 +33,7 @@ import { environment } from 'src/environments/environment';
 import { FormsModule } from '@angular/forms';
 import { VentaService } from '../../../services/venta.service';
 import { Venta } from '../../../models/Venta.model';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-ventas-productos-listado',
@@ -63,6 +64,7 @@ import { Venta } from '../../../models/Venta.model';
 export class VentasProductosListadoComponent {
   private destruir$: Subject<void> = new Subject<void>();
 
+  private _LoginService = inject(LoginService);
   private _VentaService = inject(VentaService);
   private _ModalService = inject(ModalService);
   private _HelpersService = inject(HelpersService);
@@ -76,13 +78,24 @@ export class VentasProductosListadoComponent {
     disablePaginate: '0',
     fecha_inicio: dayjs().startOf('month').format('YYYY-MM-DD'),
     fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
-    // empleado_model: '1',
-    // local_model: '1',
-    // user_model: '1',
+    cliente_model: '1',
+    user_model: '1',
   };
+  Local_id!: number;
   VentaList!: Listado<Venta>;
 
-  ngOnInit(): void {
+  constructor() {
+    effect((a) => {
+      this.eventChangeLocal();
+    });
+  }
+
+  ngOnInit(): void {}
+
+  eventChangeLocal() {
+    const USER_DATA = this._LoginService.getUserData();
+    // logger.log('USER_DATA', USER_DATA);
+    this.Local_id = Number(USER_DATA.local.id);
     this.getVentas();
   }
 
@@ -90,7 +103,7 @@ export class VentasProductosListadoComponent {
     this.loaderTable = true;
 
     this._VentaService
-      .getVentas(this.ParametrosURL)
+      .getVentas({ ...this.ParametrosURL, local_id: this.Local_id })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Venta>) => {

@@ -40,6 +40,16 @@ export const routes: Routes = [
           title: 'Agregar',
         },
       },
+      {
+        path: 'detalle/:id',
+        loadComponent: () =>
+          import(
+            './ventas-producto-detalle/ventas-producto-detalle.component'
+          ).then((m) => m.VentasProductoDetalleComponent),
+        data: {
+          title: 'Detalle',
+        },
+      },
     ],
   },
 ];

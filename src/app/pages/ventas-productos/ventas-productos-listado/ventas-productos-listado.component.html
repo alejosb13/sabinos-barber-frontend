@@ -71,6 +71,7 @@
             <thead class="text-nowrap text-truncate">
               <tr>
                 <th class="bg-body-tertiary">#</th>
+                <th class="bg-body-tertiary">Nombre</th>
                 <th class="bg-body-tertiary">Total</th>
                 <!-- <th class="bg-body-tertiary">Porcentaje</th>
                 <th class="bg-body-tertiary">Total</th>  -->
@@ -82,15 +83,26 @@
               <tr>
                 <td>
                   <span>{{ venta.id }}</span>
-                  <!-- <div class="small text-body-secondary text-nowrap">
-                      <span> Registered: </span>
-                    </div> -->
+                </td>
+                <td>
+                  <span
+                    >{{ venta.cliente?.nombre
+                    }}{{ venta.cliente?.apellido }}</span
+                  >
                 </td>
                 <td>
                   <span>{{ venta.total }}</span>
                 </td>
                 <td>
-                  <div class="d-flex flex-direction">
+                  <div class="d-flex flex-direction justify-content-center">
+                    <div class="me-3" ngbTooltip="Editar">
+                      <a
+                        [routerLink]="['/ventas', 'detalle', venta.id]"
+                        cTooltip="Editar"
+                      >
+                        <svg cIcon height="18" name="fa-eye"></svg>
+                      </a>
+                    </div>
                     <div class="me-3" ngbTooltip="Editar">
                       <a
                         [routerLink]="['/ventas', 'editar', venta.id]"
@@ -123,10 +135,6 @@
       <c-row>
         <c-col>
           <c-pagination aria-label="Page navigation">
-            <!-- [ngClass]="{
-                active: listado.active,
-                disabled: listado.url == null
-              }" -->
             <li
               cPageItem
               *ngFor="let listado of VentaList.links"
@@ -175,10 +183,7 @@
     <app-filtros-list-form
       (filtrar)="filtroEvent($event)"
       [showDate]="true"
-      [showEstado]="true"
       [showValidDates]="true"
-      [showEmpleados]="true"
-      [showUsers]="true"
     />
   </c-modal-body>
 </c-modal>

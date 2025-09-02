@@ -15,7 +15,7 @@
               getControl('cliente_id').touched,
             'is-valid': getControl('cliente_id').valid
           }"
-          appOnlyAlphanumeric
+          appOnlyCharacters
           [ngbTypeahead]="searchClient"
           [resultTemplate]="CLientTypeaHead"
           [inputFormatter]="formatterValue"
@@ -65,7 +65,7 @@
   </c-row>
   <c-row class="mb-4 flex-wrap" formArrayName="ventas">
     <c-col [md]="12">
-      @for (prod of VentasFormArray.controls; track $index; let i = $index) {
+      @for (prod of VentasFormArray.controls; track prod; let i = $index) {
       <c-row [formGroupName]="i" class="mb-3">
         <c-col [md]="3" class="mb-3">
           <div cFormFloating>
@@ -176,10 +176,10 @@
       </button>
     </c-col>
   </c-row>
-  <c-row class="mb-4 flex-wrap" formArrayName="metodos_pago">
+  <c-row class="mb-4" formArrayName="metodos_pago">
     <c-col [md]="12">
-      @for (medioPagoForm of MetodosPagoFormArray.controls; track $index; let m
-      = $index) {
+      @for (medioPagoForm of MetodosPagoFormArray.controls; track medioPagoForm;
+      let m = $index) {
       <c-row [formGroupName]="m" class="mb-3">
         <c-col [md]="3" class="mb-3">
           <div cFormFloating>
@@ -244,7 +244,7 @@
         cButton
         color="info"
         (click)="sendValueFom()"
-        [disabled]="!MetodosPagoFormArray.valid && !VentasFormArray.valid"
+        [disabled]="!VentasForm.valid"
       >
         Editar
       </button>

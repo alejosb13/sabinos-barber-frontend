@@ -15,12 +15,11 @@
               getControl('cliente_id').touched,
             'is-valid': getControl('cliente_id').valid
           }"
-          appOnlyAlphanumeric
+          appOnlyCharacters
           [ngbTypeahead]="searchClient"
           [resultTemplate]="CLientTypeaHead"
           [inputFormatter]="formatterValue"
         />
-        <!-- </div> -->
         <label cLabel for="clienteInput">Cliente</label>
         <app-valid-messages-form
           [errors]="getControlError('cliente_id')"
@@ -79,51 +78,10 @@
         [messages]="PedidoCrudErrorMessages['servicio_id']"
       ></app-valid-messages-form>
     </c-col>
-    <!-- <c-col [md]="12" class="mb-3">
-      <div cFormFloating>
-        <select
-          cSelect
-          id="metodoInput"
-          formControlName="metodo_pago_id"
-          [ngClass]="{
-            'is-invalid':
-              getControl('metodo_pago_id').invalid &&
-              getControl('metodo_pago_id').touched,
-            'is-valid': getControl('metodo_pago_id').valid
-          }"
-        >
-          <option hidden value="null">Seleccione un método de pago</option>
-          <option
-            *ngFor="let MetodosPago of MetodosPagos"
-            [ngValue]="MetodosPago.id"
-          >
-            {{ MetodosPago.tipo | uppercase }}
-          </option>
-        </select>
-        <label cLabel for="metodoInput"
-          >Método de Pago
-        </label>
-      </div>
-      <app-valid-messages-form
-        [errors]="getControlError('metodo_pago_id')"
-        [messages]="PedidoCrudErrorMessages['metodo_pago_id']"
-      ></app-valid-messages-form>
-    </c-col> -->
   </c-row>
 
   <c-row class="mb-4 mt-2">
     <c-col [md]="12" class="d-flex align-items-center justify-content-center">
-      <!-- @if (PedidoDetail) {
-      <button
-        [disabled]="!this.PedidoCrudForm.valid"
-        cButton
-        color="primary"
-        (click)="sendValueFom()"
-      >
-        Editar
-      </button>
-      } @else {
-       -->
       <button
         cButton
         class="btn-danger me-4"
