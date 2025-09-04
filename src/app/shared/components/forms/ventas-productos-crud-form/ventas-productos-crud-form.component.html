@@ -20,7 +20,10 @@
           [resultTemplate]="CLientTypeaHead"
           [inputFormatter]="formatterValue"
         />
-        <label cLabel for="clienteInput">Cliente</label>
+        <label cLabel for="clienteInput"
+          >Cliente <c-spinner size="sm" *ngIf="LoadingSearchClient"
+        /></label>
+
         <app-valid-messages-form
           [errors]="getControlError('cliente_id')"
           [messages]="ErrorMessages['cliente_id']"

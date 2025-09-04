@@ -138,7 +138,7 @@ export class GastoListadoComponent {
   }
 
   sumarGastoDetalle(detalles: any): number {
-    return detalles.reduce((acc: any, det: any) => acc + det.precio, 0);
+    return detalles.reduce((acc: any, det: any) => acc + det.monto, 0);
   }
 
   buscar() {

@@ -31,7 +31,7 @@
     </p>
     <p>
       <strong>Total:</strong>
-      {{ gasto.total }}
+      {{ sumarTodosLosDetalles(gasto) | currency : "ARS" }}
     </p>
 
     <c-accordion [alwaysOpen]="true" class="mb-4">
@@ -118,7 +118,7 @@
           <div class="accordion-body">
             <div class="row">
               <div class="col-md-3 col-sm-6 mb-1">
-                <strong>Tipo de pago:</strong> {{ mp.monto }}
+                <strong>Tipo de pago:</strong> {{ mp.metodo_pago?.tipo }}
               </div>
               <div class="col-md-3 col-sm-6 mb-1">
                 <strong>Monto:</strong> {{ mp.monto | currency : "ARS" }}

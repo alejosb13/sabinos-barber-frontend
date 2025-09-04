@@ -76,7 +76,7 @@ export const navItemsProject: INavData[] = [
     url: '/nominas',
     iconComponent: { name: 'faPersonCircleCheck' },
     attributes: {
-      roles: ['administrador'],
+      roles: ['administrador', 'encargado'],
     },
   },
   {

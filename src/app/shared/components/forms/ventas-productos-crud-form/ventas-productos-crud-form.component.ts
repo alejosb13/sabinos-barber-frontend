@@ -33,6 +33,7 @@ import {
   FormSelectDirective,
   ModalModule,
   RowComponent,
+  SpinnerComponent,
 } from '@coreui/angular';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -83,6 +84,7 @@ import { LoginService } from '../../../../services/login.service';
     NgbTypeaheadModule,
     ButtonDirective,
     IconDirective,
+    SpinnerComponent,
   ],
   templateUrl: './ventas-productos-crud-form.component.html',
   styleUrl: './ventas-productos-crud-form.component.scss',

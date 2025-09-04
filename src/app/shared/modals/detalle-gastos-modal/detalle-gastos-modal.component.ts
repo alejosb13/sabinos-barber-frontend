@@ -12,11 +12,8 @@ import {
 } from '@coreui/angular';
 import { LoginService } from '../../../services/login.service';
 import { FacturaDetalleFormComponent } from '../../components/forms/factura-detalle-form/factura-detalle-form.component';
-import { Cliente } from '../../../models/Cliente.model';
-import { MetodoPago } from '../../../models/MetodoPago.model';
 import logger from '../../utils/logger';
-import { Servicios } from '../../../models/Servicios.model';
-import { Gasto } from '../../../models/Gasto.model';
+import { Gasto, MetodoPagoGasto } from '../../../models/Gasto.model';
 
 @Component({
   selector: 'app-detalle-gastos-modal',
@@ -59,6 +56,18 @@ export class DetalleGastosModalComponent {
   FormsValues(event: any) {
     logger.log('event', event);
     // this.ResponseFacturaCreate.emit(event);
+  }
+
+  sumarTodosLosDetalles(Gasto: Gasto): number {
+    const total =
+      Gasto.metodo_pago?.reduce(
+        (total: number, metodo_pago: MetodoPagoGasto) => {
+          const monto = Number(metodo_pago?.monto || '0');
+          return total + monto;
+        },
+        0
+      ) || 0;
+    return total;
   }
 
   sumarTodosLosMetodos(gastos: any): number {

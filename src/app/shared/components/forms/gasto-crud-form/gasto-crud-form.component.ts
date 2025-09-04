@@ -177,24 +177,22 @@ export class GastoCrudFormComponent {
   eventInputTypeHead({ item }: { item: Producto }, posicion: number) {
     setTimeout(() => {
       logger.log('item', item);
-      // this.clienteModel = `${item.nombre} ${item.apellido}`;
-      // this.clienteId = Number(item.id);
-      // const controlInversion = this.getControlFormArray();
 
       this.gastos.controls[posicion].patchValue({
-        // producto_id: item.id,
-        // cantidad: item.cantidad,
         precio_unitario: item.precio,
       });
+
       this.gastos.controls[posicion].clearValidators();
-      this.gastos.controls[posicion].get('cantidad')?.addValidators([
+
+      const cantidadControl = this.gastos.controls[posicion].get('cantidad');
+      cantidadControl?.clearValidators(); // limpia validadores previos
+      cantidadControl?.addValidators([
         Validators.required,
         Validators.min(1),
         Validators.max(item.cantidad),
-        // Validators.maxLength(item.cantidad),
         Validators.pattern(/^[0-9]+$/),
       ]);
-      // this.gastos.controls[posicion].
+      cantidadControl?.updateValueAndValidity(); // 👈 fuerza la revalidación
     }, 10);
   }
 

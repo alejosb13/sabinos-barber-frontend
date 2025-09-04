@@ -46,7 +46,7 @@ interface GastoDetalle {
   tipo_gasto?: TipoGasto;
 }
 
-interface MetodoPagoGasto {
+export interface MetodoPagoGasto {
   id?: number;
 
   gasto_id: number;
