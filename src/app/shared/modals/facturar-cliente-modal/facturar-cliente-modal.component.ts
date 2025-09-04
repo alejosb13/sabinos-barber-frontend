@@ -27,7 +27,6 @@ export class FacturarClienteModalComponent {
 
   activeModal = inject(NgbActiveModal);
   _HelpersService = inject(HelpersService);
-  #colorModeService = inject(ColorModeService);
   _LoginService = inject(LoginService);
 
   FormsValues(event: any) {

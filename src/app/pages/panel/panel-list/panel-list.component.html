@@ -241,6 +241,8 @@
           [ngClass]="{
             'align-items-center justify-content-center d-flex': loaderPanel
           }"
+          class="pointer"
+          (click)="openDetalleGastos()"
         >
           @if(loaderPanel){
           <c-spinner aria-hidden="true" size="sm" variant="grow" />

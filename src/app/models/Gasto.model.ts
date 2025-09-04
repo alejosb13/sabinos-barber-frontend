@@ -35,7 +35,7 @@ interface GastoDetalle {
   precio_unitario: number;
   precio: number;
   tipo_gasto_id: number;
-  comentario: string;
+  comentario: string | null;
 
   estado: number;
   created_at?: string;

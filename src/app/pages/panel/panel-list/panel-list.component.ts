@@ -32,44 +32,37 @@ import { IModalAction } from '@coreui/angular/lib/modal/modal.service';
 import { ParametersUrl } from '../../../models/Parameter.model';
 import dayjs from 'dayjs';
 import logger from '../../../shared/utils/logger';
-import { Subject, takeUntil } from 'rxjs';
+import { catchError, Subject, takeUntil, throwError } from 'rxjs';
 import { PanelService } from '../../../services/panel.service';
 import { Filtro } from '../../../models/Filter.model';
 import { WidgetsDropdownComponent } from '../../../documentacion/widgets/widgets-dropdown/widgets-dropdown.component';
 import { WidgetsBrandComponent } from '../../../documentacion/widgets/widgets-brand/widgets-brand.component';
 import { Panel } from '../../../models/Panel.model';
 import { LoginService } from '../../../services/login.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DetalleGastosModalComponent } from '../../../shared/modals/detalle-gastos-modal/detalle-gastos-modal.component';
+import Swal from 'sweetalert2';
+import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { Gasto } from '../../../models/Gasto.model';
 
 @Component({
   selector: 'app-panel-list',
   standalone: true,
   imports: [
-    TableDirective,
     CardModule,
     GridModule,
-    InputGroupComponent,
-    FormControlDirective,
     ButtonDirective,
     IconDirective,
-    PaginationComponent,
-    PageItemDirective,
-    PageLinkDirective,
-    RouterLink,
     CommonModule,
-    TooltipDirective,
     FiltrosListFormComponent,
     ModalModule,
     ButtonModule,
     FormsModule,
     SpinnerComponent,
     TextColorDirective,
-    WidgetsDropdownComponent,
-    ProgressBarDirective,
-    ProgressComponent,
     TemplateIdDirective,
     IconDirective,
-    WidgetsBrandComponent,
-    CardGroupComponent,
     WidgetStatCComponent,
   ],
   templateUrl: './panel-list.component.html',
@@ -82,6 +75,7 @@ export class PanelListComponent {
   private _PanelService = inject(PanelService);
   private _LoginService = inject(LoginService);
   readonly #ColorModeService = inject(ColorModeService);
+  private _ModalServiceNgb = inject(NgbModal);
 
   loaderPanel: boolean = true;
   Panel!: Panel;
@@ -98,6 +92,8 @@ export class PanelListComponent {
     fecha_inicio: dayjs().format('YYYY-MM-DD'),
     fecha_fin: dayjs().format('YYYY-MM-DD'),
   };
+
+  DetalleGasto: Gasto[] = [];
 
   constructor() {
     this.changeSesionStorage();
@@ -158,6 +154,7 @@ export class PanelListComponent {
 
     return Factura;
   }
+
   filtroEvent(filtros: Filtro) {
     logger.log('filtros', filtros);
 
@@ -178,5 +175,75 @@ export class PanelListComponent {
     logger.log('this.ParametrosURL', this.ParametrosURL);
 
     this.getPanel();
+  }
+
+  openDetalleGastos() {
+    this._HelpersService.loaderSweetAlert({
+      title: 'Descargando detalles de gastos',
+      text: 'Esto puede demorar un momento.',
+    });
+    this._PanelService
+      .getDetalleGasto({
+        ...this.ParametrosURL,
+        gasto_detalle_model: '1',
+        empleado_model: '1',
+        user_model: '1',
+        metodo_pago_model: '1',
+
+        local_id: this._LoginService.getUserData().local.id,
+      })
+      .pipe(
+        takeUntil(this.destruir$),
+        catchError((error: HttpErrorResponse) => {
+          Swal.mixin({
+            customClass: {
+              container: this.#ColorModeService.getStoredTheme(
+                environment.SabinosTheme
+              ),
+            },
+          }).fire({
+            text: 'Fallo al intentar traer detalles de gasto',
+            icon: 'info',
+          });
+          return throwError(() => error);
+        })
+      )
+      .subscribe((data) => {
+        logger.log(data);
+        this.DetalleGasto = [...data];
+        Swal.close();
+        const modalRef = this._ModalServiceNgb.open(
+          DetalleGastosModalComponent,
+          {
+            size: 'xl',
+            centered: true,
+            scrollable: true,
+            // backdrop: 'static'
+          }
+        );
+        modalRef.componentInstance.Gastos = [...data];
+      });
+
+    // modalRef.componentInstance.MetodosPagos = this.MetodosPagos;
+    // modalRef.componentInstance.Servicios = this.Servicios;
+    // modalRef.componentInstance.empleado_id = empleadiId;
+
+    // modalRef.componentInstance.ResponseFacturaCreate.subscribe((data: any) => {
+    //   const EmpleadoResponse = [...data];
+    //   const empleadoIndex = this.EmpleadoList.findIndex(
+    //     (empleado) => empleado.id === EmpleadoResponse[0].empleado_id
+    //   );
+
+    //   if (
+    //     empleadoIndex !== -1 &&
+    //     (!this.EmpleadoList[empleadoIndex].facturas ||
+    //       this.EmpleadoList[empleadoIndex].facturas.length === 0)
+    //   ) {
+    //     // Actualizamos solo la propiedad 'factura' para el empleado encontrado
+
+    //     this.EmpleadoList[empleadoIndex].facturas = [...EmpleadoResponse];
+    //     this.getClientes();
+    //   }
+    // });
   }
 }

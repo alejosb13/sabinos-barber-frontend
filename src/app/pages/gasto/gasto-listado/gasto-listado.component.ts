@@ -79,6 +79,7 @@ export class GastoListadoComponent {
     local_model: '1',
     user_model: '1',
     gasto_detalle_model: '1',
+    metodo_pago_model: '1',
   };
   GastoList!: Listado<Gasto>;
 
@@ -134,6 +135,10 @@ export class GastoListadoComponent {
     logger.log('this.ParametrosURL', this.ParametrosURL);
 
     this.getGastos();
+  }
+
+  sumarGastoDetalle(detalles: any): number {
+    return detalles.reduce((acc: any, det: any) => acc + det.precio, 0);
   }
 
   buscar() {

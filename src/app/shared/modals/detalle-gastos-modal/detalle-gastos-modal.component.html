@@ -1,0 +1,145 @@
+<div class="modal-header">
+  <h4 class="modal-title">Detalle de gastos.</h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+
+<div class="modal-body">
+  <h4 class="text-end">Total {{ Total | currency : "ARS" }}</h4>
+  <hr class="mb-4" />
+
+  @if(Gastos.length === 0) {
+  <p class="text-center text-muted">No hay gastos para mostrar.</p>
+  } @else { @for (gasto of Gastos; track gasto.id) {
+  <div class="mb-2 p-3 border rounded">
+    <h5>Gasto #{{ gasto.id }}</h5>
+
+    <!-- Condicional para mostrar quién generó el gasto -->
+    <p>
+      <strong>Usuario:</strong>
+      @if (gasto.empleado) {
+      {{ gasto.empleado.nombre_completo }} (Empleado) } @else if
+      (gasto.is_local) { Gasto del local cargado por
+      {{ gasto.user?.nombre_completo }}
+      } @else {
+      {{ gasto.user?.nombre_completo }}
+      }
+    </p>
+    <p>
+      <strong>Total:</strong>
+      {{ gasto.total }}
+    </p>
+
+    <c-accordion [alwaysOpen]="true" class="mb-4">
+      @for (detalle of gasto.gasto_detalle; track detalle.id) {
+      <c-accordion-item #item="cAccordionItem" [visible]="false">
+        <ng-template cTemplateId="accordionHeaderTemplate">
+          <button
+            (click)="item.toggleItem()"
+            [collapsed]="!item.visible"
+            cAccordionButton
+          >
+            {{ detalle.tipo_gasto?.descripcion ?? "Sin descripción" }}
+          </button>
+        </ng-template>
+
+        <ng-template cTemplateId="accordionBodyTemplate">
+          <div class="accordion-body">
+            <ng-container *ngIf="!detalle.producto">
+              <div class="row">
+                <div class="col-md-3 col-sm-6 mb-1">
+                  <strong>Precio:</strong>
+                  {{ detalle.precio | currency : "ARS" }}
+                </div>
+                <div class="col-md-3 col-sm-6 mb-1">
+                  <strong>Creado:</strong>
+                  {{ detalle.created_at | date : "dd/mm/yyyy" }}
+                </div>
+                <div class="col-md-6 col-sm-12 mb-1">
+                  <strong>Comentario:</strong> {{ detalle.comentario ?? "-" }}
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Caso Producto -->
+            <ng-container *ngIf="detalle.producto">
+              <div class="row">
+                <div class="col-md-3 col-sm-6 mb-1">
+                  <strong>Marca:</strong> {{ detalle.producto.marca }}
+                </div>
+                <div class="col-md-3 col-sm-6 mb-1">
+                  <strong>Descripción:</strong>
+                  {{ detalle.producto.descripcion }}
+                </div>
+                <div class="col-md-6 col-sm-12 mb-1">
+                  <strong>Comentario:</strong> {{ detalle.comentario ?? "-" }}
+                </div>
+                <div class="col-md-3 col-sm-6 mb-1">
+                  <strong>Cantidad:</strong> {{ detalle.cantidad }}
+                </div>
+                <div class="col-md-3 col-sm-6 mb-1">
+                  <strong>Precio Unitario:</strong>
+                  {{ detalle.precio_unitario | currency : "ARS" }}
+                </div>
+                <div class="col-md-3 col-sm-6 mb-1">
+                  <strong>Total:</strong>
+                  {{ detalle.precio | currency : "ARS" }}
+                </div>
+                <div class="col-md-3 col-sm-6 mb-1">
+                  <strong>Creado:</strong>
+                  {{ detalle.created_at | date : "dd/mm/yyyy" }}
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-template>
+      </c-accordion-item>
+      }
+    </c-accordion>
+
+    <c-accordion [alwaysOpen]="true" class="mb-4">
+      @for (mp of gasto.metodo_pago; track mp.id) {
+      <c-accordion-item #item="cAccordionItem" [visible]="false">
+        <ng-template cTemplateId="accordionHeaderTemplate">
+          <button
+            (click)="item.toggleItem()"
+            [collapsed]="!item.visible"
+            cAccordionButton
+          >
+            Método de pago #{{ mp.id }}
+          </button>
+        </ng-template>
+
+        <ng-template cTemplateId="accordionBodyTemplate">
+          <div class="accordion-body">
+            <div class="row">
+              <div class="col-md-3 col-sm-6 mb-1">
+                <strong>Tipo de pago:</strong> {{ mp.monto }}
+              </div>
+              <div class="col-md-3 col-sm-6 mb-1">
+                <strong>Monto:</strong> {{ mp.monto | currency : "ARS" }}
+              </div>
+              <!-- <div class="col-md-3 col-sm-6 mb-1">
+                <strong>Estado:</strong> {{ mp.estado }}
+              </div> -->
+              <!-- <div class="col-md-3 col-sm-6 mb-1">
+                <strong>Creado:</strong>
+                {{ mp.created_at | date : "dd/MM/yyyy" }}
+              </div> -->
+              <!-- <div class="col-md-3 col-sm-6 mb-1">
+                <strong>Actualizado:</strong>
+                {{ mp.updated_at | date : "dd/MM/yyyy" }}
+              </div> -->
+            </div>
+          </div>
+        </ng-template>
+      </c-accordion-item>
+      }
+    </c-accordion>
+  </div>
+  } }
+</div>

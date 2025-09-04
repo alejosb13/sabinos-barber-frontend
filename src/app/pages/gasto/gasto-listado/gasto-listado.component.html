@@ -99,7 +99,9 @@
                   <span>{{ gasto.empleado?.nombre_completo }}</span>
                 </td>
                 <td>
-                  <span>{{ gasto.total | currency : "ARS" }}</span>
+                  <span>{{
+                    sumarGastoDetalle(gasto.gasto_detalle) | currency : "ARS"
+                  }}</span>
                 </td>
                 <td>
                   <span>{{ gasto.is_local == 1 ? "Si" : "No" }}</span>
