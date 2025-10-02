@@ -71,7 +71,7 @@ export class LocalListadoComponent {
 
   loaderTable: boolean = true;
   ParametrosURL: ParametersUrl = {
-    allDates: false,
+    allDates: true,
     estado: 1,
     link: null,
     disablePaginate: '0',
@@ -81,14 +81,17 @@ export class LocalListadoComponent {
   LocalList!: Listado<Local>;
 
   ngOnInit(): void {
-    this.getLocals();
+    this.getLocals(true);
   }
 
-  getLocals() {
+  getLocals(isSearch: boolean = false) {
     this.loaderTable = true;
 
     this._LocalsService
-      .getLocales(this.ParametrosURL)
+      .getLocales({
+        ...this.ParametrosURL,
+        page: isSearch ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Local>) => {

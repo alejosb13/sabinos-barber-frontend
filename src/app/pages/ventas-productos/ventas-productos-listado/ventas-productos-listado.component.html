@@ -73,6 +73,7 @@
                 <th class="bg-body-tertiary">#</th>
                 <th class="bg-body-tertiary">Nombre</th>
                 <th class="bg-body-tertiary">Total</th>
+                <th class="bg-body-tertiary">Fecha</th>
                 <!-- <th class="bg-body-tertiary">Porcentaje</th>
                 <th class="bg-body-tertiary">Total</th>  -->
                 <th class="bg-body-tertiary"></th>
@@ -92,6 +93,9 @@
                 </td>
                 <td>
                   <span>{{ venta.total }}</span>
+                </td>
+                <td>
+                  <span>{{ venta.created_at | date : "dd-MM-YYYY" }}</span>
                 </td>
                 <td>
                   <div class="d-flex flex-direction justify-content-center">
@@ -182,7 +186,7 @@
   <c-modal-body>
     <app-filtros-list-form
       (filtrar)="filtroEvent($event)"
-      [showDate]="true"
+      [showDateIniFin]="true"
       [showValidDates]="true"
     />
   </c-modal-body>

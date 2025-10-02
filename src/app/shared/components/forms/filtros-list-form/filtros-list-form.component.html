@@ -74,14 +74,14 @@
           </div>
         </c-col>
         } @if(showDateIniFin && !filtro.allDates){
-        <c-col [md]="6">
+        <c-col [md]="6" class="mb-3">
           <app-input-single-date
             [selectedDate]="filtro.fecha.startDate"
             [textLabel]="'Fecha inicio'"
             (selectedDateChange)="handleDateInicioFin($event, 'inicio')"
           />
         </c-col>
-        <c-col [md]="6">
+        <c-col [md]="6" class="mb-3">
           <app-input-single-date
             [selectedDate]="filtro.fecha.endDate"
             [textLabel]="'Fecha fin'"

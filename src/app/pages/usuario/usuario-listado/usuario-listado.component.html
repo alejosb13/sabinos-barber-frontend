@@ -190,9 +190,9 @@
   <c-modal-body>
     <app-filtros-list-form
       (filtrar)="filtroEvent($event)"
-      [showDate]="true"
-      [showEstado]="true"
       [showValidDates]="true"
+      [validDateValue]="ParametrosURL.allDates"
+      [showEstado]="true"
     />
   </c-modal-body>
 </c-modal>

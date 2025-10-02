@@ -182,6 +182,7 @@
     <app-filtros-list-form
       (filtrar)="filtroEvent($event)"
       [showDateIniFin]="true"
+      [limpiarTipo]="'mes-actual'"
       [showEstado]="true"
       [showValidDates]="true"
       [validDateValue]="ParametrosURL.allDates"

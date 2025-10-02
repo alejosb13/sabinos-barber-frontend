@@ -74,12 +74,12 @@ export class UsuarioListadoComponent {
 
   loaderTable: boolean = true;
   ParametrosURL: ParametersUrl = {
-    allDates: false,
+    allDates: true,
     estado: 1,
     link: null,
     disablePaginate: '0',
-    fecha_inicio: dayjs().startOf('month').format('YYYY-MM-DD'),
-    fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
+    // fecha_inicio: dayjs().startOf('month').format('YYYY-MM-DD'),
+    // fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
   };
   UsuarioList!: Listado<Usuario>;
 
