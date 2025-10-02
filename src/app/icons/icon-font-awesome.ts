@@ -6,6 +6,7 @@ import {
   faPersonCircleCheck,
   faEye,
   faChevronDown,
+  faCalendarAlt,
 } from '@fortawesome/free-solid-svg-icons';
 
 const formatTemplate = (data: any) =>
@@ -33,5 +34,9 @@ export const CUSTOM_ICONS = {
   faChevronDown: [
     `${faChevronDown.icon[0]} ${faChevronDown.icon[1]}`,
     formatTemplate(faChevronDown.icon[4]),
+  ],
+  faCalendarAlt: [
+    `${faCalendarAlt.icon[0]} ${faCalendarAlt.icon[1]}`,
+    formatTemplate(faCalendarAlt.icon[4]),
   ],
 };

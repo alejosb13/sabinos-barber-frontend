@@ -1,153 +1,138 @@
 import { CommonModule } from '@angular/common';
+import { LOCALE_ID, Inject, Injectable } from '@angular/core';
 import {
   Component,
   EventEmitter,
   Input,
   Output,
+  OnInit,
+  OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormFloatingDirective, FormModule } from '@coreui/angular';
-import dayjs, { Dayjs, locale } from 'dayjs';
-import 'dayjs/locale/es'; // Cambia 'es' al idioma que necesites
+import { FormsModule } from '@angular/forms';
+import { FormModule } from '@coreui/angular';
+import { IconDirective } from '@coreui/icons-angular';
 import {
-  NgxDaterangepickerBootstrapComponent,
-  NgxDaterangepickerBootstrapDirective,
-} from 'ngx-daterangepicker-bootstrap';
+  NgbCalendar,
+  NgbDate,
+  NgbInputDatepicker,
+  NgbDatepicker,
+  NgbDateParserFormatter,
+} from '@ng-bootstrap/ng-bootstrap';
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/es';
 import logger from 'src/app/shared/utils/logger';
 
-dayjs.locale('es'); // Configura el idioma global
+dayjs.locale('es');
+
+// Formateo personalizado para ng-bootstrap
+@Injectable()
+class CustomDateParserFormatter extends NgbDateParserFormatter {
+  readonly DELIMITER = '-';
+
+  parse(value: string): NgbDate | null {
+    if (value) {
+      const parts = value.split(this.DELIMITER);
+      if (parts.length === 3) {
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10);
+        const year = parseInt(parts[2], 10);
+
+        if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+          return new NgbDate(year, month, day);
+        }
+      }
+    }
+    return null;
+  }
+
+  format(date: NgbDate | null): string {
+    if (date && !isNaN(date.year) && !isNaN(date.month) && !isNaN(date.day)) {
+      return (
+        date.day.toString().padStart(2, '0') +
+        this.DELIMITER +
+        date.month.toString().padStart(2, '0') +
+        this.DELIMITER +
+        date.year
+      );
+    }
+    return '';
+  }
+}
 
 @Component({
   selector: 'app-input-single-date',
   standalone: true,
   imports: [
-    NgxDaterangepickerBootstrapDirective,
-    FormsModule,
     CommonModule,
+    FormsModule,
     FormModule,
-    ReactiveFormsModule,
+    NgbInputDatepicker,
+    NgbDatepicker,
+    IconDirective,
   ],
   templateUrl: './input-single-date.component.html',
   styleUrl: './input-single-date.component.scss',
+  providers: [
+    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
+  ],
 })
-export class InputSingleDateComponent {
-  // @Input() SelectType!: string
-
+export class InputSingleDateComponent implements OnInit, OnChanges {
   @Input() textLabel!: string;
-  @Input() selectedDate: any = '01-02-2025';
-  @Output() selectedDateChange = new EventEmitter<any>();
+  @Input() selectedDate!: string | Dayjs;
+  @Output() selectedDateChange = new EventEmitter<string>();
 
   @Input() floatingInput: boolean = false;
-  @Output() handleDate = new EventEmitter<any>();
 
-  dropsDown = 'down';
-  dropsUp = 'up';
-  opensRight = 'right';
-  opensCenter = 'center';
-  opensLeft = 'left';
+  // NgBootstrap date model
+  model: NgbDate | null = null;
 
-  maxDate?: Dayjs;
-  minDate?: Dayjs;
-  invalidDates: Dayjs[] = [];
+  // ID único para evitar conflictos
+  componentId = Math.random().toString(36).substr(2, 9);
 
-  locale = {
-    firstDay: 1,
-    // startDate: this.startDate,
-    // endDate: this.endDate,
-    format: 'DD-MM-YYYY',
-    applyLabel: 'Aplicar',
-    cancelLabel: 'Cancelar',
-    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-    monthNames: [
-      'Enero',
-      'Febrero',
-      'Marzo',
-      'Abril',
-      'Mayo',
-      'Junio',
-      'Julio',
-      'Agosto',
-      'Septiembre',
-      'Octubre',
-      'Noviembre',
-      'Diciembre',
-    ],
-  };
-  // tooltips = [
-  //   { date: dayjs(), text: 'Today is just unselectable' },
-  //   { date: dayjs().add(2, 'days'), text: 'Yeeeees!!!' },
-  // ];
+  constructor(private calendar: NgbCalendar) {}
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-  //   //Add '${implements OnChanges}' to the class.
-  //   logger.log('changes', changes);
-  // }
-
-  constructor() {
-    // this.selectedRangeCalendarTimeRight = {
-    //   startDate: dayjs().startOf('day'),
-    //   endDate: dayjs().endOf('day'),
-    // };
-    // this.selectedRangeCalendar = {
-    //   startDate: dayjs().startOf('day'),
-    //   endDate: dayjs().endOf('day'),
-    // };
-    // this.selectedRangeCalendarAutoLeft = {
-    //   startDate: dayjs().startOf('day'),
-    //   endDate: dayjs().endOf('day'),
-    // };
-    this.selectedDate = dayjs().startOf('day');
-    // this.selectedSingleCalendarCenter = dayjs().startOf('day');
-    // this.selectedSingleCalendarAutoLeft = dayjs().startOf('day');
-    // this.selectedSimpleCalendarTimeUpRight = {
-    //   startDate: dayjs().startOf('day'),
-    //   endDate: dayjs().endOf('day'),
-    // };
-    // this.selectedSimpleCalendarUpCenter = {
-    //   startDate: dayjs().startOf('day'),
-    //   endDate: dayjs().endOf('day'),
-    // };
-    // this.selectedSimpleCalendarAutoUpLeft = {
-    //   startDate: dayjs().startOf('day'),
-    //   endDate: dayjs().endOf('day'),
-    // };
-    // this.selectedRangeCalendarTimeInline = {
-    //   startDate: dayjs().startOf('day'),
-    //   endDate: dayjs().endOf('day'),
-    // };
+  ngOnInit(): void {
+    // Convertir selectedDate inicial a NgbDate
+    if (this.selectedDate) {
+      this.updateModelFromSelectedDate();
+    }
   }
 
-  isInvalidDate = (m: Dayjs) => {
-    return this.invalidDates.some((d) => d.isSame(m, 'day'));
-  };
-
-  isCustomDate = (date: Dayjs) => {
-    return date.month() === 0 || date.month() === 6 ? 'mycustomdate' : false;
-  };
-
-  // isTooltipDate = (m: Dayjs) => {
-  //   const tooltip = this.tooltips.find((tt) => tt.date.isSame(m, 'day'));
-  //   return tooltip ? tooltip.text : false;
-  // };
-
-  datesUpdatedRange(event: any) {
-    if (event.startDate && event.endDate) this.handleDate.emit(event);
-    // console.log('range', event);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedDate'] && changes['selectedDate'].currentValue) {
+      this.updateModelFromSelectedDate();
+      logger.log(
+        this.textLabel,
+        'selectedDate actualizado a:',
+        dayjs.isDayjs(this.selectedDate)
+          ? this.selectedDate.format('YYYY-MM-DD')
+          : this.selectedDate
+      );
+    }
   }
 
-  datesUpdatedSingle(event: any) {
-    // console.log('single', this.selectedDate);
-    // console.log('single2', event.startDate.format('YYYY-MM-DD'));
-    // if (event.startDate)
-    logger.log('event.startDate', event.startDate);
-    if (event.startDate)
-      this.selectedDateChange.emit(event.startDate.format('YYYY-MM-DD'));
-    // this.selectedDateChange.emit(event);
+  private updateModelFromSelectedDate(): void {
+    if (this.selectedDate) {
+      let date: Dayjs;
+      if (dayjs.isDayjs(this.selectedDate)) {
+        date = this.selectedDate;
+      } else {
+        date = dayjs(this.selectedDate);
+      }
+
+      this.model = new NgbDate(date.year(), date.month() + 1, date.date());
+    }
   }
 
-  datesUpdatedInline($event: Object) {
-    // console.log('inline', $event);
+  onDateSelect(date: NgbDate | null): void {
+    if (date) {
+      // Convertir NgbDate a string formato YYYY-MM-DD para el backend
+      const selectedDateString = `${date.year}-${date.month
+        .toString()
+        .padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`;
+      this.selectedDateChange.emit(selectedDateString);
+      logger.log(this.textLabel, 'fecha seleccionada:', selectedDateString);
+    }
   }
 }

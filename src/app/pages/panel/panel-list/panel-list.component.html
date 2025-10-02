@@ -294,9 +294,10 @@
   <c-modal-body>
     <app-filtros-list-form
       (filtrar)="filtroEvent($event)"
-      [showDate]="true"
       [showValidDates]="false"
+      [showDateIniFin]="true"
       [fechaFilter]="ParametrosURL"
+      [limpiarTipo]="'dia-actual'"
     />
   </c-modal-body>
 </c-modal>

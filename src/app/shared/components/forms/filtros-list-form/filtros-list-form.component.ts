@@ -36,6 +36,7 @@ import { Empleado } from '../../../../models/Empleado.model';
 import { UsuarioesService } from '../../../../services/usuarios.service';
 import { EmpleadosService } from '../../../../services/empleados.service';
 import { LoginService } from '../../../../services/login.service';
+import { InputSingleDateComponent } from '../../input-single-date/input-single-date.component';
 
 @Component({
   selector: 'app-filtros-list-form',
@@ -54,6 +55,7 @@ import { LoginService } from '../../../../services/login.service';
     FormLabelDirective,
     FormCheckComponent,
     FormCheckInputDirective,
+    InputSingleDateComponent,
   ],
   templateUrl: './filtros-list-form.component.html',
   styleUrl: './filtros-list-form.component.scss',
@@ -71,7 +73,10 @@ export class FiltrosListFormComponent {
   @Input() validDateValue!: boolean | undefined;
   @Input() showEmpleados: boolean = false;
   @Input() showUsers: boolean = false;
+  @Input() showDateIniFin: boolean = false;
   @Input() fechaFilter?: any = undefined;
+  @Input() limpiarTipo: 'mes-actual' | 'dia-actual' | 'personalizado' =
+    'mes-actual';
   @Output() filtrar = new EventEmitter<Filtro>();
 
   private _LocalesServices = inject(LocalesService);
@@ -106,7 +111,7 @@ export class FiltrosListFormComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    logger.log(changes, this.filtro);
+    logger.log('changes', this.filtro);
     this.filtro = {
       ...this.filtro,
       estado: this.showEstado ? 1 : '',
@@ -129,6 +134,7 @@ export class FiltrosListFormComponent {
           : IniciarFiltro.fecha.endDate,
       },
     };
+    logger.log('changes fin', this.filtro);
   }
 
   eventChangeLocal() {
@@ -177,14 +183,57 @@ export class FiltrosListFormComponent {
     this.filtrar.emit(filtro);
   }
 
+  // Método para obtener las fechas según el tipo de limpieza
+  private obtenerFechasLimpieza() {
+    switch (this.limpiarTipo) {
+      case 'dia-actual':
+        return {
+          startDate: dayjs().startOf('day'),
+          endDate: dayjs().endOf('day'),
+        };
+      case 'mes-actual':
+        return {
+          startDate: dayjs().startOf('month'),
+          endDate: dayjs().endOf('month'),
+        };
+      case 'personalizado':
+        // Aquí puedes agregar lógica personalizada o retornar fechas por defecto
+        return {
+          startDate: dayjs().startOf('month'),
+          endDate: dayjs().endOf('month'),
+        };
+      default:
+        return {
+          startDate: dayjs().startOf('month'),
+          endDate: dayjs().endOf('month'),
+        };
+    }
+  }
+
   // Método para limpiar los campos
   onLimpiar() {
-    this.filtro = { ...IniciarFiltro };
+    // Obtener las fechas según el tipo configurado
+    const fechasLimpieza = this.obtenerFechasLimpieza();
+
+    // Crear un nuevo objeto con fechas completamente nuevas para forzar detección de cambios
+    this.filtro = {
+      ...IniciarFiltro,
+      fecha: fechasLimpieza,
+    };
+    console.log('limpiar', this.filtro, 'tipo:', this.limpiarTipo);
   }
 
   handleDate(event: { endDate: dayjs.Dayjs; startDate: dayjs.Dayjs }) {
     logger.log('range', event);
     this.filtro.fecha = event;
+  }
+
+  handleDateInicioFin(event: string, section: string) {
+    logger.log('range', event);
+    logger.log('section', section);
+
+    if (section === 'fin') this.filtro.fecha.endDate = dayjs(event);
+    if (section === 'inicio') this.filtro.fecha.startDate = dayjs(event);
   }
 
   ngOnDestroy(): void {

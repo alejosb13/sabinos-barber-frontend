@@ -1,31 +1,32 @@
 @if(!floatingInput){
-<!-- <label cLabel for="singleCalendarCenter" class="form-label"
-  >fecha de nacimiento</label
-> -->
+<label cLabel [for]="'datePicker_' + componentId" class="form-label">{{
+  textLabel
+}}</label>
 }
-<input
-  type="text"
-  id="singleCalendarCenter"
-  class="form-control"
-  style="
-    box-shadow: none;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  "
-  readonly
-  ngxDaterangepickerBootstrap
-  [singleDatePicker]="true"
-  [(ngModel)]="selectedDate"
-  [autoApply]="true"
-  [drops]="dropsDown"
-  [opens]="opensCenter"
-  [locale]="locale"
-  [isCustomDate]="isCustomDate"
-  [isInvalidDate]="isInvalidDate"
-  (datesUpdated)="datesUpdatedSingle($event)"
-  aria-describedby="singleCalendarCenterDesc"
-  [showDropdowns]="true"
-  cFormControl
-/>
-<label cLabel for="singleCalendarCenter">{{ textLabel }}</label>
+
+<div class="input-group">
+  <input
+    class="form-control"
+    placeholder="dd-mm-yyyy"
+    name="dp"
+    [id]="'datePicker_' + componentId"
+    [(ngModel)]="model"
+    (ngModelChange)="onDateSelect($event)"
+    ngbDatepicker
+    #d="ngbDatepicker"
+    [outsideDays]="'hidden'"
+    readonly
+  />
+  <button
+    class="btn btn-outline-secondary"
+    type="button"
+    (click)="d.toggle()"
+    aria-label="Abrir calendario"
+  >
+    <svg cIcon height="18" name="faCalendarAlt"></svg>
+  </button>
+</div>
+
+@if(floatingInput){
+<label cLabel [for]="'datePicker_' + componentId">{{ textLabel }}</label>
+}
