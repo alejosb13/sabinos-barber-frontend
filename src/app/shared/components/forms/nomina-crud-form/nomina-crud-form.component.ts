@@ -478,7 +478,7 @@ export class NominaCrudFormComponent {
       };
       logger.log(NOMINA);
 
-      // this.FormsValues.emit(NOMINA);
+      this.FormsValues.emit(NOMINA);
     } else {
       Swal.mixin({
         customClass: {
