@@ -90,11 +90,14 @@ export class TipoGastoListadoComponent {
     this.getTiposGastos();
   }
 
-  getTiposGastos() {
+  getTiposGastos(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._TipoGastoService
-      .getTipoGasto(this.ParametrosURL)
+      .getTipoGasto({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<TipoGasto>) => {
@@ -137,7 +140,7 @@ export class TipoGastoListadoComponent {
   }
 
   buscar() {
-    this.getTiposGastos();
+    this.getTiposGastos(true);
   }
 
   eliminar(tipoGasto: TipoGasto) {

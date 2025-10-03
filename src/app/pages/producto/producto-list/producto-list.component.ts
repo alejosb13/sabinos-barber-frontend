@@ -97,11 +97,14 @@ export class ProductoListComponent {
     this.getProductos();
   }
 
-  getProductos() {
+  getProductos(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._ProductosService
-      .getProductos(this.ParametrosURL)
+      .getProductos({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Producto>) => {
@@ -148,7 +151,7 @@ export class ProductoListComponent {
   }
 
   buscar() {
-    this.getProductos();
+    this.getProductos(true);
   }
 
   eliminar(producto: Producto) {

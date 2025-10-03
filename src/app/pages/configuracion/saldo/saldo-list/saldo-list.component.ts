@@ -94,13 +94,14 @@ export class SaldoListComponent {
     });
   }
 
-  getSaldos() {
+  getSaldos(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._SaldoService
       .getSaldos({
         ...this.ParametrosURL,
         local_id: this._LoginService.getUserData().local.id,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
       })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
@@ -148,7 +149,7 @@ export class SaldoListComponent {
   }
 
   buscar() {
-    this.getSaldos();
+    this.getSaldos(true);
   }
 
   eliminar(saldo: Saldo) {

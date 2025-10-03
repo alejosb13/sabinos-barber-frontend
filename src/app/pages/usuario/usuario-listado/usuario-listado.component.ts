@@ -87,11 +87,14 @@ export class UsuarioListadoComponent {
     this.getUsuarios();
   }
 
-  getUsuarios() {
+  getUsuarios(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._UsuarioService
-      .getUsuarioes(this.ParametrosURL)
+      .getUsuarioes({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Usuario>) => {
@@ -137,7 +140,7 @@ export class UsuarioListadoComponent {
   }
 
   buscar() {
-    this.getUsuarios();
+    this.getUsuarios(true);
   }
 
   cambiarClave(usuario: Usuario) {

@@ -87,11 +87,14 @@ export class GastoListadoComponent {
     this.getGastos();
   }
 
-  getGastos() {
+  getGastos(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._GastoService
-      .getGastos(this.ParametrosURL)
+      .getGastos({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Gasto>) => {
@@ -142,7 +145,7 @@ export class GastoListadoComponent {
   }
 
   buscar() {
-    this.getGastos();
+    this.getGastos(true);
   }
 
   eliminar(gasto: Gasto) {

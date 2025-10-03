@@ -82,11 +82,14 @@ export class RolListadoComponent {
     this.getRols();
   }
 
-  getRols() {
+  getRols(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._RolesService
-      .getRoles(this.ParametrosURL)
+      .getRoles({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Role>) => {
@@ -128,7 +131,7 @@ export class RolListadoComponent {
   }
 
   buscar() {
-    this.getRols();
+    this.getRols(true);
   }
 
   eliminar(Rol: Role) {

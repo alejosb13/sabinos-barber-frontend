@@ -138,7 +138,7 @@ export class LocalListadoComponent {
   }
 
   buscar() {
-    this.getLocals();
+    this.getLocals(true);
   }
 
   eliminar(Local: Local) {

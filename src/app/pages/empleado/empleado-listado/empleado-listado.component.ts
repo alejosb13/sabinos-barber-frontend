@@ -93,11 +93,14 @@ export class EmpleadoListadoComponent {
     // this.getEmpleados();
   }
 
-  getEmpleados() {
+  getEmpleados(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._EmpleadosService
-      .getEmpleadoes(this.ParametrosURL)
+      .getEmpleadoes({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Empleado>) => {
         this.loaderTable = false;
@@ -149,7 +152,7 @@ export class EmpleadoListadoComponent {
   }
 
   buscar() {
-    this.getEmpleados();
+    this.getEmpleados(true);
   }
 
   eliminar(Empleado: Empleado) {

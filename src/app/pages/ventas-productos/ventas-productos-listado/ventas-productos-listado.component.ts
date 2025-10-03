@@ -99,11 +99,15 @@ export class VentasProductosListadoComponent {
     this.getVentas();
   }
 
-  getVentas() {
+  getVentas(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._VentaService
-      .getVentas({ ...this.ParametrosURL, local_id: this.Local_id })
+      .getVentas({
+        ...this.ParametrosURL,
+        local_id: this.Local_id,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Venta>) => {
@@ -150,7 +154,7 @@ export class VentasProductosListadoComponent {
   }
 
   buscar() {
-    this.getVentas();
+    this.getVentas(true);
   }
 
   eliminar(venta: Venta) {

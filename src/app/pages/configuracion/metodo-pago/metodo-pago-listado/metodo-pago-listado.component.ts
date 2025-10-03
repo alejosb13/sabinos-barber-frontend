@@ -89,11 +89,14 @@ export class MetodoPagoListadoComponent {
     this.getNominas();
   }
 
-  getNominas() {
+  getNominas(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._MetodoPagoService
-      .getMetodoPago(this.ParametrosURL)
+      .getMetodoPago({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<MetodoPago>) => {
@@ -135,7 +138,7 @@ export class MetodoPagoListadoComponent {
   }
 
   buscar() {
-    this.getNominas();
+    this.getNominas(true);
   }
 
   eliminar(metodopago: MetodoPago) {

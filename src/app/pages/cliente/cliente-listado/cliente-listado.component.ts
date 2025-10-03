@@ -84,11 +84,14 @@ export class ClienteListadoComponent {
     this.getClientes();
   }
 
-  getClientes() {
+  getClientes(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._ClientesService
-      .getClientes(this.ParametrosURL)
+      .getClientes({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Cliente>) => {
@@ -135,7 +138,7 @@ export class ClienteListadoComponent {
   }
 
   buscar() {
-    this.getClientes();
+    this.getClientes(true);
   }
 
   eliminar(Cliente: Cliente) {

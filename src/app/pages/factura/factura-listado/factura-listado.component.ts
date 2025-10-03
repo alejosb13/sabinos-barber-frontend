@@ -99,11 +99,14 @@ export class FacturaListadoComponent {
     this.getFacturas();
   }
 
-  getFacturas() {
+  getFacturas(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._FacturasService
-      .getFacturas(this.ParametrosURL)
+      .getFacturas({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Factura>) => {
@@ -150,7 +153,7 @@ export class FacturaListadoComponent {
   }
 
   buscar() {
-    this.getFacturas();
+    this.getFacturas(true);
   }
 
   eliminar(factura: Factura) {

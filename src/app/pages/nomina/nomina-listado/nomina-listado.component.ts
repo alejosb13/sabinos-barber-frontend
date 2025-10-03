@@ -97,11 +97,14 @@ export class NominaListadoComponent {
     this.getNominas();
   }
 
-  getNominas() {
+  getNominas(buscarTrigerred: boolean = false) {
     this.loaderTable = true;
 
     this._NominaService
-      .getNominas(this.ParametrosURL)
+      .getNominas({
+        ...this.ParametrosURL,
+        page: buscarTrigerred ? 1 : this.ParametrosURL.page,
+      })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
       .subscribe((data: Listado<Nomina>) => {
@@ -148,7 +151,7 @@ export class NominaListadoComponent {
   }
 
   buscar() {
-    this.getNominas();
+    this.getNominas(true);
   }
 
   eliminar(nomina: Nomina) {

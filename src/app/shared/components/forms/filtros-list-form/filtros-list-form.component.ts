@@ -39,7 +39,6 @@ import { LoginService } from '../../../../services/login.service';
 import { InputSingleDateComponent } from '../../input-single-date/input-single-date.component';
 import { TipoGastoService } from '../../../../services/tipo_gasto.service';
 import { TipoGasto } from '../../../../models/TipoGasto.model';
-import { get } from 'lodash';
 
 @Component({
   selector: 'app-filtros-list-form',
