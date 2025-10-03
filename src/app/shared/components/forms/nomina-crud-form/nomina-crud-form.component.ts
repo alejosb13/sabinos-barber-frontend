@@ -61,6 +61,7 @@ import { MetodoPagoService } from '../../../../services/metodos_pago.service';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { Gasto } from '../../../../models/Gasto.model';
 import { HelpersService } from '../../../../services/helpers.service';
+import { CurrencyFormatDirective } from '../../../directivas/currency-format.directive';
 
 @Component({
   selector: 'app-nomina-crud-form',
@@ -80,6 +81,7 @@ import { HelpersService } from '../../../../services/helpers.service';
     DateRangePickerComponent,
     IconDirective,
     NgbCollapse,
+    CurrencyFormatDirective,
   ],
   templateUrl: './nomina-crud-form.component.html',
   styleUrl: './nomina-crud-form.component.scss',
@@ -229,6 +231,33 @@ export class NominaCrudFormComponent {
     return this.TotalExtras + presentismovalue;
   }
 
+  // Suma todos los montos de los métodos de pago
+  getTotalMetodosPago(): number {
+    let total = 0;
+    const metodosArray = this.MetodoPagoNominaFormArray;
+
+    for (let i = 0; i < metodosArray.length; i++) {
+      const montoControl = metodosArray.at(i).get('monto');
+      const monto = montoControl?.value || 0;
+      total += Number(monto);
+    }
+
+    return total;
+  }
+
+  // Calcula cuánto falta para completar el pago (Total - Métodos de pago)
+  getResta(): number {
+    const totalAPagar = this.getTotalSeccion();
+    const totalMetodosPago = this.getTotalMetodosPago();
+    return totalAPagar - totalMetodosPago;
+  }
+
+  // Verifica si se puede agregar un nuevo método de pago
+  puedeAgregarMetodoPago(): boolean {
+    const resta = this.getResta();
+    return resta > 0 && this.MetodoPagoNominaFormArray.length < 2;
+  }
+
   getControl(name: string): FormControl {
     return this.NominaCrudForm.get(name) as FormControl;
   }
@@ -367,12 +396,20 @@ export class NominaCrudFormComponent {
   }
 
   agregarMetodoPago(): void {
-    if (this.MetodoPagoNominaFormArray.length >= 2) {
-      // // Lógica de advertencia (puede ser alert, snackbar, toast, etc.)
-      // alert('No se pueden agregar más de 2 métodos de pago.');
+    if (!this.puedeAgregarMetodoPago()) {
       return;
     }
-    this.MetodoPagoNominaFormArray.push(crearMetodosForm());
+
+    // Crear nuevo método de pago con el monto de la resta
+    const resta = this.getResta();
+    const nuevoMetodo = crearMetodosForm();
+
+    // Pre-completar el monto con la resta
+    nuevoMetodo.patchValue({
+      monto: resta,
+    });
+
+    this.MetodoPagoNominaFormArray.push(nuevoMetodo);
   }
 
   eliminarMetodoPago(i: number): void {
@@ -439,9 +476,9 @@ export class NominaCrudFormComponent {
         //   nomina_empleado: this.NominaData.nomina_empleado,
         // },
       };
-      // logger.log(NOMINA);
+      logger.log(NOMINA);
 
-      this.FormsValues.emit(NOMINA);
+      // this.FormsValues.emit(NOMINA);
     } else {
       Swal.mixin({
         customClass: {

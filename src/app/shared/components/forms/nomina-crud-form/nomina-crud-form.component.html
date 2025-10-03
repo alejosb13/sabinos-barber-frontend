@@ -131,7 +131,7 @@
               formControlName="monto"
               type="text"
               placeholder="Monto"
-              appOnlyNumberAndPoint
+              appCurrencyFormat
             />
             <label cLabel for="monto_{{ i }}">Monto</label>
           </div>
@@ -149,7 +149,7 @@
               formControlName="monto_total"
               type="text"
               placeholder="Monto Total"
-              appOnlyNumberAndPoint
+              appCurrencyFormat
             />
             <label cLabel for="monto_total_{{ i }}">Monto Total</label>
           </div>
@@ -232,7 +232,14 @@
         cButton
         color="info"
         class="btn-action-table"
-        [disabled]="MetodoPagoNominaFormArray.length >= 2"
+        [disabled]="!puedeAgregarMetodoPago()"
+        [title]="
+          !puedeAgregarMetodoPago()
+            ? getResta() <= 0
+              ? 'El total ya está cubierto'
+              : 'Máximo 2 métodos de pago'
+            : 'Agregar método de pago'
+        "
         (click)="agregarMetodoPago()"
       >
         <svg cIcon height="18" name="cil-plus"></svg>
@@ -282,7 +289,7 @@
               formControlName="monto"
               type="text"
               placeholder="Monto"
-              appOnlyNumberAndPoint
+              appCurrencyFormat
             />
             <label cLabel for="monto_metodo_{{ i }}">Monto</label>
           </div>
@@ -309,6 +316,13 @@
 
   <div class="text-end p-3 mb-4 border">
     <h5>
+      Resta:
+      <span class="badge bg-primary rounded-pill">
+        {{ getResta() | currency : "ARS" }}
+      </span>
+    </h5>
+    <br />
+    <h5>
       Total a pagar:
       <span class="badge bg-primary rounded-pill">
         {{ getTotalSeccion() | currency : "ARS" }}
@@ -327,46 +341,3 @@
     Agregar
   </button>
 </div>
-<!-- 
-<form cForm [formGroup]="NominaCrudForm" class="form-Empleado-crud">
-  <c-row class="mb-4">
-    <c-col [md]="4">
-      <div cFormFloating class="mb-3">
-        <input
-          cFormControl
-          id="descripcionInput"
-          placeholder="descripcion"
-          type="text"
-          formControlName="descripcion"
-          [ngClass]="{
-            'is-invalid':
-              getControl('descripcion').invalid &&
-              getControl('descripcion').touched,
-            'is-valid': getControl('descripcion').valid
-          }"
-          appOnlyAlphanumeric
-        />
-        <label cLabel for="descripcionInput">Comentario</label>
-        <app-valid-messages-form
-          [errors]="getControlError('descripcion')"
-          [messages]="NominaCrudErrorMessages['descripcion']"
-        ></app-valid-messages-form>
-      </div>
-    </c-col>
-    <c-col [md]="4">
-      <div class="mb-3">
-        <app-date-range-picker
-          [selectedRangeCalendar]="Fecha"
-          (handleDate)="handleDate($event)"
-          [floatingInput]="true"
-          cFormFloating
-        />
-      </div>
-    </c-col>
-  </c-row>
-  <c-row class="mb-4">
-    <c-col class="text-center">
-      <button cButton color="info" (click)="sendValueFom()">Generar</button>
-    </c-col>
-  </c-row>
-</form> -->
