@@ -19,6 +19,7 @@ export const IniciarFiltro = {
   user_id: 0,
   empleado_id: 0,
   local_id: 0,
+  tipo_gasto_id: 0,
 };
 
 export function obtenerRangoFecha(fecha?: string | Date) {

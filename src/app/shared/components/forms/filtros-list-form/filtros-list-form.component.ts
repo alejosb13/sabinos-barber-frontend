@@ -37,6 +37,9 @@ import { UsuarioesService } from '../../../../services/usuarios.service';
 import { EmpleadosService } from '../../../../services/empleados.service';
 import { LoginService } from '../../../../services/login.service';
 import { InputSingleDateComponent } from '../../input-single-date/input-single-date.component';
+import { TipoGastoService } from '../../../../services/tipo_gasto.service';
+import { TipoGasto } from '../../../../models/TipoGasto.model';
+import { get } from 'lodash';
 
 @Component({
   selector: 'app-filtros-list-form',
@@ -73,6 +76,7 @@ export class FiltrosListFormComponent {
   @Input() validDateValue!: boolean | undefined;
   @Input() showEmpleados: boolean = false;
   @Input() showUsers: boolean = false;
+  @Input() showTiposGastos: boolean = false;
   @Input() showDateIniFin: boolean = false;
   @Input() fechaFilter?: any = undefined;
   @Input() limpiarTipo: 'mes-actual' | 'dia-actual' | 'personalizado' =
@@ -83,6 +87,7 @@ export class FiltrosListFormComponent {
   private _UsuarioesService = inject(UsuarioesService);
   private _EmpleadosService = inject(EmpleadosService);
   private _LoginService = inject(LoginService);
+  private _TipoGastoService = inject(TipoGastoService);
 
   private ParametrosURL: ParametersUrl = {
     allDates: false,
@@ -96,6 +101,7 @@ export class FiltrosListFormComponent {
 
   Locales: Local[] = [];
   Usuarios: Usuario[] = [];
+  TiposGastos: TipoGasto[] = [];
   Empleados: Empleado[] = [];
 
   constructor() {
@@ -108,6 +114,7 @@ export class FiltrosListFormComponent {
     this.getLocales();
     this.getEmpleados();
     this.getUsers();
+    this.getTiposGastos();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -160,6 +167,17 @@ export class FiltrosListFormComponent {
         .pipe(takeUntil(this.destruir$))
         .subscribe((Usuarios: Usuario[]) => {
           this.Usuarios = Usuarios;
+        });
+    }
+  }
+
+  getTiposGastos() {
+    if (this.showTiposGastos) {
+      this._TipoGastoService
+        .getTipoGasto(this.ParametrosURL)
+        .pipe(takeUntil(this.destruir$))
+        .subscribe((TiposGastos: TipoGasto[]) => {
+          this.TiposGastos = TiposGastos;
         });
     }
   }

@@ -17,6 +17,7 @@ export interface Filtro {
   empleado_id?: number | string;
   inicioFecha?: string;
   finFecha?: string;
+  tipo_gasto_id?: number | string;
 }
 
 export type FiltroKeys = keyof Filtro;

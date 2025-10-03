@@ -148,6 +148,26 @@
             </select>
           </div>
         </c-col>
+        } @if(showTiposGastos){
+        <c-col [md]="6">
+          <div class="mb-3">
+            <label cLabel for="userInput">Tipos de Gasto</label>
+            <select
+              cSelect
+              [(ngModel)]="filtro.tipo_gasto_id"
+              name="tipoGasto"
+              id="tipoGastoInput"
+            >
+              <option [ngValue]="0">Todos</option>
+              <option
+                *ngFor="let tipoGasto of TiposGastos; let i = index"
+                [ngValue]="tipoGasto.id"
+              >
+                {{ tipoGasto.descripcion }}
+              </option>
+            </select>
+          </div>
+        </c-col>
         } @if(showEstado){
         <c-col [md]="6">
           <div class="mb-3">
