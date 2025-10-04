@@ -187,6 +187,10 @@ export class PedidoNewFormComponent {
       Number(this.PedidoDetail.id),
       Number(precioServicio)
     );
+
+    // Revalidar el pago después del cambio
+    let metodosP = this.PedidoCrudForm.controls.metodos_pagos.getRawValue();
+    this.validarTienePago(metodosP);
   }
 
   getMetodoPagoFormControlError(
@@ -422,10 +426,35 @@ export class PedidoNewFormComponent {
     } else {
       this.changeProducto(producGroup);
     }
+
+    // Recalcular el total de productos y revalidar el pago
+    this.getValueFacturaTotal();
+    let metodosP = this.PedidoCrudForm.controls.metodos_pagos.getRawValue();
+    this.validarTienePago(metodosP);
     // agregarProductosArray(this.PedidoCrudForm);
   }
 
   validarTienePago(metodos_pagos: any) {
+    // Verificar si el servicio es gratuito
+    const isServicioGratis = this.PedidoCrudForm.controls.servicio_gratis.value;
+
+    // Calcular el total de productos
+    const totalProductos = this.ProductorFormArray.getRawValue().reduce(
+      (acc, producto) => acc + (producto.precio || 0),
+      0
+    );
+
+    // Si el servicio es gratuito Y no hay productos con precio, considerar como válido
+    if (isServicioGratis && totalProductos === 0) {
+      this.TienePago.emit({
+        validacion: true,
+        empleado_id: this.EmpleadoId,
+        factura_detalle_id: this.PedidoDetail.id,
+      });
+      return;
+    }
+
+    // Validación normal para servicios con costo
     if (
       (metodos_pagos?.length ?? 0) > 0 &&
       metodos_pagos?.some((m: any) => m.editable === true)
