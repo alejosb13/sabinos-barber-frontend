@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -34,6 +34,7 @@ import { environment } from 'src/environments/environment';
 import { FormsModule } from '@angular/forms';
 import { GastoService } from '../../../services/gasto.service';
 import { Gasto } from '../../../models/Gasto.model';
+import { LoginService } from '../../../services/login.service';
 @Component({
   selector: 'app-gasto-listado',
   standalone: true,
@@ -66,6 +67,7 @@ export class GastoListadoComponent {
   private _ModalService = inject(ModalService);
   private _HelpersService = inject(HelpersService);
   readonly #ColorModeService = inject(ColorModeService);
+  readonly _LoginService = inject(LoginService);
 
   loaderTable: boolean = true;
   ParametrosURL: ParametersUrl = {
@@ -81,9 +83,18 @@ export class GastoListadoComponent {
     gasto_detalle_model: '1',
     metodo_pago_model: '1',
   };
+
   GastoList!: Listado<Gasto>;
 
-  ngOnInit(): void {
+  constructor() {
+    effect((a) => {
+      this.eventChangeLocal();
+    });
+  }
+
+  eventChangeLocal() {
+    const USER_DATA = this._LoginService.getUserData();
+    this.ParametrosURL.local_id = USER_DATA.local.id;
     this.getGastos();
   }
 
