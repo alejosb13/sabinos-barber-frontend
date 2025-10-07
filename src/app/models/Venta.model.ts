@@ -17,6 +17,8 @@ export interface Venta {
   producto_id: number;
   Producto?: Producto;
 
+  metodo_pago_sum_monto?: number;
+
   metodo_pago?: any[];
 
   user_id: number;

@@ -82,7 +82,7 @@
               getControl('precio').invalid && getControl('precio').touched,
             'is-valid': getControl('precio').valid
           }"
-          appOnlyNumberAndPoint
+          appCurrencyFormat
         />
         <label cLabel for="precioInput">Precio</label>
         <app-valid-messages-form

@@ -92,7 +92,9 @@
                   >
                 </td>
                 <td>
-                  <span>{{ venta.total }}</span>
+                  <span>{{
+                    venta.metodo_pago_sum_monto | currency : "ARS"
+                  }}</span>
                 </td>
                 <td>
                   <span>{{ venta.created_at | date : "dd-MM-YYYY" }}</span>

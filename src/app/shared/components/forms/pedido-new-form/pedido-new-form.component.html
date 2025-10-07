@@ -229,7 +229,7 @@
                   formControlName="monto"
                   type="text"
                   placeholder="monto"
-                  appOnlyNumberAndPoint
+                  appCurrencyFormat
                 />
                 <label cLabel for="monto_{{ m }}">Monto</label>
               </div>
@@ -424,6 +424,7 @@
                   formControlName="precio_unitario"
                   type="text"
                   placeholder="Precio Unitario"
+                  appCurrencyFormat
                 />
                 <label cLabel for="precio_unitario_{{ i }}"
                   >Precio Unitario</label
@@ -442,6 +443,7 @@
                   formControlName="precio"
                   type="text"
                   placeholder="precio"
+                  appCurrencyFormat
                 />
                 <label cLabel for="precio_{{ i }}">Total</label>
               </div>

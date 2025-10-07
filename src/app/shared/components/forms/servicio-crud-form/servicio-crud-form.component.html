@@ -36,7 +36,7 @@
               getControl('precio').invalid && getControl('precio').touched,
             'is-valid': getControl('precio').valid
           }"
-          appOnlyNumberAndPoint
+          appCurrencyFormat
         />
         <label cLabel for="PrecioInput">Precio</label>
         <app-valid-messages-form
@@ -59,7 +59,7 @@
               getControl('precio_nomina').touched,
             'is-valid': getControl('precio_nomina').valid
           }"
-          appOnlyNumberAndPoint
+          appCurrencyFormat
         />
         <label cLabel for="PrecioNominaInput">Precio Nomina</label>
         <app-valid-messages-form

@@ -32,7 +32,7 @@
           type="number"
           formControlName="precioUnitario"
           [readOnly]="true"
-          appOnlyNumberAndPoint
+          appCurrencyFormat
         />
         <!-- <input
           cFormControl
@@ -64,7 +64,7 @@
           type="number"
           formControlName="precioTotal"
           [readOnly]="true"
-          appOnlyNumberAndPoint
+          appCurrencyFormat
         />
         <label cLabel for="precioTotalInput">Precio Total</label>
         <app-valid-messages-form

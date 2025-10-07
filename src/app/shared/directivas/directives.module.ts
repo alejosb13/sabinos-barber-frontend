@@ -7,9 +7,10 @@ import { OnlyDecimalsDirective } from './only-decimals.directive';
 import { OnlyNumberAndPointDirective } from './only-number-and-point.directive';
 import { BlockCopyPasteDirective } from './block-copy-paste.directive';
 import { OnlyEmailCharactersDirective } from './only-email-characters.directive';
+import { CurrencyFormatDirective } from './currency-format.directive';
 
 @NgModule({
-  imports: [BlockCopyPasteDirective],
+  imports: [BlockCopyPasteDirective, CurrencyFormatDirective],
   declarations: [
     OnlyNumbersDirective,
     PasteOnlyNumDirective,
@@ -28,6 +29,7 @@ import { OnlyEmailCharactersDirective } from './only-email-characters.directive'
     OnlyDecimalsDirective,
     OnlyNumberAndPointDirective,
     OnlyEmailCharactersDirective,
+    CurrencyFormatDirective,
   ],
 })
 export class DirectivesModule {}

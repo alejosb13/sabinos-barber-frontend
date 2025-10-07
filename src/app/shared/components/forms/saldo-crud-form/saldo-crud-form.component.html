@@ -8,7 +8,7 @@
           formControlName="monto"
           type="text"
           placeholder="Monto"
-          appOnlyNumberAndPoint
+          appCurrencyFormat
           [ngClass]="{
             'is-invalid':
               getControl('monto').invalid && getControl('monto').touched,

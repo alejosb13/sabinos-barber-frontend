@@ -91,10 +91,10 @@
                   <span>{{ Servicio.descripcion }}</span>
                 </td>
                 <td>
-                  <span>{{ Servicio.precio }}</span>
+                  <span>{{ Servicio.precio | currency : "ARS" }}</span>
                 </td>
                 <td>
-                  <span>{{ Servicio.precio_nomina }}</span>
+                  <span>{{ Servicio.precio_nomina | currency : "ARS" }}</span>
                 </td>
                 <td>
                   <div class="d-flex flex-direction">
