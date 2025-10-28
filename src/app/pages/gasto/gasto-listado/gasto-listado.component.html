@@ -70,7 +70,7 @@
           >
             <thead class="text-nowrap text-truncate">
               <tr>
-                <th class="bg-body-tertiary">#</th>
+                <!-- <th class="bg-body-tertiary">#</th> -->
                 <th class="bg-body-tertiary">Usuario</th>
                 <th class="bg-body-tertiary">Empleado</th>
                 <th class="bg-body-tertiary">Monto</th>
@@ -86,22 +86,25 @@
             <tbody>
               @for (gasto of GastoList.data; track gasto.id; let i = $index) {
               <tr>
-                <td>
-                  <span>{{ gasto.id }}</span>
-                  <!-- <div class="small text-body-secondary text-nowrap">
+                <!-- <td> -->
+                <!-- <span>{{ gasto.id }}</span> -->
+                <!-- <div class="small text-body-secondary text-nowrap">
                       <span> Registered: </span>
                     </div> -->
-                </td>
+                <!-- </td> -->
                 <td>
-                  <span>{{ gasto.user?.nombre_completo }}</span>
+                  <span *ngIf="gasto.user?.nombre_completo">{{
+                    gasto.user?.nombre_completo
+                  }}</span>
+                  <span *ngIf="!gasto.user?.nombre_completo"
+                    ><b>NOMINA</b></span
+                  >
                 </td>
                 <td>
                   <span>{{ gasto.empleado?.nombre_completo }}</span>
                 </td>
                 <td>
-                  <span>{{
-                    sumarGastoDetalle(gasto.metodo_pago) | currency : "ARS"
-                  }}</span>
+                  <span>{{ sumarGastoDetalle(gasto) | currency : "ARS" }}</span>
                 </td>
                 <td>
                   <span>{{ gasto.is_local == 1 ? "Si" : "No" }}</span>

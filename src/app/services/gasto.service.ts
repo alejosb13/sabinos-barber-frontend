@@ -21,8 +21,13 @@ export class GastoService {
 
   // public methods
   getGastos(parametersURL: ParametersUrl): Observable<any> {
+    logger.log({
+      parametersURL,
+      tets: this._Helpers.formatParameters(parametersURL),
+    });
     let URL = parametersURL.link ? parametersURL.link : URL_Gasto;
-    // logger.log(URL, parametersURL);
+    console.log({ URL });
+
     return this.http.get<any>(URL, {
       params: this._Helpers.formatParameters(parametersURL),
       responseType: 'json',

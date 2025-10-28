@@ -17,10 +17,8 @@ import {
   ModalService,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
-import { ProductosService } from '../../../services/productos.service';
 import { CommonModule } from '@angular/common';
 import { Listado } from 'src/app/models/Listados.model';
-import { Producto } from 'src/app/models/Producto.model';
 import { ParametersUrl } from 'src/app/models/Parameter.model';
 import { FiltrosListFormComponent } from '../../../shared/components/forms/filtros-list-form/filtros-list-form.component';
 import { IModalAction } from '@coreui/angular/lib/modal/modal.service';
@@ -152,7 +150,12 @@ export class GastoListadoComponent {
   }
 
   sumarGastoDetalle(detalles: any): number {
-    return detalles.reduce((acc: any, det: any) => acc + det.monto, 0);
+    return (
+      detalles.metodo_pago?.reduce(
+        (acc: any, det: any) => acc + det.monto,
+        0
+      ) || detalles.total
+    );
   }
 
   buscar() {
