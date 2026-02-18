@@ -74,6 +74,7 @@
                 <th class="bg-body-tertiary">Nombre</th>
                 <th class="bg-body-tertiary">DNI</th>
                 <th class="bg-body-tertiary">Porcentaje</th>
+                <th class="bg-body-tertiary">Orden</th>
                 <th class="bg-body-tertiary"></th>
               </tr>
             </thead>
@@ -95,6 +96,16 @@
                 </td>
                 <td>
                   <span>{{ Empleado.porcentaje }}%</span>
+                </td>
+                <td>
+                  <span 
+                    class="text-primary pointer" 
+                    role="button" 
+                    (click)="abrirModalOrden(Empleado)"
+                    cTooltip="Modificar orden"
+                  >
+                    {{ Empleado.orden || 0 }}
+                  </span>
                 </td>
                 <td>
                   <div class="d-flex flex-direction">
@@ -186,4 +197,42 @@
       [showDateIniFin]="true"
     />
   </c-modal-body>
+</c-modal>
+
+<c-modal id="modalOrden">
+  <c-modal-header>
+    <h5 cModalTitle>Modificar Orden - {{ empleadoSeleccionado?.nombre_completo }}</h5>
+    <button (click)="modalStatusById('modalOrden', false)" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <c-row class="justify-content-center">
+      <c-col md="7">
+        <label cLabel for="ordenInput">Orden:</label>
+        <input 
+          cFormControl 
+          id="ordenInput" 
+          type="number" 
+          [(ngModel)]="nuevoOrden"
+          min="0"
+          class="mb-3"
+        />
+      </c-col>
+    </c-row>
+  </c-modal-body>
+  <c-modal-footer>
+    <button 
+      cButton 
+      color="secondary" 
+      (click)="modalStatusById('modalOrden', false)"
+    >
+      Cancelar
+    </button>
+    <button 
+      cButton 
+      color="primary" 
+      (click)="guardarOrden()"
+    >
+      Guardar
+    </button>
+  </c-modal-footer>
 </c-modal>

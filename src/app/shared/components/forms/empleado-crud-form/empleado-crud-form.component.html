@@ -70,6 +70,29 @@
       </div>
     </c-col>
     <c-col [md]="4">
+      <div cFormFloating class="mb-3">
+        <input
+          cFormControl
+          id="ordenInput"
+          placeholder="orden"
+          type="number"
+          formControlName="orden"
+          [ngClass]="{
+            'is-invalid':
+              getControl('orden').invalid &&
+              getControl('orden').touched,
+            'is-valid': getControl('orden').valid
+          }"
+          min="0"
+        />
+        <label cLabel for="ordenInput">Orden</label>
+        <app-valid-messages-form
+          [errors]="getControlError('orden')"
+          [messages]="EmpleadoCrudErrorMessages['orden']"
+        ></app-valid-messages-form>
+      </div>
+    </c-col>
+    <c-col [md]="4">
       <div cFormFloating>
         <select
           cSelect

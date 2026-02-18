@@ -6,6 +6,7 @@ export interface EmpleadoCrudForm {
   dni: FormControl<string | null>;
   local_id: FormControl<number | string | null>;
   porcentaje: FormControl<number | null>;
+  orden: FormControl<number | null>;
 }
 
 export const EmpleadoCrudFormBuilder = () =>
@@ -19,5 +20,8 @@ export const EmpleadoCrudFormBuilder = () =>
     ]),
     porcentaje: new FormControl({ value: 40, disabled: false }, [
       ...EmpleadoCrudValidators['porcentaje'],
+    ]),
+    orden: new FormControl({ value: 0, disabled: false }, [
+      ...EmpleadoCrudValidators['orden'],
     ]),
   });

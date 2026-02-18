@@ -82,6 +82,8 @@ export class EmpleadoListadoComponent {
     fecha_fin: dayjs().endOf('month').format('YYYY-MM-DD'),
   };
   EmpleadoList!: Listado<Empleado>;
+  empleadoSeleccionado: Empleado | null = null;
+  nuevoOrden: number = 0;
 
   constructor() {
     effect((a) => {
@@ -153,6 +155,72 @@ export class EmpleadoListadoComponent {
 
   buscar() {
     this.getEmpleados(true);
+  }
+
+  abrirModalOrden(empleado: Empleado) {
+    this.empleadoSeleccionado = empleado;
+    this.nuevoOrden = empleado.orden || 0;
+    this.modalStatusById('modalOrden', true);
+  }
+
+  guardarOrden() {
+    if (!this.empleadoSeleccionado) return;
+
+    const empleadoActualizado = {
+      ...this.empleadoSeleccionado,
+      orden: this.nuevoOrden,
+    };
+
+    this._HelpersService.loaderSweetAlert({
+      title: 'Actualizando orden',
+      text: 'Esto puede demorar un momento.',
+    });
+
+    this._EmpleadosService
+      .updateEmpleado(Number(this.empleadoSeleccionado.id), empleadoActualizado)
+      .pipe(takeUntil(this.destruir$))
+      .subscribe({
+        next: (data) => {
+          // Actualizar el empleado en la lista
+          const index = this.EmpleadoList.data.findIndex(
+            (emp) => emp.id === this.empleadoSeleccionado?.id
+          );
+          if (index !== -1) {
+            this.EmpleadoList.data[index] = {
+              ...this.EmpleadoList.data[index],
+              orden: this.nuevoOrden,
+            };
+          }
+
+          this.modalStatusById('modalOrden', false);
+          
+          Swal.mixin({
+            customClass: {
+              container: this.#ColorModeService.getStoredTheme(
+                environment.SabinosTheme
+              ),
+            },
+          }).fire({
+            text: 'Orden actualizado correctamente',
+            icon: 'success',
+          });
+
+          logger.log('Empleado actualizado:', data);
+        },
+        error: (error) => {
+          Swal.mixin({
+            customClass: {
+              container: this.#ColorModeService.getStoredTheme(
+                environment.SabinosTheme
+              ),
+            },
+          }).fire({
+            text: 'Error al actualizar el orden',
+            icon: 'error',
+          });
+          logger.error('Error al actualizar orden:', error);
+        },
+      });
   }
 
   eliminar(Empleado: Empleado) {

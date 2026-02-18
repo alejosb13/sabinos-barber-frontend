@@ -126,6 +126,8 @@ export class EmpleadoCrudFormComponent {
       nombre_completo: this.Empleado.nombre_completo,
       dni: this.Empleado.dni,
       local_id: this.Empleado.local_id,
+      porcentaje: this.Empleado.porcentaje,
+      orden: this.Empleado.orden || 0,
       // apellido: this.Empleado.nombre,
     });
   }

@@ -8,6 +8,7 @@ export interface Empleado {
   local_id: number;
 
   porcentaje: number;
+  orden?: number;
 
   facturas?: Factura[];
 
