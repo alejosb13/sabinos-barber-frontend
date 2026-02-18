@@ -127,12 +127,22 @@
                 <td>
                   <div class="d-flex flex-direction">
                     <div class="me-3" ngbTooltip="Editar">
-                      <a
-                        [routerLink]="['/gastos', 'editar', gasto.id]"
-                        cTooltip="Editar"
-                      >
-                        <svg cIcon height="18" name="fa-eye"></svg>
-                      </a>
+                      @if(gasto.nomina_id){
+                        <a
+                          [routerLink]="['/nominas', 'editar', gasto.nomina_id]"
+                          cTooltip="Editar"
+                        >
+                          <svg cIcon height="18" name="fa-eye"></svg>
+                        </a>
+
+                      }@else{
+                        <a
+                          [routerLink]="['/gastos', 'editar', gasto.id]"
+                          cTooltip="Editar"
+                        >
+                          <svg cIcon height="18" name="fa-eye"></svg>
+                        </a>
+                      }
                     </div>
                     <div
                       class=""

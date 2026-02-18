@@ -255,7 +255,7 @@ export class NominaCrudFormComponent {
   // Verifica si se puede agregar un nuevo método de pago
   puedeAgregarMetodoPago(): boolean {
     const resta = this.getResta();
-    return resta > 0 && this.MetodoPagoNominaFormArray.length < 2;
+    return resta > 0 && this.MetodoPagoNominaFormArray.length < 3;
   }
 
   getControl(name: string): FormControl {

@@ -20,6 +20,7 @@ export interface Gasto {
   user?: Usuario;
   gasto_detalle?: GastoDetalle[];
   local?: Local;
+  nomina_id?: number;
 
   // gasto_detalle:
   metodo_pago?: MetodoPagoGasto[];

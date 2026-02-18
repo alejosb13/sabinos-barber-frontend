@@ -152,9 +152,9 @@ export class GastoListadoComponent {
   sumarGastoDetalle(detalles: any): number {
     return (
       detalles.metodo_pago?.reduce(
-        (acc: any, det: any) => acc + det.monto,
+        (acc: number, det: any) => acc + Number(det.monto || 0),
         0
-      ) || detalles.total
+      ) || Number(detalles.total || 0)
     );
   }
 
