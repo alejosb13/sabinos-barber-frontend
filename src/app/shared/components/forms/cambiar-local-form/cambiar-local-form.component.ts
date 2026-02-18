@@ -99,6 +99,7 @@ export class CambiarLocalFormComponent {
       .getLocales({
         link: null,
         disablePaginate: '1',
+        estado: '1',
       })
       // .pipe(delay(3000))
       .pipe(takeUntil(this.destruir$))
@@ -113,14 +114,14 @@ export class CambiarLocalFormComponent {
     if (this.LocalChangeForm.valid) {
       const VALUE_FORM = this.LocalChangeForm.value;
       let LocalSelected = this.Locales.find(
-        (local) => local.id == VALUE_FORM.local_id
+        (local) => local.id == VALUE_FORM.local_id,
       );
       this.FormsValues.emit(LocalSelected);
     } else {
       Swal.mixin({
         customClass: {
           container: this.#colorModeService.getStoredTheme(
-            environment.SabinosTheme
+            environment.SabinosTheme,
           ),
         },
       }).fire({
