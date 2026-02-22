@@ -144,7 +144,11 @@ export class PanelListComponent {
       return acumulador + Number(item.total || 0);
     }, 0);
 
-    return TotalGasto;
+    let TotalNomina = this.Panel.caja_nomina.reduce((acumulador, item) => {
+      return acumulador + Number(item.total || 0);
+    }, 0);
+
+    return TotalGasto + TotalNomina;
   }
 
   sumaFacturacion() {
@@ -198,7 +202,7 @@ export class PanelListComponent {
           Swal.mixin({
             customClass: {
               container: this.#ColorModeService.getStoredTheme(
-                environment.SabinosTheme
+                environment.SabinosTheme,
               ),
             },
           }).fire({
@@ -206,7 +210,7 @@ export class PanelListComponent {
             icon: 'info',
           });
           return throwError(() => error);
-        })
+        }),
       )
       .subscribe((data) => {
         logger.log(data);
@@ -219,7 +223,7 @@ export class PanelListComponent {
             centered: true,
             scrollable: true,
             // backdrop: 'static'
-          }
+          },
         );
         modalRef.componentInstance.Gastos = [...data];
       });
