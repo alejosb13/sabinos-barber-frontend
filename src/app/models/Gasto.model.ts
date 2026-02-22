@@ -11,6 +11,7 @@ export interface Gasto {
   user_id: number;
   empleado_id: number;
   total?: number;
+  section?: string;
   detalle_gasto_id: number;
 
   is_local: number;

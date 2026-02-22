@@ -7,7 +7,7 @@ export interface Nomina {
   adicional: boolean | number;
   porcentaje_adicional: number;
   total: number;
-
+  section?: string;
   empleado?: Empleado;
   total_facturado?: number;
   presentismo?: number;

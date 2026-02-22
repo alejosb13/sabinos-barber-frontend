@@ -14,6 +14,7 @@ import { LoginService } from '../../../services/login.service';
 import { FacturaDetalleFormComponent } from '../../components/forms/factura-detalle-form/factura-detalle-form.component';
 import logger from '../../utils/logger';
 import { Gasto, MetodoPagoGasto } from '../../../models/Gasto.model';
+import { stringValue } from '../../utils/constants/function-value';
 
 @Component({
   selector: 'app-detalle-gastos-modal',
@@ -33,6 +34,7 @@ import { Gasto, MetodoPagoGasto } from '../../../models/Gasto.model';
 export class DetalleGastosModalComponent {
   @Input() Gastos: Gasto[] = []; // antes era Gasto
   Total = 0;
+  stringFuntion = stringValue;
   // @Output() ResponseFacturaCreate = new EventEmitter<string>();
 
   activeModal = inject(NgbActiveModal);
@@ -65,7 +67,7 @@ export class DetalleGastosModalComponent {
           const monto = Number(metodo_pago?.monto || '0');
           return total + monto;
         },
-        0
+        0,
       ) || 0;
     return total;
   }
@@ -74,13 +76,17 @@ export class DetalleGastosModalComponent {
     return gastos.reduce((acumulador: any, gasto: any) => {
       const subtotal = gasto.metodo_pago.reduce(
         (acc: any, mp: any) => acc + parseFloat(mp.monto),
-        0
+        0,
       );
       return acumulador + subtotal;
     }, 0);
   }
 
-  ngOnDestroy(): void {
-    // this.ResponseFacturaCreate.complete();
+  getLabelBySection(section: string): string {
+    const labels: { [key: string]: string } = {
+      gasto: 'Gasto',
+      nomina: 'Nómina',
+    };
+    return labels[section] || 'Registro';
   }
 }
