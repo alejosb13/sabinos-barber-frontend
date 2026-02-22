@@ -1,7 +1,11 @@
 <c-card class="my-4">
   <c-card-header>
     <div class="d-flex justify-content-between align-items-center">
-      <p class="h3">Nomina #{{ Id }}</p>
+      <div>
+        <p class="h3 mb-2">Nomina #{{ Id }}</p>
+        <p class="h5">{{ Nomina.empleado.nombre_completo }}</p>
+
+      </div>
       <p class="h6">{{ Nomina?.fecha_inicio }} - {{ Nomina?.fecha_fin }}</p>
     </div>
   </c-card-header>

@@ -1,0 +1,8 @@
+::ng-deep [data-coreui-theme="dark"] {
+}
+
+::ng-deep [data-coreui-theme="light"] {
+  .badge {
+    color: #000000;
+  }
+}
